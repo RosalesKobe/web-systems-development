@@ -1,7 +1,6 @@
 /*
 css of index.html
 */
-
 @font-face {
     font-family: "jaf-mashine";
     src: url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
@@ -83,3 +82,30 @@ css of destionation.html
 /*
 css of contact.html
 */
+
+/*
+kobe footer initial
+*/
+footer {
+    background-color: #333;
+    color: white;
+    padding: 0.5rem;
+}
+
+.footer_content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.contact_info,
+.copyright,
+.welcome_message {
+    flex-basis: calc(33.33% - 1rem);
+    padding: 0.5rem;
+}
+.try_lang,
+.try_lang2,
+.try_lang3{
+    flex-basis: calc(33.33% - 1rem);
+    padding: 0.5rem;
+}
