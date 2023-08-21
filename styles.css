@@ -101,7 +101,7 @@ css of contact.html
 kobe footer initial
 */
 footer {
-    background-color: #333;
+    background-color: #373030;
     color: white;
     padding: 0.5rem;
 }
@@ -112,14 +112,19 @@ footer {
 }
 
 .contact_info,
-.copyright,
+.try_lang,
 .welcome_message {
     flex-basis: calc(33.33% - 1rem);
     padding: 0.5rem;
+    font-family: "jaf-mashine";
+    font-size: 16px;
+    font-weight: bold;
 }
-.try_lang,
-.try_lang2,
-.try_lang3{
-    flex-basis: calc(33.33% - 1rem);
+
+.copyright{
     padding: 0.5rem;
+    color: #fff;
+    font-family: GraphikRegular,sans-serif;
+    font-size: 14px;
+    
 }
