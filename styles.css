@@ -1,3 +1,85 @@
 /*
-style
+css of index.html
+*/
+
+@font-face {
+    font-family: "jaf-mashine";
+    src: url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 300;
+    font-stretch: normal;
+}
+
+
+#indeximg1{
+    padding-left: 125px;
+    padding-top:2%;
+    width: 100px;
+    border-radius: 50px;
+    float:left;
+    padding-right:20px;
+
+}
+#teamname {
+    color: black;
+    padding-right: 100px;
+    padding-top: 3%;
+    float:left;
+    font-family: "jaf-mashine";
+}
+
+    #nav {
+        margin-top:0;
+    padding: 12px 0;
+    margin-left: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin:0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#topnav li a {
+    text-decoration: none;
+    color:black;
+    padding: 50px;
+    padding-top:8%;
+    float: left;
+    font-family: BlinkMacSystemFont;
+    
+}
+
+#topnav li a:hover{
+    color: black;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding:3px;
+    margin-bottom: 2%;
+    margin-top: 1%;
+    vertical-align: 0.06em;
+  }
+
+  .down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+  }
+
+/*
+css of about.html
+*/
+
+
+/*
+css of destionation.html
+*/
+
+/*
+css of contact.html
 */
