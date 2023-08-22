@@ -10,6 +10,10 @@ css of index.html
     font-stretch: normal;
 }
 
+/*body{
+    width: 1400px;
+    margin: 0 auto;
+}*/
 
 #indeximg1{
     padding-left: 125px;
@@ -28,10 +32,11 @@ css of index.html
     font-family: "jaf-mashine";
 }
 
-    #nav {
-        margin-top:0;
+nav {
+    margin-top:0;
     padding: 12px 0;
     margin-left: 0;
+    justify-content: space-between;
 }
 
 ul {
@@ -69,6 +74,15 @@ ul {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
   }
+
+  #main_img{
+    display: block;
+    margin-left:auto;
+    margin-right: auto;
+    width: 70%;
+  }
+
+
 
 /*
 css of about.html
