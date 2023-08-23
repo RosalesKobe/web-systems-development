@@ -96,6 +96,39 @@ css of about.html
 css of destionation.html
 */
 
+.destination-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .destination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+    max-width: 1000px;
+  }
+  
+  .image-container {
+    flex-basis: 50%;
+  }
+  
+  .destination-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .details-container {
+    flex-basis: 50%;
+    padding: 1rem;
+    text-align: left;
+  }
+  
+
 /*
 css of contact.html
 */
@@ -158,4 +191,6 @@ footer {
     font-size:20px;
     color:#2B2B2B;
 }
+
+
 
