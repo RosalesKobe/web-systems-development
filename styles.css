@@ -1,85 +1,23 @@
 /*
+css imports
+*/
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Iso&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text&family=Sedgwick+Ave+Display&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/*
 css of index.html
 */
-@font-face {
-    font-family: "jaf-mashine";
-    src: url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/f97613/000000000000000077359ace/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n3&v=3") format("opentype");
-    font-display: auto;
-    font-style: normal;
-    font-weight: 300;
-    font-stretch: normal;
-}
-.header-container {
-    background-color: #5d685b;
-    border-bottom: 1px solid #020202;
-}
 
-/*body{
-    width: 1400px;
-    margin: 0 auto;
-}*/
-
-/*team logo*/
-#indeximg1{
-    padding-left: 125px;
-    padding-top:2%;
-    width: 100px;
-    border-radius: 50px;
-    float:left;
-    padding-right:20px;
-
+.index_body {
+    background-color: #24252A;
 }
-/*team name*/
-#teamname {
-    color: black;
-    padding-right: 100px;
-    padding-top: 3%;
-    float:left;
-    font-family: "jaf-mashine";
-}
-/*navigation*/
-nav {
-    margin-top:0;
-    padding: 12px 0;
-    margin-left: 0;
-    justify-content: space-between;
-}
-/*list/hyperlinks*/
-ul {
-    list-style-type: none;
-    margin:0;
-    padding: 0;
-    overflow: hidden;
-}
-
-#topnav li a {
-    text-decoration: none;
-    color:black;
-    padding: 50px;
-    padding-top:8%;
-    float: left;
-    font-family: BlinkMacSystemFont;
-    
-}
-
-#topnav li a:hover{
-    color: gray;
-}
-
-.arrow {
-    border: solid black;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding:3px;
-    margin-bottom: 2%;
-    margin-top: 1%;
-    vertical-align: 0.06em;
-  }
-
-  .down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-  }
 
   /*content image*/
   #main_img{
@@ -91,7 +29,9 @@ ul {
 
 /* image slider index page */
 .body_container{
-    padding: 2rem;
+    /*padding: 2rem;*/
+    padding-top: 2px;
+    padding-bottom: 20px;
 }
 .img_slider_wrapper{
     position: relative;
@@ -349,6 +289,89 @@ css of contact.html
 
 
 
+/*
+ednis sobrang pogi tangina
+*/
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+}
+
+.nav_links a, .nav_links li, button {
+    /*font-family: 'Crimson Text', serif;*/
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-weight: 500;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+}
+
+.logo{
+    width: 100px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-left: 110px;
+    order: 4;
+    margin-right: 10px;
+}
+
+.teamm_name{
+    color: black;
+    padding-right: 100px;
+    padding-top: 3%;
+    font-family: "jaf-mashine";
+}
+
+.nav_links{
+    list-style: none;
+}
+
+.nav_links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav_links li a {
+    transition: all 0.3s ease 0s;
+}
+
+.nav_links li a:hover{
+    color: gray;
+}
+
+nav {
+    order: 1;
+}
+
+button {
+    margin-left: 10px;
+    padding: 9px 25px;
+    background-color: rgb(29, 29, 163);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover{
+    background-color: white;;
+    color: black;
+}
+
+.contact{
+    order: 2;
+}
+
+.header_quote {
+    order: 3;
+    margin-left: auto;
+    color: white;
+    font-family: 'Bungee', cursive;
+    font-size: 30px;
+    font-style:italic;
+}
 /*
 kobe footer initial
 */
