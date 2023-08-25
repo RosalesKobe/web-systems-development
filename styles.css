@@ -362,6 +362,42 @@ footer {
     font-size: 14px;
     
 }
+.social-icons a{
+    width:40px;
+    height:40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#e6e3e3;
+    margin:20px 10px;
+    border-radius:50%;
+}
+.social-icons{
+    display: flex;
+    
+}
+.social-icons i,.social i{
+    color:#000000;
+}
+.social-icons a:hover{
+    background-color:#000000;
+    box-shadow:2px 2px 12px rgba(0,0,0,0.2);
+    transition:all ease 0.5s;
+}
+.social-icons a:hover i,
+.social a:hover i{
+    color:#FFFFFF;
+    transition:all ease 0.5s;
+}
+ 
+.copyright{
+    color:#565555;
+    font-size: 13px;
+    position: absolute;
+    left:50%;
+    bottom:10px;
+    transform: translateX(-50%);
+}
 .social{
     position: fixed;
     top:50%;
@@ -389,6 +425,5 @@ footer {
     font-size:20px;
     color:#2B2B2B;
 }
-
 
 
