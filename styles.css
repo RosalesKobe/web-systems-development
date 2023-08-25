@@ -9,6 +9,10 @@ css of index.html
     font-weight: 300;
     font-stretch: normal;
 }
+.header-container {
+    background-color: #5d685b;
+    border-bottom: 1px solid #020202;
+}
 
 /*body{
     width: 1400px;
@@ -136,40 +140,54 @@ css of about.html
 
 /*
 css of destionation.html
-*/
-
-.destination-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+*
+  
+  /* Style destination containers */
+  .destination-page {
     padding: 2rem;
   }
   
   .destination-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 3rem;
-    max-width: 1000px;
+    margin-bottom: 2rem;
   }
   
   .image-container {
-    flex-basis: 50%;
+    flex: 1;
+    margin-right: 1rem;
   }
   
   .destination-image {
     width: 100%;
-    max-width: 100%;
-    height: auto;
     border-radius: 10px;
   }
   
   .details-container {
-    flex-basis: 50%;
+    flex: 2;
     padding: 1rem;
-    text-align: left;
+    background-color: #8cc298;
+    border-radius: 10px;
   }
   
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .learn-more-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #0a8d43;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+  }
 
 /*
 css of contact.html
@@ -393,8 +411,7 @@ footer {
 .copyright{
     color:#565555;
     font-size: 13px;
-    position: absolute;
-    left:50%;
+    position: relative;
     bottom:10px;
     transform: translateX(-50%);
 }
