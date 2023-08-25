@@ -308,13 +308,17 @@ header{
     text-decoration: none;
 }
 
+.nav_links .active{
+    color: gray;
+}
+
 .logo{
-    width: 100px;
-    border-radius: 50px;
+    width: 150px;
+    border-radius: 75px;
     cursor: pointer;
-    margin-left: 110px;
+    margin-left: 75px;
     order: 4;
-    margin-right: 10px;
+    margin-right: 0px;
 }
 
 .teamm_name{
