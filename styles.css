@@ -322,10 +322,16 @@ nav .team_name{
     margin-top: 15px;
     font-weight: 100;
     font-size: 200%;
-
+    cursor: pointer;
     font-family: 'Creepster', cursive;
     color: rgb(170, 161, 161)
 }
+
+nav .team_name:hover{
+    opacity: 30%;
+    transition: .5s;
+}
+
 .nav_links {
 	float: right;
 	padding: 0;
@@ -387,7 +393,7 @@ nav .icon-burger .line {
 		float: left;
 	}
 
-    nav .name_logo{
+    nav .namelogo-container{
         margin-left: auto;
         margin-right: auto;
     }
@@ -427,7 +433,6 @@ nav .icon-burger .line {
 	nav :checked ~ .icon-burger .line:nth-child(2) {
 		opacity: 0;
 	}
-	
 }
 
 /*
