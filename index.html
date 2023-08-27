@@ -12,16 +12,24 @@
     
     <!--header ito-->
     <header>
-      <img class = "logo" src = "images/logo 2.png" alt ="logo">
-      <h1 class ="header_quote">The world is yours to explore.<br>&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Visit Baguio!</h1>
-      <nav>
+    <nav>
+      <input id="nav-toggle" type="checkbox">
+      <div class = "name_logo">
+      <img class = "logo" src = "images/team_logo.png" alt ="logo">
+      <p class="team_name">Team<br>Pogi</p>
+      </div>
       <ul class = "nav_links">
         <li><a class = "active" href = "#">Home</a></li>
         <li><a href = "about.html" target="_self">About</a></li>
         <li><a href = "destination.html" target="_self">Destinations</a></li>
+        <li><a class = "blank" href = "contact.html" target="_blank">Contact</a></li>
       </ul>
-      </nav>
-      <a class = "contact" href="contact.html" target="_blank"><button class = "nav_links">Contact</button></a>
+      <label for="nav-toggle" class="icon-burger">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </label>
+    </nav>
     </header>
 
 <!-- start ng content ng katawan -->
