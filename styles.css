@@ -110,7 +110,7 @@ css of destionation.html
   .details-container {
     flex: 2;
     padding: 1rem;
-    background-color: #8cc298;
+    background-color: #6e6e6e;
     border-radius: 10px;
   }
   
@@ -127,7 +127,7 @@ css of destionation.html
   .learn-more-button {
     display: inline-block;
     padding: 0.5rem 1rem;
-    background-color: #0a8d43;
+    background-color: #24252A;
     color: white;
     border: none;
     border-radius: 5px;
