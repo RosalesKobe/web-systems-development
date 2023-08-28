@@ -5,6 +5,7 @@ css imports
 @import url('https://fonts.googleapis.com/css2?family=Rubik+Iso&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text&family=Sedgwick+Ave+Display&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC&display=swap');
 
 *{
     box-sizing: border-box;
@@ -34,15 +35,16 @@ css of index.html
     justify-content: flex-start;
 }
 .home_main_text{
-    
+    margin-left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     font-size: 30px;
-    font-weight: 800;
+    font-weight: bolder;
     line-height: 1.2;
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 6px;
-    font-family:'Courier New', Courier, monospace;
+    font-family:'PlayFair Display SC';
 } 
 
 .index_body {
@@ -455,20 +457,20 @@ css of contact.html
 
 
 
-/*
+/* 
 header - ednis sobrang pogi tangina
 */
 nav {
 	position: relative; 
     /* tulad nung sabi ni dennis pag naka position:fixed naka inscroll header
     pag naka position:relative di masasama background nung unang picture sa header. */
-	z-index: 1000;
+	z-index: 10;
 	left: 0;
 	right: 0;
 	top: 0;
 	padding: 0 5%;
 	height: 100px;
-    background-color: transparent; 
+    background-color: #3c3d45; 
     display: flex;
 }
 nav .logo {
