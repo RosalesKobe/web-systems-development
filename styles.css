@@ -12,7 +12,6 @@ css imports
     padding: 0;
     text-decoration: none;
     list-style: none;
-    outline: none;
 }
 
 /*
@@ -24,7 +23,7 @@ css of index.html
 }
 
 .body_container {
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 .img_slider_wrapper {
@@ -58,21 +57,47 @@ css of index.html
     flex: 0 0 100%;
     width: 100%;
 }
+
+/* Name of Image / Title */
 .image-text {
     display: block;
     position: absolute;
     top: 1%;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 600;
+    color: white; 
+    font-family: 'Pomesh';
+    font-size: 63px;
+    font-weight: bold;
     text-transform: uppercase;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    font-size: 50px;
-    padding: 10px;
+
+    padding: 10px;}
+
+/* Image Link going to Destination */
+.image-link {
+    display: block;
+    position: absolute;
+    top: 90%;
+    color: black;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    font-family: 'Segoe UI';
+    font-weight: 600;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 25px;
+    padding: 10px 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
     animation: glowingText 2s ease-in-out infinite alternate;
+
 }
+  
+  .image-link:hover {
+    color: white;
+    background-color: #ff0000; 
+  }
 
 /* 
 asa .image-text animation,
@@ -82,27 +107,8 @@ temporary na kulay tanggalin nyo nalang if masakit sa mata */
         text-shadow: 0 0 10px #222, 0 0 20px #222, 0 0 30px #444, 0 0 40px #444, 0 0 50px #666, 0 0 60px #666, 0 0 70px #888;
     }
     to {
-        text-shadow: 0 0 20px #222, 0 0 30px #444, 0 0 40px #444, 0 0 50px #666, 0 0 60px #666, 0 0 70px #888, 0 0 80px #888;
+        text-shadow: 0 0 20px #96B6C5, 0 0 30px #ADC4CE, 0 0 40px #EEE0C9, 0 0 50px #F1F0E8;
     }
-}
-
-.slider_nav {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-}
-.slider_nav a {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background-color: white;
-    opacity: 0.75;
-    transition: opacity ease 250ms;
-    margin: 0 0.5rem;
-}
-
-.slider_nav a:hover {
-    opacity: 1;
 }
 
 .slider_nav {
@@ -123,84 +129,11 @@ temporary na kulay tanggalin nyo nalang if masakit sa mata */
 .slider_nav a:hover {
     opacity: 1;
 }
+
+
 /*
 css of about.html
 */
-.baguio_facts{
-    font-family:'Courier New';
-    width:100%;
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-}
-
-.row {
-    width: 80%;
-    max-width: 1170px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 50px;
-    overflow-x: hidden;
-    padding: 5rem 0;
-}
-
-.row .img_wrapper{
-    overflow: hidden;
-}
-
-.row .img_wrapper img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: 1s;
-}
-
-.row .img_wrapper:hover img{
-    transform: scale(0.5s);
-    cursor: pointer;
-}
-
-.row .content_wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 30px;
-}
-
-.row .content_wrapper .about_content p {
-    display: block;
-    font-size: 20px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-.row .content_wrapper h2{
-    font-size: 40px;
-    font-weight: 700;
-    color: gray;
-    padding-bottom: 20px;
-}
-
-.row .content_wrapper p{
-    font-size: 16px;
-    line-height: 25px;
-    padding-bottom: 25px;
-}
-
-.row .content_wrapper a{
-    display: inline-block;
-    text-decoration: none;
-    text-transform: uppercase;
-    background: gray;
-    color: white;
-    padding: 15px 40px;
-    letter-spacing: 1px;
-    user-select: none;
-}
 
 
 /*
