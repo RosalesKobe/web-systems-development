@@ -12,25 +12,52 @@ css imports
     padding: 0;
     text-decoration: none;
     list-style: none;
+    border: none; /**/
+    outline: none; /**/
+    scroll-behavior: smooth; /**/
 }
 
 /*
 css of index.html
 */
+.home_main{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    position: relative;
+    height: 86.5vh;
+    width: 100%;
+    background-image: url(images/destinations/welcometobaguio.jpeg);   
+    background-size: cover;
+    background-position: bottom cover;
+    display: flex;
+    justify-content: flex-start;
+}
+.home_main_text{
+    
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    font-family:'Courier New', Courier, monospace;
+} 
 
 .index_body {
     background-color: #24252A;
 }
 
 .body_container {
+    padding-top: 5rem;
     padding-bottom: 1rem;
 }
 
 .img_slider_wrapper {
     position: relative;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
+    /* margin: 0 auto; */
+    padding-left: 25%;
     overflow: hidden;
 }
 
@@ -40,8 +67,9 @@ css of index.html
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     box-shadow: 0 1.5rem 3rem -0.75rem hsla(0, 0%, 0%, 0.25);
-    border-radius: 0rem;
-    height: 600px;
+    border-radius: 8px;
+    width: 420px;
+    height: 420px;
 }
 
 .img_slider img {
@@ -65,14 +93,15 @@ css of index.html
     top: 1%;
     color: white; 
     font-family: 'Pomesh';
-    font-size: 63px;
+    font-size: 42px;
     font-weight: bold;
+    letter-spacing: 0.25rem;
     text-transform: uppercase;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-
-    padding: 10px;}
+    padding: 10px;
+}
 
 /* Image Link going to Destination */
 .image-link {
@@ -113,7 +142,6 @@ temporary na kulay tanggalin nyo nalang if masakit sa mata */
 
 .slider_nav {
     display: flex;
-    justify-content: center;
     margin-top: 1rem;
 }
 .slider_nav a {
@@ -123,7 +151,7 @@ temporary na kulay tanggalin nyo nalang if masakit sa mata */
     background-color: white;
     opacity: 0.75;
     transition: opacity ease 250ms;
-    margin: 0 1rem;
+    margin: 0 0.80rem;
 }
 
 .slider_nav a:hover {
@@ -431,14 +459,17 @@ css of contact.html
 header - ednis sobrang pogi tangina
 */
 nav {
-	position: relative; /*palitan ng fixed yung position if gusto ng in-scroll header*/
-	z-index: 10;
+	position: relative; 
+    /* tulad nung sabi ni dennis pag naka position:fixed naka inscroll header
+    pag naka position:relative di masasama background nung unang picture sa header. */
+	z-index: 1000;
 	left: 0;
 	right: 0;
 	top: 0;
 	padding: 0 5%;
 	height: 100px;
-    background-color: #3c3d45;
+    background-color: transparent; 
+    display: flex;
 }
 nav .logo {
 	float: left;
