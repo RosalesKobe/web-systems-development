@@ -663,3 +663,50 @@ footer {
 }
 
 
+/*
+JEUS sa team ito
+*/
+
+.team_page{
+    font-family: 'Courier New';
+    width:100%;
+    min-height: 100vh;
+    display: flex;
+    place-items: center;
+    place-content: left;
+    padding:0;
+    margin: 0;
+}
+
+body{
+    background-color:rgb(170, 161, 161) ; 
+}
+
+.team_page{
+    margin: 20px 40px;
+    color: white;
+}
+
+.headings{
+    font-size: 60px;
+    color: white;
+    justify-content: left;
+}
+
+.headings span{
+    font-style: italic;
+    font-size: 30px;
+}
+
+.profiles{
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 80px;
+
+}
+
+.img{
+    max-width: 400px;
+}
+/* tuloy bukas fotanng ina biyahe muna
+*/
