@@ -34,6 +34,7 @@ css of index.html
     display: flex;
     justify-content: flex-start;
 }
+
 .home_main_text{
     margin-left: 50%;
     transform: translateX(-50%);
@@ -45,121 +46,36 @@ css of index.html
     text-transform: uppercase;
     letter-spacing: 6px;
     font-family:'PlayFair Display SC';
-} 
-
-.index_body {
-    background-color: #24252A;
 }
-
-.body_container {
-    padding-top: 5rem;
-    padding-bottom: 1rem;
+.img_slider_wrapper{
+    padding: 20px 20px 20px 20px;
 }
-
-.img_slider_wrapper {
-    position: relative;
-    /* margin: 0 auto; */
-    padding-left: 25%;
-    overflow: hidden;
-}
-
-.img_slider {
-    display: flex;
-    overflow: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    box-shadow: 0 1.5rem 3rem -0.75rem hsla(0, 0%, 0%, 0.25);
+.slider_item img{
+    border: 1px solid #ddd;
     border-radius: 8px;
-    width: 420px;
-    height: 420px;
-}
-
-.img_slider img {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-}
-
-.slider_item {
-    position: relative;
-    flex: 0 0 100%;
-    width: 100%;
-}
-
-/* Name of Image / Title */
-.image-text {
+    padding: 5px;
+    width: 550px;
+    height: 400px;
     display: block;
-    position: absolute;
-    top: 1%;
-    color: white; 
-    font-family: 'Pomesh';
-    font-size: 42px;
-    font-weight: bold;
-    letter-spacing: 0.25rem;
-    text-transform: uppercase;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    padding: 10px;
+    margin-left: 10%;
 }
-
-/* Image Link going to Destination */
-.image-link {
+.slider_item2 img{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px;
+    width: 550px;
+    height: 400px;
     display: block;
-    position: absolute;
-    top: 90%;
-    color: black;
-    /* background-color: rgba(0, 0, 0, 0.5); */
-    font-family: 'Segoe UI';
-    font-weight: 600;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    font-size: 25px;
-    padding: 10px 10px;
-    border-radius: 20px;
-    transition: background-color 0.3s, color 0.3s;
-    animation: glowingText 2s ease-in-out infinite alternate;
-
+    margin-left: 55%;
 }
-  
-  .image-link:hover {
-    color: white;
-    background-color: #ff0000; 
-  }
-
-/* 
-asa .image-text animation,
-temporary na kulay tanggalin nyo nalang if masakit sa mata */
-@keyframes glowingText {
-    from {
-        text-shadow: 0 0 10px #222, 0 0 20px #222, 0 0 30px #444, 0 0 40px #444, 0 0 50px #666, 0 0 60px #666, 0 0 70px #888;
-    }
-    to {
-        text-shadow: 0 0 20px #96B6C5, 0 0 30px #ADC4CE, 0 0 40px #EEE0C9, 0 0 50px #F1F0E8;
-    }
+.image-text, .image-link{
+    display: block;
+    margin-left: 55%;
 }
-
-.slider_nav {
-    display: flex;
-    margin-top: 1rem;
+.image-text2, .image-link2{
+    display: block;
+    margin-left: 10%;
 }
-.slider_nav a {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background-color: white;
-    opacity: 0.75;
-    transition: opacity ease 250ms;
-    margin: 0 0.80rem;
-}
-
-.slider_nav a:hover {
-    opacity: 1;
-}
-
 
 /*
 css of about.html
