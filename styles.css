@@ -21,7 +21,13 @@ css imports
 /*
 css of index.html
 */
-.home_main{
+
+
+.index_body{
+    background-color: whitesmoke;
+}
+
+.home_main{ /* unang part ng home */
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -34,8 +40,7 @@ css of index.html
     display: flex;
     justify-content: flex-start;
 }
-
-.home_main_text{
+.home_main_text{ /* unang part ng home */
     margin-left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -47,35 +52,70 @@ css of index.html
     letter-spacing: 6px;
     font-family:'PlayFair Display SC';
 }
-.img_slider_wrapper{
-    padding: 20px 20px 20px 20px;
-}
-.slider_item img{
-    border: 1px solid #ddd;
-    border-radius: 8px;
+
+.img_slider_wrapper { /* second part ng home */
+    padding: 20px;
+    border-top: 5px solid red; 
+    border-bottom: 5px solid red;
+  }
+
+  .slider_item, .slider_item2{ /* second part ng home */
+    clear: both; 
+    margin-bottom: 20px;
+  }
+  
+  .slider_item img { /* second part ng home */
+    float: left;
     padding: 5px;
     width: 550px;
     height: 400px;
     display: block;
     margin-left: 10%;
-}
-.slider_item2 img{
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    margin-right: 6%;
+    
+  }
+
+  .slider_item2 img { /* second part ng home */
+    float: right;
     padding: 5px;
     width: 550px;
     height: 400px;
     display: block;
-    margin-left: 55%;
-}
-.image-text, .image-link{
-    display: block;
-    margin-left: 55%;
-}
-.image-text2, .image-link2{
+    margin-left: 6%;
+    margin-right: 10%;
+  }
+  
+  .image-text, .image-link { /* second part ng home */
     display: block;
     margin-left: 10%;
-}
+    margin-right: 10%;
+    text-align: justify;
+    color: #000000;
+  }
+    
+  .image-text2, .image-link2 { /* second part ng home */
+    display: block;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: justify;
+    color: #000000;
+  }
+  .image-text h2, .image-text2 h2 { /* second part ng home */
+    font-family: 'Calibri';
+    text-align: center;
+    text-decoration:underline;
+    font-size: 40px;
+  }
+  .image-text p, .image-text2 p,
+  .image-link, .image-link2 { /* second part ng home */
+    font-family: 'Calibri';
+    font-size: 20px;
+  }
+  .image-link, .image-link2{ /* second part ng home */
+    font-weight: bolder;
+    text-decoration: underline;
+  }
+
 
 /*
 css of about.html
