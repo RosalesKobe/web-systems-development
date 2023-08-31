@@ -27,7 +27,7 @@ css of index.html
     background-color: whitesmoke;
 }
 
-.home_main{ /* unang part ng home */
+.home_1st{ /* unang part ng home */
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -58,10 +58,13 @@ css of index.html
     border-top: 5px solid red; 
     border-bottom: 5px solid red;
   }
-
+/**/
   .slider_item, .slider_item2{ /* second part ng home */
     clear: both; 
-    margin-bottom: 20px;
+    margin-top: 150px;
+    margin-bottom: 150px;
+    display: flex;
+    align-items: flex-start;
   }
   
   .slider_item img { /* second part ng home */
@@ -72,7 +75,7 @@ css of index.html
     display: block;
     margin-left: 10%;
     margin-right: 6%;
-    
+    border-radius: 1rem;
   }
 
   .slider_item2 img { /* second part ng home */
@@ -83,6 +86,7 @@ css of index.html
     display: block;
     margin-left: 6%;
     margin-right: 10%;
+    border-radius: 1rem;
   }
   
   .image-text, .image-link { /* second part ng home */
@@ -103,7 +107,6 @@ css of index.html
   .image-text h2, .image-text2 h2 { /* second part ng home */
     font-family: 'Calibri';
     text-align: center;
-    text-decoration:underline;
     font-size: 40px;
   }
   .image-text p, .image-text2 p,
@@ -114,8 +117,40 @@ css of index.html
   .image-link, .image-link2{ /* second part ng home */
     font-weight: bolder;
     text-decoration: underline;
+    color: red;
+    text-align: center;
+    margin-top: 50px;
   }
 
+  .home_guide { /* third part ng home */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+.home_guide h1{ /* third part ng home */
+    color: #00a8e8;
+}
+.home_guide h2 { /* third part ng home */
+    color: #333;
+}
+.home_guide p { /* third part ng home */
+        line-height: 1.6;
+}
+.home_guide_link { /* third part ng home */
+    font-weight: bolder;
+    text-decoration: underline;
+    color: red;
+    text-align: center;
+    display: block;
+    font-family: 'Calibri';
+    font-size: 25px;
+  }
 
 /*
 css of about.html
@@ -423,6 +458,7 @@ header - ednis sobrang pogi tangina
 */
 nav {
 	position: relative; 
+    /* position: fixed; (optional) */
     /* tulad nung sabi ni dennis pag naka position:fixed naka inscroll header
     pag naka position:relative di masasama background nung unang picture sa header. */
 	z-index: 10;
@@ -431,7 +467,8 @@ nav {
 	top: 0;
 	padding: 0 5%;
 	height: 100px;
-    background-color: #3c3d45; 
+    background-color: #3c3d45;
+    /* background-color: transparent; (optional)  */
     display: flex;
 }
 nav .logo {
