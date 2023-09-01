@@ -213,6 +213,7 @@ css of about.html
     display: grid;
     place-items: center;
     scroll-snap-type: y mandatory;
+    margin-top: -50px !important;
 }
 
 .row {
@@ -289,6 +290,7 @@ css of about.html
         grid-template-columns: 1fr;
         grid-gap: 20px;
         text-align: center;
+        margin-top: -0.5px;
     }
 
     .row .img_wrapper {
@@ -308,9 +310,9 @@ css of about.html
     margin: 50px auto;
 }
 
-.baguio_covid {
+.baguio_covid h1{
     text-align: center;
-    margin-top: 150px;
+    margin-top: 120px !important;
 }
 
 .timeline_container {
@@ -323,7 +325,7 @@ css of about.html
 
 @keyframes movedown {
     0%{
-        opcaity: 1;
+        opacity: 1;
         transform: translateY(-30px);
     }
     100%{
@@ -334,7 +336,7 @@ css of about.html
 
 .text-box{
     padding: 20px 30px;
-    background: #fff;
+    background: whitesmoke;
     position: relative;
     border-radius: 6px;
     font-size: 15px;
@@ -366,7 +368,7 @@ css of about.html
     position: absolute;
     width: 6px;
     height: 100%;
-    background: #fff;
+    background: whitesmoke;
     top: 0;
     left: 50%;
     margin-left: -3px;
@@ -399,7 +401,7 @@ css of about.html
     z-index: 1;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
-    border-left: 15px solid #fff;
+    border-left: 15px solid whitesmoke;
     right: -15px;
 }
 
@@ -411,7 +413,7 @@ css of about.html
     z-index: 1;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
-    border-right: 15px solid #fff;
+    border-right: 15px solid whitesmoke;
     left: -15px;
 }
 
@@ -432,6 +434,72 @@ css of about.html
 
 /*second part of about*/
 
+@media screen and (max-width: 600px){
+
+
+    .baguio_covid h1{
+        font-size: 20px;
+    }
+    .timeline{
+        margin: 50px auto;
+    }
+    .timeline::after{
+        left:31px;
+    }
+    .timeline_container{
+        width: 100%;
+        padding-left: 80px;
+        padding-right: 25px;
+    }
+    .text-box{
+        font-size: 13px;
+    }
+    .text-box small{
+        margin-bottom: 10px;
+    }
+
+    .right-container{
+        left: 0;
+    }
+
+    .left-container img, .right-container img {
+        left: 10px;
+    }
+
+    .left-container-arrow, .right-container-arrow{
+        border-right:15px solid whitesmoke;
+        border-left: 0;
+        left: -15px;
+    }
+}
+
+.food {
+    padding: 100px 10px 30px 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+.food_heading{
+    background-color: red;
+    color: whitesmoke;
+    margin-bottom: 30px;
+    padding: 30px 0;
+    grid-column: 1/-1;
+    text-align: center;
+}
+
+.food_heading>h1{
+    font-weight: 400;
+    font-size: 30px;
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+}
+
+.food_heading>h3{
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 5px;
+}
 
 
 /*
@@ -699,7 +767,7 @@ nav .team_name{
     cursor: pointer;
     font-family: 'Creepster', cursive;
     color: rgb(170, 161, 161);
-    margin-right: 5em;
+    margin-right: 70px;
 }
 
 nav .team_name:hover{
