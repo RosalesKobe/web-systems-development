@@ -137,7 +137,7 @@ css of about.html
 .baguio_facts{
     font-family:'Courier New';
     width:100%;
-    min-height: 100vh;
+    min-height: 150vh;
     display: grid;
     place-items: center;
 }
@@ -149,9 +149,10 @@ css of about.html
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 50px;
     overflow-x: hidden;
-    padding: 5rem 0;
+    padding: 2rem 0;
+    margin-top: 90px;
+    margin-bottom: -8%;
 }
-
 .row .img_wrapper{
     overflow: hidden;
 }
