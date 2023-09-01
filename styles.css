@@ -381,6 +381,9 @@ css of about.html
 
 
 
+/*second part of about*/
+
+
 
 /*
 css of destionation.html
@@ -454,8 +457,10 @@ css of contact.html
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url(images/head.jpg);
-    background-size: cover;
+    background-image: url(images/back.jpg);
+    background-size: auto;
+    background-repeat: ;
+
 }
 .contact .content
 {
@@ -464,14 +469,15 @@ css of contact.html
 }
 .contact .content h2
 {
-    font-size: 36px;
+    font-size: 50px;
     font-weight: 500;
-    color: #fff;
+    color: #000000;
 }
 .contact .content p
 {
     font-weight: 300;
-    color: #fff;
+    font-size: 18px;
+    color: #000000;
 }
 .container
 {
@@ -516,7 +522,13 @@ css of contact.html
 .container .contactInfo .box .text h3
 {
     font-weight: 500;
+    font-size: 25px;
     color: cyan;
+}
+.container .contactInfo .box .text a
+{
+    font-weight: 500;
+    color: #f00;
 }
 .contactForm
 {
