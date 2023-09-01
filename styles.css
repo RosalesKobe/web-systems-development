@@ -459,7 +459,7 @@ css of contact.html
     flex-direction: column;
     background-image: url(images/back.jpg);
     background-size: auto;
-    background-repeat: ;
+    /*background-repeat: ;*/
 
 }
 .contact .content
