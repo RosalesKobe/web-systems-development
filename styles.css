@@ -232,6 +232,23 @@ css of about.html
     user-select: none;
 }
 
+@media screen and (max-width: 768px){
+    .row {
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+        text-align: center;
+    }
+
+    .row .img_wrapper {
+        order: 1; /* Move the image below the text */
+    }
+
+    .row .content_wrapper {
+        order: 2; /* Move the text above the image */
+    }
+
+    }
+
 
 /*
 css of destionation.html
