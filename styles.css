@@ -511,7 +511,7 @@ nav .team_name{
     cursor: pointer;
     font-family: 'Creepster', cursive;
     color: rgb(170, 161, 161);
-    margin-right: 6em;
+    margin-right: 5em;
 }
 
 nav .team_name:hover{
