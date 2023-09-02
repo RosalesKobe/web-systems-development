@@ -618,6 +618,11 @@ css of about.html
     transition: .2s ease-in-out;
 }
 
+.food-items:hover{
+    background-color: whitesmoke;
+    border: 2px solid black;
+}
+
 .food-items img {
     position: relative;
     width: 100%;
@@ -656,8 +661,9 @@ css of about.html
     align-self: stretch;
 }
 
-.food-details a button {
-    background:rgb(151, 132, 132);
+.food-details a{
+    font-family: 'Courier New', Courier, monospace;
+    background: rgb(151, 132, 132);
     border: none;
     color: white;
     font-size: 15px;
@@ -665,36 +671,22 @@ css of about.html
     border-radius: 5px;
     width: 170px;
     height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     text-decoration: none;
 }
 
-.food-details a{
-        font-family: 'Courier New', Courier, monospace;
-        background: rgb(151, 132, 132);
-        border: none;
-        color: white;
-        font-size: 15px;
-        font-weight: 500;
-        border-radius: 5px;
-        width: 170px;
-        height: 50px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        text-decoration: none;
-    }
-
 .food-details a:hover{
-    background: rgb(151, 132, 132);
-    border: 2px solid black;
-    color: black;
+background: rgb(151, 132, 132);
+border: 2px solid black;
+color: black;
 }
 
 .food-items a:hover {
-    border: 3px solid rgb(0, 0, 0);
-    background: whitesmoke; /* Add a border when hovering */
+border: 3px solid rgb(0, 0, 0);
+background: whitesmoke;
 }
 
 /*
@@ -1103,8 +1095,9 @@ nav .team_name:hover{
     border-style: solid;;
 }
 
-#nav-toggle{
-
+#nav-toggle {
+    position: absolute;
+	top: -50px;
 }
 /*nav .icon-burger {
 	display: none;
@@ -1125,13 +1118,15 @@ nav .team_name:hover{
 } */
 
 @media screen and (max-width: 768px) {
+
     #nav-toggle{
-        position: absolute;
-        margin-left: 75%;
-        margin-top: 2px;
+        margin-left: 83%;
+        margin-top: 52px;
         height: 100px;
-        width: 50px;
+        width: 30px;
+        
     }
+
 	nav .logo {
 		float: left;
 	}
