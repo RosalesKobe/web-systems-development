@@ -830,27 +830,30 @@ css of contact.html
     align-items: center;
     flex-direction: column;
     background-image: url(images/back.jpg);
-    background-size: auto;
-    /*background-repeat: ;*/
-
+    background-size: cover;
 }
+/* for the content inside the contact section */
 .contact .content
 {
     max-width: 800px;
     text-align: center;
 }
+/* adjust the header style in the contact section */
 .contact .content h2
 {
     font-size: 50px;
     font-weight: 500;
     color: #000000;
+    margin-top: 80px;
 }
+/* adjust the paragraph styles in the contact section */
 .contact .content p
 {
     font-weight: 300;
     font-size: 18px;
     color: #000000;
 }
+/* for the container in the contact info */
 .container
 {
     width: 100%;
@@ -859,18 +862,21 @@ css of contact.html
     align-items: center;
     margin-top: 30px;
 }
+/* for the styles of contact in the boxes */
 .container .contactInfo
 {
     width: 50%;
     display: flex;
     flex-direction: column;
 }
+/* adjust the boxes styles */
 .container .contactInfo .box
 {
     position: relative;
     padding: 20px 0;
     display: flex;
 }
+/* for the icon styles */
 .container .contactInfo .box .icon
 {
     min-width: 60px;
@@ -882,6 +888,7 @@ css of contact.html
     border-radius: 50%;
     font-size: 22px;
 }
+/* for the text sttles in the information boxes */
 .container .contactInfo .box .text
 {
     display: flex;
@@ -891,29 +898,34 @@ css of contact.html
     flex-direction: column;
     font-weight: 300;
 }
+/* adjust the header of information boxes */
 .container .contactInfo .box .text h3
 {
     font-weight: 500;
     font-size: 25px;
     color: cyan;
 }
+/* adjusat the styles for the link in the info boxes */
 .container .contactInfo .box .text a
 {
     font-weight: 500;
     color: #f00;
 }
+/* for the contact form */
 .contactForm
 {
     width: 40%;
     padding: 40px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
 }
+/* adjust the header of the contact form */
 .contactForm h2
 {
     font-size: 30px;
     color: #333;
     font-weight: 500;
 }
+/* for the input field and text area within the contact form */
 .contactForm .inputBox
 {
     position: relative;
@@ -924,7 +936,7 @@ css of contact.html
 .contactForm .inputBox textarea
 {
    width: 100%;
-   padding: 5px 0;
+   padding: 10px 0;
    font-size: 16px;
    margin: 10px 0;
    border: none;
@@ -932,6 +944,7 @@ css of contact.html
    outline: none;
    resize: none;
 }
+/* for the input field labels */
 .contactForm .inputBox span
 {
     position: absolute;
@@ -943,6 +956,7 @@ css of contact.html
     transition: 0.5s;
     color: #666;
 }
+/* for the einput field with valid input */
 .contactForm .inputBox input:focus ~ span,
 .contactForm .inputBox input:valid ~ span,
 .contactForm .inputBox textarea:focus ~ span,
@@ -962,26 +976,34 @@ css of contact.html
     padding: 10px;
     font-size: 18px;
 }
-@media (max-width: 991)
-{
-    .contact
-    {
-        padding: 50px;
+/* media queries for responsive design */
+/* adjust font size and spacing for medium screens */
+@media (max-width: 991px) {
+    .contact {
+        padding: 30px;
     }
-    .container
-    {
+    .container {
         flex-direction: column;
     }
-    .container .contactInfo
-    {
-        margin-bottom: 40px;
-    }
-    .container .contactInfo, 
-    .contactForm
-    {
+    .container .contactInfo {
         width: 100%;
+        margin-bottom: 20px;
+    }
+    .contactForm {
+        width: 100%; /* adjust the size of the form based on the screen size */
     }
 }
+/* for the even smaller display of other gadgets */
+@media (max-width: 480px) {
+    .contact .content h2 {
+        font-size: 40px; /* adjust font size for smaller screens */
+    }
+
+    .contactForm {
+        padding: 10px; 
+    }
+}
+
 
 
 
