@@ -869,8 +869,8 @@ JEUS sa team ito
     display: flex;
     place-items: center;
     place-content: left;
-    padding:0;
-    margin: 0;
+    padding: 50px;;
+    margin: 10px;
 }
 
 body{
@@ -901,7 +901,80 @@ body{
 }
 
 .img{
-    max-width: 400px;
+    height: 300px;
+    width: 350px;
+    border-radius: 10%;
 }
 /* tuloy bukas fotanng ina biyahe muna
 */
+
+/* tang ina hotel ito */
+
+@font-face{
+    font-family: myFont;
+    src:url(MEU.ttf.otf)
+}
+
+.telho_page{
+    min-height: 100vh;
+    place-items: center;
+    place-content: left;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+.above{
+    margin: 80px;
+    padding: 50px;
+    font-family: myFont;
+    color: #090909;
+    font-size: 60px;
+  
+   
+}
+.above span{
+    color: #c76504;
+    font-family: myFont;
+    font-style: italic;
+    font-size: 40px ;
+    font-weight: 900;
+}
+
+.rooms{
+    display:flex;
+    justify-content: space-around;
+    margin: 20px 80px;
+}
+
+.room{
+    flex-basis: 300px;
+}
+
+.room .room_img{
+    height: 300px;
+    width: 350px;
+    border-radius: 10%;
+    filter: grayscale(100%);
+    cursor: pointer;
+    transition: 400ms;
+    border-color: #c76504;
+    border-style: solid;
+}
+
+.room:hover .room_img{
+    filter: grayscale(0);
+}
+
+.room h3 {
+    font-family: myFont;
+    font-weight: 100;
+    letter-spacing: 3px;    
+}
+
+.room p{
+    font-size: 16px;
+    margin-top: 20px;
+    text-align: justify;
+
+}
