@@ -485,7 +485,7 @@ css of about.html
 
 .text-box h2{
     font-family: 'Asap Condensed', sans-serif;
-    font-weight: 8000;
+    font-weight: bold;
 }
 
 .text-box small{
@@ -1177,153 +1177,100 @@ nav .team_name:hover{
 
 /*
 footer {
-    background-color: #3c3d45;
+    background: #333;
     color: white;
-    padding: 0.5rem;
-}
-
-.footer_content {
+    padding: 1rem 0;
+    text-align: center;
+  }
+  
+  .footer_content {
     display: flex;
     flex-wrap: wrap;
-}
-
-.contact_info,
-.try_lang,
-.welcome_message {
-    flex-basis: calc(33.33% - 1rem);
-    padding: 0.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .welcome_message,
+  .contact_info {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .welcome_message p {
+    font-family: 'Creepster', cursive;
+    color: rgb(170, 161, 161);
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  .contact_info p {
     font-family: "jaf-mashine";
     font-size: 16px;
-    font-weight: bold;
-}
-
-.copyright{
-    padding: 0.5rem;
-    color: #fff;
-    font-family: GraphikRegular,sans-serif;
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .social-icons a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e6e3e3;
+    margin: 0 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s, box-shadow 0.3s, color 0.3s;
+  }
+  
+  .social-icons a:hover {
+    background-color: #000;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+  }
+  
+  .copyright {
+    padding: 10px 0;
     font-size: 14px;
-    
-}
-.social-icons a{
-    width:40px;
-    height:40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color:#e6e3e3;
-    margin:20px 10px;
-    border-radius:50%;
-}
-.social-icons{
-    display: flex;
-    
-}
-.social-icons i,.social i{
-    color:#000000;
-}
-.social-icons a:hover{
-    background-color:#000000;
-    box-shadow:2px 2px 12px rgba(0,0,0,0.2);
-    transition:all ease 0.5s;
-}
-.social-icons a:hover i,
-.social a:hover i{
-    color:#FFFFFF;
-    transition:all ease 0.5s;
-}
- 
-.copyright{
-    color:#565555;
-    font-size: 13px;
-    position: relative;
-    bottom:10px;
-    transform: translateX(-50%);
-}
-.social{
+    text-align: center;
+    font-family: "GraphikRegular", sans-serif;
+  }
+  
+  /* Social Media Fixed Bar on the right */
+  .social {
     position: fixed;
-    top:50%;
-    right:0px;
-    transform:translateY(-50%);
-}
-.social a{
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+  
+  .social a {
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    width:50px;
-    height:50px;
-    margin:0px;
-    padding: 0px;
-    line-height:0px;
-    background-color:#FFFFFF;
-    border:1px solid #CBCBCB;
-    box-shadow:2px 2px 12px rgba(0,0,0,0.2);
-}
-.social a:hover{
-    background-color:#000000;
-    transition:all ease 0.5s;
-}
-.social i{
-    font-size:20px;
-    color:#2B2B2B;
-}
-*/
+    background-color: #fff;
+    border: 1px solid #cbc7c7;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .social a:hover {
+    background-color: #000;
+  }
+  
+  .social i {
+    font-size: 20px;
+    color: #2b2b2b;
+  }
 
 
-
-<<<<<<< HEAD:styles.css
-/*
-JEUS sa team ito
-*/
-
-.team_page{
-    font-family: 'Courier New';
-    width:100%;
-    min-height: 100vh;
-    display: flex;
-    place-items: center;
-    place-content: left;
-    padding: 50px;;
-    margin: 10px;
-}
-
-body{
-    background-color:rgb(170, 161, 161) ; 
-}
-
-.team_page{
-    margin: 20px 40px;
-    color: white;
-}
-
-.headings{
-    font-size: 60px;
-    color: white;
-    justify-content: left;
-}
-
-.headings span{
-    font-style: italic;
-    font-size: 30px;
-}
-
-.profiles{
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 80px;
-
-}
-
-.img{
-    height: 300px;
-    width: 350px;
-    border-radius: 10%;
-}
-/* tuloy bukas fotanng ina biyahe muna
-*/
-
-/* tang ina hotel ito */
-=======
->>>>>>> 1eeecf8 (aaa):css/style.css
 
 @font-face{
     font-family: myFont;
