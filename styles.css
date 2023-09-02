@@ -63,6 +63,7 @@ css of index.html
     border-top: 5px solid gray; 
     border-bottom: 5px solid gray;
   }
+
 /**/
   .slider_item, .slider_item2{ /* second part ng home */
     clear: both; 
@@ -133,6 +134,7 @@ css of index.html
   .home_hotel_wrapper { /* third part ng home */
     padding: 20px;
     border-bottom: 5px solid gray;
+    filter: grayscale(100%);
   }
   .home_hotel_item { /* third part ng home */
     clear: both; 
@@ -152,6 +154,9 @@ css of index.html
     margin-left: 10%;
     margin-right: 6%;
     border-radius: 1rem;
+  }
+  .home_hotel_wrapper:hover{
+    filter: grayscale(0);
   }
   .home_hotel_info, .home_hotel_link { /* third part ng home */
     display: block;
@@ -202,6 +207,82 @@ css of index.html
 .home_guide p { /* fourth part ng home */
         line-height: 1.6;
 }
+
+@media screen and (max-width: 768px) {
+    .home_1st {
+        background-size: cover;
+        height: 100vh;
+    }
+    .home_main_text h1 {
+        font-size: 32px;
+        margin-bottom: 5px;
+    }
+    .home_main_text p {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+    .slider_item, .slider_item2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .slider_item img, .slider_item2 img {
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+    .image-text, .image-link, .image-text2, .image-link2 {
+        margin-left: 5%;
+        margin-right: 5%;
+        text-align: justify;
+    }
+    .image-link, .image-link2 {
+        margin-left: 5%;
+        margin-right: 5%;
+        text-align: center;
+        margin-top: -1%;
+        margin-bottom: 5%;
+    }
+    .image-text h2, .image-text2 h2 {
+        font-size: 20px;
+    }
+    .image-text p, .image-text2 p, .image-link, .image-link2 {
+        font-size: 14px;
+    }
+    .home_hotel_wrapper{
+        filter: grayscale(0);
+    }
+    .home_hotel_item {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .home_hotel_item img {
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+    .home_hotel_info h2 {
+        font-size: 20px;
+    }
+    .home_hotel_info p, .home_hotel_link {
+        font-size: 14px;
+    }
+    .home_hotel_link {
+        margin-top: 10px;
+    }
+    .home_guide {
+        margin: 20px;
+        padding: 10px;
+    }
+    .home_guide h1 {
+        font-size: 22px;
+    }
+    .home_guide h2 {
+        font-size: 18px;
+    }
+    .home_guide p {
+        font-size: 14px;
+    }
+} 
 
 
 /*
