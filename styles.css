@@ -21,15 +21,12 @@ css imports
     scroll-behavior: smooth; /**/
 }
 
-/*
-css of index.html
-*/
-
+/* css of index.html */
 .index_body{
     background-color: whitesmoke;
 }
 
-.home_1st{ /* unang part ng home */
+.home_1st{ /* first part ng home */
     position: relative;
     height: 100vh;
     background-image: url('images/destinations/welcometobaguio.jpeg');
@@ -41,18 +38,18 @@ css of index.html
     text-align: center;
     color: #fff;
 }
-.home_main_text{ /* unang part ng home */
+.home_main_text{ /* first part ng home */
     text-transform: uppercase;
     letter-spacing: 3px;
     font-family: 'PlayFair Display SC', serif;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-.home_main_text h1 { /* unang part ng home */
+.home_main_text h1 { /* first part ng home */
     font-size: 50px;
     font-weight: bold;
     margin-bottom: 10px;
 }
-.home_main_text p { /* unang part ng home */
+.home_main_text p { /* first part ng home */
     font-size: 26px;
     font-weight: normal;
     margin-top: 20px;
@@ -63,8 +60,6 @@ css of index.html
     border-top: 5px solid gray; 
     border-bottom: 5px solid gray;
   }
-
-/**/
   .slider_item, .slider_item2{ /* second part ng home */
     clear: both; 
     margin-top: 150px;
@@ -72,7 +67,6 @@ css of index.html
     display: flex;
     align-items: flex-start;
   }
-  
   .slider_item img { /* second part ng home */
     float: left;
     padding: 5px;
@@ -83,7 +77,6 @@ css of index.html
     margin-right: 6%;
     border-radius: 1rem;
   }
-
   .slider_item2 img { /* second part ng home */
     float: right;
     padding: 5px;
@@ -94,7 +87,6 @@ css of index.html
     margin-right: 10%;
     border-radius: 1rem;
   }
-  
   .image-text, .image-link { /* second part ng home */
     display: block;
     margin-left: 10%;
@@ -102,7 +94,6 @@ css of index.html
     text-align: justify;
     color: #000000;
   }
-    
   .image-text2, .image-link2 { /* second part ng home */
     display: block;
     margin-left: 10%;
@@ -185,7 +176,6 @@ css of index.html
   .home_hotel_link:hover { /* third part ng home */
     color: red;
   }
-  
 
   .home_guide { /* fourth part ng home */
     font-family: Arial, sans-serif;
@@ -208,6 +198,7 @@ css of index.html
         line-height: 1.6;
 }
 
+/* @media of index.html */
 @media screen and (max-width: 768px) {
     .home_1st {
         background-size: cover;
@@ -1272,7 +1263,7 @@ body{
 }
 
 .team_page{
-    margin: 20px 40px;
+    margin: 20px 40px;1
     color: white;
 }
 
