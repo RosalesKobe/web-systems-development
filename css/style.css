@@ -32,6 +32,7 @@ body{
     position: relative;
     height: 100vh;
     background-image: url('../images/destinations/welcometobaguio.jpeg');
+    background-image: url('../images/destinations/welcometobaguio.jpeg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -583,6 +584,7 @@ css of about.html
 
 .food_heading {
     background: url(../images/about/longganisa.jpeg);
+    background: url(../images/about/longganisa.jpeg);
     color: whitesmoke;
     margin-bottom: 30px;
     padding: 30px 0;
@@ -839,6 +841,7 @@ css of contact.html
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-image: url(../images/back.jpg);
     background-image: url(../images/back.jpg);
     background-size: cover;
 }
@@ -1178,7 +1181,13 @@ nav .team_name:hover{
 /*
 footer {
     background: #333;
+    background: #333;
     color: white;
+    padding: 1rem 0;
+    text-align: center;
+  }
+  
+  .footer_content {
     padding: 1rem 0;
     text-align: center;
   }
@@ -1199,9 +1208,16 @@ footer {
   
   .welcome_message p {
     font-family: 'Creepster', cursive;
-    color: rgb(170, 161, 161);
     font-size: 30px;
     font-weight: bold;
+  }
+  
+  .contact_info p {
+    font-family: "jaf-mashine";
+    font-size: 16px;
+  }
+  
+  .social-icons {
   }
   
   .contact_info p {
@@ -1231,6 +1247,67 @@ footer {
   .social-icons a:hover {
     background-color: #000;
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+  }
+  
+  .copyright {
+    padding: 10px 0;
+    font-size: 14px;
+    text-align: center;
+    font-family: "GraphikRegular", sans-serif;
+  }
+  
+  /* Social Media Fixed Bar on the right */
+  .social {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+  
+  .social a {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #cbc7c7;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .social a:hover {
+    background-color: #000;
+  }
+  
+  .social i {
+    font-size: 20px;
+    color: #2b2b2b;
+  }
+
+
+/*
+JEUS sa team ito
+*/
+
+.team_page{
+    font-family: 'Courier New';
+    width:100%;
+    min-height: 100vh;
+    display: flex;
+    place-items: center;
+    place-content: left;
+    padding: 50px;;
+    margin: 10px;
+}
+
+body{
+    background-color:rgb(170, 161, 161) ; 
+}
+
+.team_page{
+    margin: 20px 40px;1
     color: white;
   }
   
