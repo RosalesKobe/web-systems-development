@@ -1159,18 +1159,6 @@ nav .team_name:hover{
 	nav :checked ~ .nav_links {
 		bottom: 0;
 	}
-	nav .icon-burger {
-		display: block;
-	}
-	nav :checked ~ .icon-burger .line:nth-child(1) {
-		transform: translateY(10px) rotate(225deg);
-	}
-	nav :checked ~ .icon-burger .line:nth-child(3) {
-		transform: translateY(-10px) rotate(-225deg);
-	}
-	nav :checked ~ .icon-burger .line:nth-child(2) {
-		opacity: 0;
-	}
 }
 
 /*
@@ -1302,7 +1290,7 @@ body{
 }
 
 .team_page{
-    margin: 20px 40px;1
+    margin: 20px 40px;
     color: white;
   }
   
