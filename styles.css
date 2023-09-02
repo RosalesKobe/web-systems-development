@@ -6,6 +6,9 @@ css imports
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Text&family=Sedgwick+Ave+Display&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Handjet:wght@300&display=swap');
 
 *{
     box-sizing: border-box;
@@ -207,21 +210,20 @@ css of about.html
 
 /*first part of about*/
 .baguio_facts{
-    font-family:'Courier New';
     width:100%;
     min-height: 150vh;
     display: grid;
     place-items: center;
     scroll-snap-type: y mandatory;
-    margin-top: -50px !important;
+    margin-top: -60px !important;
 }
 
 .row {
-    width: 80%;
+    width: 100%;
     max-width: 1170px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 50px;
+    grid-gap: 70px;
     overflow-x: hidden;
     padding: 2rem 0;
     margin-top: 90px;
@@ -235,12 +237,14 @@ css of about.html
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: 1s;
+    opacity: 80%;
+    
 }
 
 .row .img_wrapper:hover img{
-    transform: scale(0.5s);
     cursor: pointer;
+    opacity: 100%;
+    transition: 1s;
 }
 
 .row .content_wrapper {
@@ -262,9 +266,10 @@ css of about.html
 }
 
 .row .content_wrapper h2{
+    font-family: 'Acme', sans-serif;
     font-size: 40px;
     font-weight: 700;
-    color: gray;
+    color: rgb(64, 57, 57);
     padding-bottom: 20px;
 }
 
@@ -285,6 +290,9 @@ css of about.html
     user-select: none;
 }
 
+.row .content_wrapper a:hover{
+    color: rgb(64, 57, 57);
+}
 @media screen and (max-width: 768px){
     .row {
         grid-template-columns: 1fr;
@@ -300,8 +308,10 @@ css of about.html
     .row .content_wrapper {
         order: 2;
     }
-
+    .row .content_wrapper p{
+        margin-left: -28px;
     }
+}
 
 /*second part of about*/
 .timeline{
@@ -311,6 +321,8 @@ css of about.html
 }
 
 .baguio_covid h1{
+    font-size: 50px;
+    font-family: 'Asap Condensed', sans-serif;
     text-align: center;
     margin-top: 120px !important;
 }
@@ -386,10 +398,12 @@ css of about.html
 }
 
 .text-box h2{
-    font-weight: 600;
+    font-family: 'Asap Condensed', sans-serif;
+    font-weight: 8000;
 }
 
 .text-box small{
+    font-style: italic;
     display: inline-block;
     margin-bottom: 15px;
 }
@@ -473,34 +487,110 @@ css of about.html
     }
 }
 
+/*baguio delicacies css*/
 .food {
     padding: 100px 10px 30px 10px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
 }
 
-.food_heading{
-    background-color: red;
+.food_heading {
+    background: url(images/about/longganisa.jpeg);
     color: whitesmoke;
     margin-bottom: 30px;
     padding: 30px 0;
-    grid-column: 1/-1;
+    margin: 50px -10px 5px -10px;
+    grid-column: 1 / -1;
     text-align: center;
 }
 
-.food_heading>h1{
-    font-weight: 400;
+.food_heading > h1 {
+    font-family: 'Rajdhani';
+    font-weight: 500;
     font-size: 30px;
     letter-spacing: 10px;
     margin-bottom: 10px;
 }
 
-.food_heading>h3{
+.food_heading > h3 {
+    font-family: 'Rajdhani', sans-serif;
     font-weight: 600;
     font-size: 22px;
     letter-spacing: 5px;
+    text-transform: uppercase;
 }
 
+.food-items {
+    display: grid;
+    position: relative;
+    grid-template-rows: auto 0.8fr;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    transition: .2s ease-in-out;
+}
+
+.food-items img {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    border-radius: 15px 15px 0 0;
+    cursor: pointer;
+}
+
+.food_heading h1{
+    grid-column: 1/-1;
+    text-align: center;
+}
+
+.food-details{
+    padding: 20px 10px;
+    display: grid;
+    grid-template-rows: auto 1fr 50px;
+    grid-row-gap: 15px;
+}
+
+.details-sub > h5{
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.price{
+    text-align: right;
+    margin-top: -23px;
+}
+
+.food-details>p{
+    color: black;
+    font-size: 15px;
+    line-height: 28px;
+    font-weight: 400;
+    align-self: stretch;
+}
+
+.food-details a button{
+    background:rgb(151, 132, 132);
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 5px;
+    width: 170px;
+    height: 50px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.food-details a button:hover{
+    background: whitesmoke;
+    border: 2px solid black;
+    color: black;
+}
+
+.food-items:hover {
+    border: 3px solid rgb(0, 0, 0);
+    background: whitesmoke; /* Add a border when hovering */
+}
 
 /*
 css of destionation.html
