@@ -14,7 +14,7 @@ css imports
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    text-decoration: none;
+    text-decoration: none; 
     list-style: none;
     border: none; /**/
     outline: none; /**/
@@ -652,7 +652,7 @@ css of about.html
     align-self: stretch;
 }
 
-.food-details a button{
+.food-details a button {
     background:rgb(151, 132, 132);
     border: none;
     color: white;
@@ -665,13 +665,30 @@ css of about.html
     text-decoration: none;
 }
 
-.food-details a button:hover{
-    background: whitesmoke;
+.food-details a{
+        font-family: 'Courier New', Courier, monospace;
+        background: rgb(151, 132, 132);
+        border: none;
+        color: white;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 5px;
+        width: 170px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+.food-details a:hover{
+    background: rgb(151, 132, 132);
     border: 2px solid black;
     color: black;
 }
 
-.food-items:hover {
+.food-items a:hover {
     border: 3px solid rgb(0, 0, 0);
     background: whitesmoke; /* Add a border when hovering */
 }
@@ -1081,27 +1098,35 @@ nav .team_name:hover{
     border-style: solid;;
 }
 
-#nav-toggle {
-	position: absolute;
-	top: -100px;
+#nav-toggle{
+
 }
-nav .icon-burger {
+/*nav .icon-burger {
 	display: none;
 	position: absolute;
 	right: 5%;
 	top: 50%;
-	transform: translateY(-50%);
+	tr
+    ansform: translateY(-50%);
 }
-nav .icon-burger .line {
+*/
+/* nav .icon-burger .line {
 	width: 30px;
 	height: 5px;
 	background-color: #fff;
 	margin: 5px;
 	border-radius: 3px;
 	transition: all .3s ease-in-out;
-}
+} */
 
 @media screen and (max-width: 768px) {
+    #nav-toggle{
+        position: absolute;
+        margin-left: 75%;
+        margin-top: 2px;
+        height: 100px;
+        width: 50px;
+    }
 	nav .logo {
 		float: left;
 	}
@@ -1149,8 +1174,6 @@ nav .icon-burger .line {
 }
 
 /*
-kobe footer initial
-*/
 footer {
     background-color: #3c3d45;
     color: white;
@@ -1241,6 +1264,8 @@ footer {
     font-size:20px;
     color:#2B2B2B;
 }
+*/
+
 
 
 /*
@@ -1263,7 +1288,7 @@ body{
 }
 
 .team_page{
-    margin: 20px 40px;1
+    margin: 20px 40px;
     color: white;
 }
 
