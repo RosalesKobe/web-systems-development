@@ -1392,17 +1392,10 @@ body{
 
 .room .room_img{
     height: 300px;
-    width: 350px;
+    width: 480px;
     border-radius: 10%;
-    filter: grayscale(100%);
-    cursor: pointer;
-    transition: 400ms;
-    border-color: #c76504;
+    border-color: #080808;
     border-style: solid;
-}
-
-.room:hover .room_img{
-    filter: grayscale(0);
 }
 
 .room h3 {
@@ -1417,3 +1410,4 @@ body{
     text-align: justify;
 
 }
+
