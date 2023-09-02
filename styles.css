@@ -277,6 +277,7 @@ css of about.html
     font-size: 16px;
     line-height: 25px;
     padding-bottom: 25px;
+    padding-right: 10px;
 }
 
 .row .content_wrapper a{
@@ -297,8 +298,8 @@ css of about.html
     .row {
         grid-template-columns: 1fr;
         grid-gap: 20px;
-        text-align: center;
-        margin-top: -0.5px;
+        text-align: left;
+        margin-top: 10px;
     }
 
     .row .img_wrapper {
@@ -309,7 +310,18 @@ css of about.html
         order: 2;
     }
     .row .content_wrapper p{
-        margin-left: -28px;
+        padding-right: 30px;
+        text-align: justify;
+    }
+
+    .row .img_wrapper img{
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .row .content_wrapper a{
+       text-align: center;
+       margin-left: auto;
     }
 }
 
