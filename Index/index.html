@@ -1,40 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="./index.css">
-    <link rel="icon" href="team_pogi.png" type="image/x-icon">
+	<title>OJT</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class="login-container">
-        <form id="login-form" method="POST" action="/9374-cs312-web_dev-finalsactivity/ServerSide/php/server.php" class="login-form">
-            <h2>Login to your account</h2>
-            <label for="user-type">User Type</label>
-            <select id="user-type" name="user-type">
-                <option value="student">Student</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="adviser">Adviser</option>
-                <!-- Add more user types here if necessary -->
-            </select>
-            
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username">
-            
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password">
-            <a href="#" class="forgot-password">Forgot password?</a>
-            
-            <label class="remember-me">
-                <input type="checkbox" name="remember" id="remember">
-                Remember me
-            </label>
-            
-            <button type="submit" class="sign-in-button">Sign in</button>
-        </form>
-    </div>
+	<img class="wave" src="img/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="img/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="index.html">
+				<img src="img\Saint_Louis_University_PH_Logo.svg.png">
+				<h2 class="title">Welcome</h2>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">	
+           		   		<input type="text" id="username" name="username" placeholder="Username">
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<input type="text" id="username" name="username" placeholder="Password">
+            	   </div>
+            	</div>
+				<div class="input-div role">
+					<div class="i">
+						<i class="fas fa-user"></i>
+					</div>
+					<div class="div">
+						<select id="role" name="role">
+							<option value="student">Student</option>
+							<option value="supervisor">Supervisor</option>
+							<option value="administrator">Administrator</option>
+						</select>
+					</div>
+				</div>
+            	<a href="#">Forgot Password?</a>
+            	<input type="submit" class="btn" value="Login">
 
+				<label class="remember-me">
+					<input type="checkbox" name="remember" id="remember">
+					Remember me
+				</label>
+            </form>
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var loginForm = document.getElementById('login-form');
