@@ -14,7 +14,7 @@
 			<img src="img/bg.svg">
 		</div>
 		<div class="login-content">
-			<form id="login-form" method="POST" action="/web-systems-development/ServerSide/php/server.php" class="login-form">
+			<form id="login-form" method="POST" action="/web-systems-development/ServerSide/php/adviser-admin_login.php" class="login-form">
 				<img src="img\Saint_Louis_University_PH_Logo.svg.png">
 				<h2 class="title">Welcome</h2>
            		<div class="input-div one">
@@ -30,7 +30,7 @@
            		    	<i class="fas fa-lock"></i>
            		   </div>
            		   <div class="div">
-           		    	<input type="text" id="password" name="password" placeholder="Password">
+           		    	<input type="password" id="password" name="password" placeholder="Password">
             	   </div>
             	</div>
 				<div class="input-div role">
@@ -39,9 +39,9 @@
 					</div>
 					<div class="div">
 						<select id="user-type" name="user-type">
-							<option value="student">Student</option>
-							<option value="supervisor">Supervisor</option>
-							<option value="administrator">Administrator</option>
+							<option value="Intern">Student</option>
+							<option value="Adviser">Adviser</option>
+							<option value="Administrator">Administrator</option>
 						</select>
 					</div>
 				</div>
@@ -56,36 +56,32 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(event) {
-                    var userType = document.getElementById('user-type').value;
-                    var username = document.getElementById('username').value;
-                    var password = document.getElementById('password').value;
+document.addEventListener('DOMContentLoaded', function () {
+    var loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(event) {
+            var userType = document.getElementById('user-type').value;
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
 
-                    if (userType === 'student') {
-                        event.preventDefault();
-                        var xhr = new XMLHttpRequest();
-                        xhr.open('POST', '/web-systems-development/ServerSide/php/server.php', true);
-                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                        xhr.onload = function() {
-                            if (xhr.status === 200) {
-                                if(username == 'admin' && password == 'admin'){
-                                    window.location.href = '/web-systems-development/ClientSide/client_home.html';
-                                }
-                                else{
-                                    alert('Wrong Credentials');
-                                }
-                            } else {
-                                alert('Login failed: ' + xhr.responseText);
-                            }
-                        };
-                        xhr.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+            if (userType === 'Intern') {
+                event.preventDefault();
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/web-systems-development/ServerSide/php/student_login.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        window.location.href = '/web-systems-development/ClientSide/client_home.html';
+                    } else {
+                        alert('Login failed: ' + xhr.responseText);
                     }
-                });
+                };
+                xhr.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
             }
+            
         });
+    }
+});
     </script>
 </body>
 </html>
