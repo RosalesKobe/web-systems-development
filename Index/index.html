@@ -14,7 +14,7 @@
 			<img src="img/bg.svg">
 		</div>
 		<div class="login-content">
-			<form action="index.html">
+			<form id="login-form" method="POST" action="/web-systems-development/ServerSide/php/server.php" class="login-form">
 				<img src="img\Saint_Louis_University_PH_Logo.svg.png">
 				<h2 class="title">Welcome</h2>
            		<div class="input-div one">
@@ -30,7 +30,7 @@
            		    	<i class="fas fa-lock"></i>
            		   </div>
            		   <div class="div">
-           		    	<input type="text" id="username" name="username" placeholder="Password">
+           		    	<input type="text" id="password" name="password" placeholder="Password">
             	   </div>
             	</div>
 				<div class="input-div role">
@@ -38,7 +38,7 @@
 						<i class="fas fa-user"></i>
 					</div>
 					<div class="div">
-						<select id="role" name="role">
+						<select id="user-type" name="user-type">
 							<option value="student">Student</option>
 							<option value="supervisor">Supervisor</option>
 							<option value="administrator">Administrator</option>
@@ -61,26 +61,22 @@
             if (loginForm) {
                 loginForm.addEventListener('submit', function(event) {
                     var userType = document.getElementById('user-type').value;
+                    var username = document.getElementById('username').value;
+                    var password = document.getElementById('password').value;
+
                     if (userType === 'student') {
                         event.preventDefault();
-                        var username = document.getElementById('username').value;
-                        var password = document.getElementById('password').value;
-
-                        // Perform AJAX request to your server-side script
                         var xhr = new XMLHttpRequest();
                         xhr.open('POST', '/web-systems-development/ServerSide/php/server.php', true);
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                         xhr.onload = function() {
-                            // Check if the login was successful
                             if (xhr.status === 200) {
                                 if(username == 'admin' && password == 'admin'){
-                                
-                                // Redirect to the student dashboard or homepage
-                                window.location.href = '/web-systems-development/ClientSide/client_home.html';
-                            }
-                            else{
-                                alert('Wrong Credentials');
-                            }
+                                    window.location.href = '/web-systems-development/ClientSide/client_home.html';
+                                }
+                                else{
+                                    alert('Wrong Credentials');
+                                }
                             } else {
                                 alert('Login failed: ' + xhr.responseText);
                             }
