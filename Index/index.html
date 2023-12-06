@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="icon" href="team_pogi.png" type="image/x-icon">
+</head>
+<body>
+    <div class="login-container">
+        <form id="login-form" method="POST" action="/9374-cs312-web_dev-finalsactivity/ServerSide/php/server.php" class="login-form">
+            <h2>Login to your account</h2>
+            <label for="user-type">User Type</label>
+            <select id="user-type" name="user-type">
+                <option value="student">Student</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="adviser">Adviser</option>
+                <!-- Add more user types here if necessary -->
+            </select>
+            
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username">
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <a href="#" class="forgot-password">Forgot password?</a>
+            
+            <label class="remember-me">
+                <input type="checkbox" name="remember" id="remember">
+                Remember me
+            </label>
+            
+            <button type="submit" class="sign-in-button">Sign in</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(event) {
+                    var userType = document.getElementById('user-type').value;
+                    if (userType === 'student') {
+                        event.preventDefault();
+                        var username = document.getElementById('username').value;
+                        var password = document.getElementById('password').value;
+
+                        // Perform AJAX request to your server-side script
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/9374-cs312-web_dev-finalsactivity/ServerSide/php/server.php', true);
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.onload = function() {
+                            // Check if the login was successful
+                            if (xhr.status === 200) {
+                                if(username == 'admin' && password == 'admin'){
+                                
+                                // Redirect to the student dashboard or homepage
+                                window.location.href = '/9374-cs312-web_dev-finalsactivity/ClientSide/client_home.html';
+                            }
+                            else{
+                                alert('Wrong Credentials');
+                            }
+                            } else {
+                                alert('Login failed: ' + xhr.responseText);
+                            }
+                        };
+                        xhr.send('username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password));
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
