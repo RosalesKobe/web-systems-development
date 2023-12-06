@@ -68,7 +68,7 @@
 
                         // Perform AJAX request to your server-side script
                         var xhr = new XMLHttpRequest();
-                        xhr.open('POST', '/9374-cs312-web_dev-finalsactivity/ServerSide/php/server.php', true);
+                        xhr.open('POST', '/web-systems-development/ServerSide/php/server.php', true);
                         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                         xhr.onload = function() {
                             // Check if the login was successful
@@ -76,7 +76,7 @@
                                 if(username == 'admin' && password == 'admin'){
                                 
                                 // Redirect to the student dashboard or homepage
-                                window.location.href = '/9374-cs312-web_dev-finalsactivity/ClientSide/client_home.html';
+                                window.location.href = '/web-systems-development/ClientSide/client_home.html';
                             }
                             else{
                                 alert('Wrong Credentials');

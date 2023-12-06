@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $username;
             
             // Redirect to a new page (e.g., dashboard.php) after successful login
-            header("Location: /9374-cs312-web_dev-finalsactivity/ServerSide/html/server_home.html");
+            header("Location: /web-systems-development/ServerSide/html/server_home.html");
             exit();
         } else {
             // If the provided credentials are wrong
