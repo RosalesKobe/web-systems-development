@@ -4,9 +4,10 @@
     <title>OJT Client - Dashboard</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/WEB-SYSTEMS-DEVELOPMENT/ClientSide/css/style_client.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="left-manager">
+     <div class="left-manager">
         <div class="client-task">
             <li class="work">
                 <a href="client_dashboard.html">Dashboard</a>
@@ -22,10 +23,9 @@
             </li>
         </div>
     </div>
-
     <div class="content">
         <h1>Welcome to Your Dashboard</h1>
-        
+    
         <div class="dashboard-summary">
             <div class="summary-box">
                 <h2>Total Tasks</h2>
@@ -33,14 +33,18 @@
             </div>
             <div class="summary-box">
                 <h2>Completed Tasks</h2>
-                <p>5</p>
+                <p id="completedTasks">7</p>
             </div>
             <div class="summary-box">
                 <h2>Pending Tasks</h2>
-                <p>5</p>
+                <p id="pendingTasks">3</p>
             </div>
         </div>
-
+    
+        <div class="task-chart">
+            <canvas id="taskChart"></canvas>
+        </div>
+    
         <div class="recent-activity">
             <h2>Recent Activity</h2>
             <ul>
@@ -50,5 +54,41 @@
             </ul>
         </div>
     </div>
+    
+    <script>
+        // Get the completed and pending tasks data (replace with your actual data)
+        var completedTasksData = 7;
+        var pendingTasksData = 3;
+    
+        // Update the chart based on the data
+        function updateChart() {
+            var ctx = document.getElementById('taskChart').getContext('2d');
+            var taskChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Completed Tasks', 'Pending Tasks'],
+                    datasets: [{
+                        label: 'Tasks',
+                        data: [completedTasksData, pendingTasksData],
+                        backgroundColor: ['#4CAF50', '#FF5733'],
+                        borderColor: ['#4CAF50', '#FF5733'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    
+        // Call the updateChart function when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            updateChart();
+        });
+    </script>
 </body>
 </html>
