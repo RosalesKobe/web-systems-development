@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 06, 2023 at 11:58 AM
+-- Generation Time: Dec 07, 2023 at 08:18 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -85,11 +85,11 @@ INSERT INTO `adviserdetails` (`adviser_id`, `user_id`, `firstName`, `lastName`, 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE IF NOT EXISTS `company` (
   `company_id` int NOT NULL AUTO_INCREMENT,
-  `companyName` varchar(50) NOT NULL,
-  `companyAddress` varchar(100) NOT NULL,
-  `companyDetails` text NOT NULL,
+  `companyName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `companyAddress` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `companyDetails` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `company`
@@ -197,10 +197,34 @@ CREATE TABLE IF NOT EXISTS `ojtprograms` (
   `program_id` int NOT NULL AUTO_INCREMENT,
   `administrator_id` int DEFAULT NULL,
   `program_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `start_date` date NOT NULL,
+  `start_datee` date NOT NULL,
   `end_date` date NOT NULL,
-  PRIMARY KEY (`program_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`program_id`),
+  KEY `administrator_id` (`administrator_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ojtprograms`
+--
+
+INSERT INTO `ojtprograms` (`program_id`, `administrator_id`, `program_name`, `start_datee`, `end_date`) VALUES
+(1, 1, 'Ednis the great Birthday', '2023-12-10', '2023-12-11'),
+(2, 1, '1', '0000-00-00', '2023-12-21'),
+(3, 1, '1', '2023-12-20', '2023-12-21'),
+(4, 1, '1', '2023-12-20', '2023-12-21'),
+(12, 1, 'denden', '2023-12-06', '2023-11-30'),
+(13, 1, 'denden', '2023-12-06', '2023-11-30'),
+(14, 1, 'dennis', '2023-12-19', '2023-12-21'),
+(15, 1, 'dennis', '2023-12-19', '2023-12-21'),
+(16, 1, 'ednis', '2023-12-19', '2023-12-20'),
+(17, 1, 'ednis', '2023-12-19', '2023-12-20'),
+(18, 1, 'dendennis', '2023-12-06', '2023-12-16'),
+(19, 1, 'dendennis', '2023-12-06', '2023-12-16'),
+(20, 1, '1', '2023-12-06', '2023-12-07'),
+(21, 1, '1', '2023-12-06', '2023-12-07'),
+(22, 1, '1', '2023-12-06', '2023-12-07'),
+(23, 1, 'BDAY BDAY', '2023-12-25', '2023-12-28'),
+(24, 1, 'BDAY BDAY', '2023-12-25', '2023-12-28');
 
 -- --------------------------------------------------------
 
@@ -214,7 +238,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `user_type` enum('Intern','Adviser','Administrator') COLLATE utf8mb4_general_ci NOT NULL,
-  `other_user_details` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -223,10 +246,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`, `other_user_details`) VALUES
-(1, 'internK', 'internK', 'Intern', 'Sample'),
-(2, 'adviserK', 'adviserK', 'Adviser', 'Adviser Sample'),
-(3, 'adminK', 'adminK', 'Administrator', 'Admin Samp');
+INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
+(1, 'internK', 'internK', 'Intern'),
+(2, 'adviserK', 'adviserK', 'Adviser'),
+(3, 'adminK', 'adminK', 'Administrator');
 
 --
 -- Constraints for dumped tables
@@ -272,6 +295,12 @@ ALTER TABLE `internshiprecords`
   ADD CONSTRAINT `internshiprecords_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `internshiprecords_ibfk_3` FOREIGN KEY (`program_id`) REFERENCES `ojtprograms` (`program_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `internshiprecords_ibfk_4` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `ojtprograms`
+--
+ALTER TABLE `ojtprograms`
+  ADD CONSTRAINT `ojtprograms_ibfk_1` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
