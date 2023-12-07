@@ -1,0 +1,37 @@
+/* Apply a box-sizing border-box model to all elements */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.left-manager {
+    background-color: #333; /* Set background color for the left manager */
+    color: #fff; /* Set text color for the left manager */
+    width: 200px; /* Set the width of the left manager */
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    position: fixed; /* Fix the position of the left manager */
+    top: 0; /* Set the top position to 0 */
+    left: 0; /* Set the left position to 0 */
+    padding-top: 20px; /* Add some top padding for better visual appearance */
+}
+
+.client-task {
+    list-style: none; /* Remove default list styles */
+}
+
+.client-task li {
+    padding: 10px;
+}
+
+.client-task a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+}
+
+.client-task a:hover {
+    background-color: #555; /* Change background color on hover */
+}
