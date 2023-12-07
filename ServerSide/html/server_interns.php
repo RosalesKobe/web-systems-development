@@ -16,34 +16,34 @@
     <div class="left-content">
       <ul class="action-list">
         <li class="item">
-          <a href="server_home.html">Home</a>
-        </li>
-        <li class="item">
-          <a href="server_interns.html">Interns</a>
-        </li>
-        <li class="item">
-          <a href="server_advisers.html">Advisers</a>
+          <a href="server_home.php">Home</a>
         </li>
         <li class="item active">
-          <a href="server_admins.html">Administrators</a>
+          <a href="server_interns.php">Interns</a>
         </li>
         <li class="item">
-          <a href="server_programs.html">Programs</a>          
+          <a href="server_advisers.php">Advisers</a>
         </li>
         <li class="item">
-          <a href="server_records.html">Records</a>    
+          <a href="server_admins.php">Administrators</a>
         </li>
         <li class="item">
-          <a href="server_docs.html">Documents</a>         
+          <a href="server_programs.php">Programs</a>          
         </li>
         <li class="item">
-          <a href="server_feedbacks.html">Feedback</a>
+          <a href="server_records.php">Records</a>    
+        </li>
+        <li class="item">
+          <a href="server_docs.php">Documents</a>         
+        </li>
+        <li class="item">
+          <a href="server_feedbacks.php">Feedback</a>
         </li>
       </ul>
     </div>
   </div>
   <div class="page-content">
-    <div class="header">Welcome sa admins page "NAME" !!!</div>
+    <div class="header">Welcome sa interns page "NAME" !!!</div>
     <div class="content-categories">
       <div class="label-wrapper">
       </div>

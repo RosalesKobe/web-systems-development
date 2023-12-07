@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (in_array($userType, ['Administrator', 'Adviser'])) {
         // Prepare a statement for getting user data from the database
         $statement = $db->prepare("SELECT password FROM users WHERE username = ? AND user_type = ?");
+        $statement = $db->prepare("SELECT user_id, password FROM users WHERE username = ? AND user_type = ?");
         $statement->bind_param("ss", $username, $userType);
         $statement->execute();
 
@@ -33,9 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['userType'] = $userType;
                 $_SESSION['username'] = $username;
-
+                $_SESSION['user_id'] = $row['user_id'];
                 // Redirect to a new page after successful login
-                header("Location: http://localhost/web-systems-development/ServerSide/html/server_home.html");
+                header("Location: http://localhost/web-systems-development/ServerSide/html/server_home.php");
                 exit();
             } else {
                 echo "Incorrect username or password.";
