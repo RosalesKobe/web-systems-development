@@ -5,6 +5,7 @@
 
 body {
     font-family: 'DM Sans', sans-serif;
+    margin: 0; /* Remove default margin */
 }
 
 .left-manager {
@@ -19,7 +20,9 @@ body {
 }
 
 .client-task {
-    list-style: none; /* Remove default list styles */
+    padding: 0;
+    margin: 0;
+    list-style-type: none; /* Remove default list styles */
 }
 
 .client-task li {
@@ -35,3 +38,38 @@ body {
 .client-task a:hover {
     background-color: #555; /* Change background color on hover */
 }
+
+.content {
+    margin-left: 220px; /* Adjusted to accommodate the left manager width */
+    padding: 20px;
+}
+
+.dashboard-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.summary-box {
+    background-color: #555;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.recent-activity {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.recent-activity ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-activity li {
+    margin-bottom: 10px;
+}
+
