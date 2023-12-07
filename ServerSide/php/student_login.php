@@ -1,6 +1,7 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 // Check if POST data is received
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
