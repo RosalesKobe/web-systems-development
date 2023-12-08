@@ -3,7 +3,7 @@
 <head>
     <title>OJT Client - Dashboard</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/web-systems-development/ClientSide/css/style_client.css">
+    <link rel="stylesheet" href="C:\wamp64\www\web-systems-development\ClientSide\css\style_client.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -25,26 +25,39 @@
     </div>
     <div class="content">
         <h1>Welcome to Your Dashboard</h1>
-    
-    
-    
-        <div class="task-chart">
-            <canvas id="taskChart"></canvas>
-            <div id="chartLegend"></div> <!-- Added div for the legend -->
+        
+        <div class="task-chart-container">
+            <div class="task-chart-shadow">
+                <div class="task-chart">
+                    <p class="task-summary">Task Summary</p>
+                    <canvas id="taskChart"></canvas>
+                    
+                </div>
+            </div>
         </div>
     
-        <div class="recent-activity">
-            <h2>Recent Activity</h2>
-            <ul>
-                <li>Task 1 completed on MM/DD/YYYY</li>
-                <li>Task 2 assigned on MM/DD/YYYY</li>
-                <!-- Add more recent activities as needed -->
-            </ul>
+        <div class="recent-activity-container">
+            <div class="recent-activity-shadow">
+                <div class="recent-activity">
+                    
+                    <h2>Recent Activity</h2>
+                    <ul>
+                        <li>Task 1 completed on MM/DD/YYYY</li>
+                        <li>Task 2 assigned on MM/DD/YYYY</li>
+                        <li>Task 3 assigned on MM/DD/YYYY</li>
+                        <li>Task 4 assigned on MM/DD/YYYY</li>
+                        <li>Task 5 assigned on MM/DD/YYYY</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
 
+        <div class="progress-bar html">
+            <progress id="html" min="0" max="150" value="92"></progress>
+        </div>
+    </div>   
     <script>
-        // Get the completed and pending tasks data (replace with your actual data)
+        //  (replace with your actual data)
         var completedTasksData = 7;
         var pendingTasksData = 3;
 
@@ -71,10 +84,6 @@
                     }
                 }
             });
-
-            // Add legend
-            var legend = taskChart.generateLegend();
-            document.getElementById('chartLegend').innerHTML = legend;
         }
 
         // Call the updateChart function when the page loads
