@@ -83,7 +83,9 @@ if (!empty($detailsTable)) {
   </div>
   <div class="page-content">
   <div class="header">Welcome sa home page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>
-    <div class="content-categories">
+      <!-- Add the Logout button -->
+      <a href="server_logout.php" class="logout-button">Logout</a>  
+  <div class="content-categories">
       <div class="label-wrapper">
       </div>
     </div>
