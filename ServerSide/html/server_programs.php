@@ -246,8 +246,6 @@ function editProgram(programId, administratorId, programName, startDate, endDate
   var form = document.getElementById('editForm');
   form.style.display = 'block';
 }
-
-
 </script>
 </body>
 </html>

@@ -34,12 +34,11 @@
 }
 
 body {
-    margin: 0;
-    justify-content: center;
-    flex-direction: column;
-    overflow: auto;
-    width: 100%;
-    height: 100vh;
+  margin: 0;
+  justify-content: center;
+  flex-direction: column;
+  overflow: auto; /* Use auto to allow the browser to decide whether to show a scrollbar */
+  width: 100%;
     padding: 20px;
     font-family: "DM Sans", sans-serif;
     font-size: 12px;
@@ -62,7 +61,7 @@ ul {
   justify-content: space-between;
   width: 100%;
   max-width: 1200px;
-  height: 90vh;
+  height: 90vh; /* Adjust as needed */
   max-height: 900px;
   background: #fff;
   border-radius: 4px;
@@ -105,6 +104,7 @@ ul {
   flex-direction: column;
   flex: 1;
   padding: 40px 20px 0 20px;
+  overflow: auto;
 }
 .page-content .header {
   font-size: 26px;
