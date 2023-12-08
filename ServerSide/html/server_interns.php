@@ -1,3 +1,68 @@
+<?php
+session_start();
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+// require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+  header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
+  exit;
+}
+
+$userID = $_SESSION['user_id'];
+$userType = $_SESSION['userType'];
+
+$lastName = '';
+
+// Determine the table to query based on user type
+if ($userType === 'Adviser') {
+  $detailsTable = 'adviserdetails';
+} elseif ($userType === 'Administrator') {
+  $detailsTable = 'admindetails';
+} else {
+  // Add logic for Adviser or any other user types
+}
+
+// Query for the last name if a details table has been identified
+if (!empty($detailsTable)) {
+  $stmt = $db->prepare("SELECT lastName FROM $detailsTable WHERE user_id = ?");
+  $stmt->bind_param("i", $userID);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      $lastName = $row['lastName'];
+  }
+  $stmt->close();
+}
+
+// Initialize $internsData
+$internsData = [];
+
+$stmt = $db->prepare("SELECT intern_id, user_id, adviser_id, firstName, lastName, email, address, School, other_intern_details FROM interndetails");
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Store the data in an array to use later in the HTML
+if ($result->num_rows > 0) {
+    // output data of each row
+    while ($row = $result->fetch_assoc()) {
+        $internsData[] = $row;
+    }
+} else {
+    $internsData = []; // Set $internsData as an empty array if no results
+}
+$stmt->close();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_intern'])) {
+
+}
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -43,12 +108,52 @@
     </div>
   </div>
   <div class="page-content">
-    <div class="header">Welcome sa interns page "NAME" !!!</div>
-    <div class="content-categories">
+  <div class="header">Welcome sa intern page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>
+  <a href="server_logout.php" class="logout-button">Logout</a>    
+  <div class="content-categories">
       <div class="label-wrapper">
-      </div>
+        </div>
+
+      <table>
+        <tr>
+          <th>Intern ID</th>
+          <th>User ID</th>
+          <th>Adviser ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>School</th>
+          <th>Other Intern Details</th>
+        </tr>
+        <?php foreach ($internsData as $intern): ?>
+          <tr>
+            <td><?php echo htmlspecialchars($intern['intern_id']); ?></td>
+            <td><?php echo htmlspecialchars($intern['user_id']); ?></td>
+            <td><?php echo htmlspecialchars($intern['adviser_id']); ?></td>
+            <td><?php echo htmlspecialchars($intern['firstName']); ?></td>
+            <td><?php echo htmlspecialchars($intern['lastName']); ?></td>
+            <td><?php echo htmlspecialchars($intern['email']); ?></td>
+            <td><?php echo htmlspecialchars($intern['address']); ?></td>
+            <td><?php echo htmlspecialchars($intern['School']); ?></td>
+            <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
+            <td>
+               </td>
+          </tr>
+        <?php endforeach; ?>
+        <?php if (empty($internsData)): ?>
+          <tr>
+            <td colspan="6">No programs found.</td>
+          </tr>
+        <?php endif; ?>
+      </table>
+
     </div>
   </div>
 </div>
+<script>
+</script>
 </body>
 </html>
+
+
