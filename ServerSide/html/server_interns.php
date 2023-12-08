@@ -54,10 +54,6 @@ if ($result->num_rows > 0) {
 }
 $stmt->close();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_intern'])) {
-
-}
-
 ?>
 
 
