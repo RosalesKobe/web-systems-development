@@ -1,169 +1,185 @@
- /* Apply a box-sizing border-box model to all elements */
-    * {
-        box-sizing: border-box;
-    }
+/* Apply a box-sizing border-box model to all elements */
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        font-family: 'DM Sans', sans-serif;
-        margin: 0; /* Remove default margin */
-    }
+body {
+    font-family: 'DM Sans', sans-serif;
+    margin: 0; /* Remove default margin */
+}
 
-    .left-manager {
-        background-color: #333; /* Set background color for the left manager */
-        color: #fff; /* Set text color for the left manager */
-        width: 200px; /* Set the width of the left manager */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        position: fixed; /* Fix the position of the left manager */
-        top: 0; /* Set the top position to 0 */
-        left: 0; /* Set the left position to 0 */
-        padding-top: 20px; /* Add some top padding for better visual appearance */
-    }
+.left-manager {
+    background-color: #333; /* Set background color for the left manager */
+    color: #fff; /* Set text color for the left manager */
+    width: 200px; /* Set the width of the left manager */
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    position: fixed; /* Fix the position of the left manager */
+    top: 0; /* Set the top position to 0 */
+    left: 0; /* Set the left position to 0 */
+    padding-top: 20px; /* Add some top padding for better visual appearance */
+}
 
-    .client-task {
-        padding: 0;
-        margin: 0;
-        list-style-type: none; /* Remove default list styles */
-    }
+.client-task {
+    padding: 0;
+    margin: 0;
+    list-style-type: none; /* Remove default list styles */
+}
 
-    .client-task li {
-        padding: 10px;
-    }
+.client-task li {
+    padding: 10px;
+}
 
-    .client-task a {
-        text-decoration: none;
-        color: #fff;
-        display: block;
-    }
+.client-task a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+}
 
-    .client-task a:hover {
-        background-color: #555; /* Change background color on hover */
-    }
+.client-task a:hover {
+    background-color: #555; /* Change background color on hover */
+}
 
 .content {
-    margin-left: 220px; /* Adjusted to accommodate the left manager width */
-    padding: 20px;
+margin-left: 220px; /* Adjusted to accommodate the left manager width */
+padding: 20px;
 }
 
 .dashboard-summary {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+display: flex;
+justify-content: space-around;
+margin-bottom: 20px;
 }
 
 .summary-box {
-    background-color: #555;
-    color: #fff;
-    padding: 15px;
-    text-align: center;
-    border-radius: 5px;
+background-color: #555;
+color: #fff;
+padding: 15px;
+text-align: center;
+border-radius: 5px;
 }
 
 .recent-activity-container {
-    position: absolute;
-    width: 30%; 
-    height: fit-content;
-    box-sizing: border-box;
-    top: 430px;
-    left: 240px;
+position: absolute;
+width: 30%; 
+height: fit-content;
+box-sizing: border-box;
+top: 430px;
+left: 240px;
 }
 
 .recent-activity-shadow {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the container */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the container */
 }
 
 .recent-activity {
-    padding: 10px;
-    border-radius: 5px;
+padding: 10px;
+border-radius: 5px;
 }
 
 
 .recent-activity h2 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
+font-size: 20px;
+color: #333;
+margin-bottom: 10px;
 }
 
 .recent-activity ul {
-    list-style: none;
-    padding: 0;
+list-style: none;
+padding: 0;
 }
 
 .recent-activity li {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #ddd;
-    border-radius: 5px;
+margin-bottom: 10px;
+padding: 10px;
+background-color: #8b9ded;
+border-radius: 5px;
 }
 
 .task-chart-container {
-    position: absolute;
-    width: 500px;
-    height: 600px;
+position: absolute;
+width: 500px;
+height: 600px;
 }
 
 .task-chart-shadow {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the container */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the container */
 }
 
 .task-chart {
-    width: 100%;
-    height: 100%;
+width: 100%;
+height: 100%;
 }
 
 .task-summary {
-    text-align: center;
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 10px;
+text-align: center;
+font-size: 18px;
+color: #333;
+margin-bottom: 10px;
 }
 
 @property --progress-value {
-    syntax: '<integer>';
-    inherits: false;
-    initial-value: 0;
-  }
-  
-  @keyframes html-progress {
-    to { --progress-value: 92; }
-  }
- 
-  
-  .progress-bar {
-    width: 150px;
-    height: 150px;
+syntax: '<integer>';
+inherits: false;
+initial-value: 0;
+}
+
+@keyframes html-progress {
+to { --progress-value: 92; }
+}
+
+
+.progress-bar-container {
+    position: absolute;
+    top: 120px;
+    right: 500px;
+    width: 200px;
+    height: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the container */
+}
+
+.progress-bar {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 100PX;
-    right: 500px;
-  }
-  
-  .progress-bar::before {
-    counter-reset: percentage var(--progress-value);
-    content: counter(percentage) '%';
-  }
-  
-  .html {
-    background: 
-      radial-gradient(closest-side, white 79%, transparent 80% 100%),
-      conic-gradient(hotpink calc(var(--progress-value) * 1%), pink 0);
-    animation: html-progress 2s 1 forwards;
-  }
-  
-  .html::before {
-    animation: html-progress 2s 1 forwards;
-  }
-  
-  progress {
-    visibility: hidden;
-    width: 0;
-    height: 0;
-  }
+}
 
-  
+/* Rest of your existing CSS for progress-bar remains the same */
 
 
+.progress-bar::before {
+counter-reset: percentage var(--progress-value);
+content: counter(percentage) '%';
+}
 
+.html {
+background: 
+  radial-gradient(closest-side, white 79%, transparent 80% 100%),
+  conic-gradient(hotpink calc(var(--progress-value) * 1%), pink 0);
+animation: html-progress 2s 1 forwards;
+}
+
+.html::before {
+animation: html-progress 2s 1 forwards;
+}
+
+progress {
+visibility: hidden;
+width: 0;
+height: 0;
+}
+
+.progress-info {
+    text-align: center;
+    margin-top: 10px;
+    color: #333;
+}
+
+.hours-spent,
+.time-remaining {
+    margin: 5px 0;
+    font-size: 14px;
+}
 
