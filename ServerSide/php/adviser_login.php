@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepare SQL to check intern credentials
-    $statement = $db->prepare("SELECT * FROM users WHERE username = ? AND user_type = 'Intern'");
+    $statement = $db->prepare("SELECT * FROM users WHERE username = ? AND user_type = 'Adviser'");
     $statement->bind_param("s", $username);
     $statement->execute();
     $result = $statement->get_result();
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($password === $user['password']) {
             // Successful login
             $_SESSION['loggedin'] = true;
-            $_SESSION['userType'] = 'Intern';
+            $_SESSION['userType'] = 'Adviser';
             $_SESSION['username'] = $username;
             echo "Login successful";
         } else {

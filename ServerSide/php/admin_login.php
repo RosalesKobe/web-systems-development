@@ -10,9 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Check if the user is an admin or adviser
-    if (in_array($userType, ['Administrator', 'Adviser'])) {
+    if ($userType === 'Administrator') {
         // Prepare a statement for getting user data from the database
-        $statement = $db->prepare("SELECT password FROM users WHERE username = ? AND user_type = ?");
         $statement = $db->prepare("SELECT user_id, password FROM users WHERE username = ? AND user_type = ?");
         $statement->bind_param("ss", $username, $userType);
         $statement->execute();
