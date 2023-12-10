@@ -35,6 +35,21 @@ if (!empty($detailsTable)) {
     }
     $stmt->close();
 }
+
+// Get the count of interns
+$stmt = $db->prepare("SELECT COUNT(*) as intern_count FROM interndetails");
+$stmt->execute();
+$result = $stmt->get_result();
+$intern_result = $result->fetch_assoc();
+$intern_count = $intern_result['intern_count'];
+
+// Get the count of advisers
+$stmt = $db->prepare("SELECT COUNT(*) as adviser_count FROM adviserdetails");
+$stmt->execute();
+$result = $stmt->get_result();
+$adviser_result = $result->fetch_assoc();
+$adviser_count = $adviser_result['adviser_count'];
+
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +58,13 @@ if (!empty($detailsTable)) {
   <meta charset="UTF-8">
   <title>TEAMPOGI OJT ADMIN MOD</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server.css">
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #myChart {
+        max-width: 600px;
+        margin: 20px auto;
+    }
+</style>
 </head>
 <body>
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
@@ -91,6 +112,36 @@ if (!empty($detailsTable)) {
     <div class="image-container">
     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
   </div>
+  <canvas id="myChart" width="400" height="400"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Interns', 'Advisers'],
+        datasets: [{
+            label: 'Count',
+            data: [<?php echo $intern_count; ?>, <?php echo $adviser_count; ?>],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
   </div>
 </div>
 </body>

@@ -165,7 +165,7 @@ tr:hover {
 
 
 .image-container {
-  position: absolute;
+  position: fixed;
   top: 16px; 
   right: 230px; 
   z-index: 1;

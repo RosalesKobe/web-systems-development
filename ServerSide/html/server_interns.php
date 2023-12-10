@@ -39,7 +39,20 @@ if (!empty($detailsTable)) {
 // Initialize $internsData
 $internsData = [];
 
-$stmt = $db->prepare("SELECT intern_id, user_id, adviser_id, firstName, lastName, email, address, School, other_intern_details FROM interndetails");
+$stmt = $db->prepare("SELECT 
+        i.firstName AS InternFirstName,
+        i.lastName AS InternLastName, 
+        i.email, 
+        i.address, 
+        i.School, 
+        i.other_intern_details,
+        a.firstName AS AdviserFirstName,
+        a.lastName AS AdviserLastName
+    FROM 
+        interndetails i
+    JOIN 
+        adviserdetails a ON i.adviser_id = a.adviser_id
+");
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -116,27 +129,26 @@ $stmt->close();
 
       <table>
         <tr>
-          <th>Intern ID</th>
-          <th>User ID</th>
-          <th>Adviser ID</th>
+
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
           <th>Address</th>
           <th>School</th>
           <th>Other Intern Details</th>
+          <th>Adviser First Name</th>
+          <th>Adviser Last Name</th>
         </tr>
         <?php foreach ($internsData as $intern): ?>
           <tr>
-            <td><?php echo htmlspecialchars($intern['intern_id']); ?></td>
-            <td><?php echo htmlspecialchars($intern['user_id']); ?></td>
-            <td><?php echo htmlspecialchars($intern['adviser_id']); ?></td>
-            <td><?php echo htmlspecialchars($intern['firstName']); ?></td>
-            <td><?php echo htmlspecialchars($intern['lastName']); ?></td>
-            <td><?php echo htmlspecialchars($intern['email']); ?></td>
-            <td><?php echo htmlspecialchars($intern['address']); ?></td>
-            <td><?php echo htmlspecialchars($intern['School']); ?></td>
-            <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
+          <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['email']); ?></td>
+          <td><?php echo htmlspecialchars($intern['address']); ?></td>
+          <td><?php echo htmlspecialchars($intern['School']); ?></td>
+          <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
+          <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
           </tr>
         <?php endforeach; ?>
         <?php if (empty($internsData)): ?>
