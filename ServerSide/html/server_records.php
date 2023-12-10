@@ -1,3 +1,72 @@
+<?php
+session_start();
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+// require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+  header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
+  exit;
+}
+
+$userID = $_SESSION['user_id'];
+$userType = $_SESSION['userType'];
+
+$lastName = '';
+
+// Determine the table to query based on user type
+if ($userType === 'Adviser') {
+  $detailsTable = 'adviserdetails';
+} elseif ($userType === 'Administrator') {
+  $detailsTable = 'admindetails';
+} else {
+  // Add logic for Adviser or any other user types
+}
+
+// Query for the last name if a details table has been identified
+if (!empty($detailsTable)) {
+  $stmt = $db->prepare("SELECT lastName FROM $detailsTable WHERE user_id = ?");
+  $stmt->bind_param("i", $userID);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      $lastName = $row['lastName'];
+  }
+  $stmt->close();
+}
+
+// Initialize $internRecords
+$internRecords = [];
+$stmt = $db->prepare("SELECT 
+        d.firstName AS InternFirstName, 
+        d.lastName AS InternLastName,
+        r.hours_completed AS hours_rendered, 
+        r.hours_remaining AS hours_remaining, 
+        r.start_date AS sd, 
+        r.end_date AS ed, 
+        r.record_status AS record_status
+    FROM 
+        internshiprecords r
+    INNER JOIN 
+        interndetails d ON r.intern_id = d.intern_id;
+");
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Store the data in an array to use later in the HTML
+if ($result->num_rows > 0) {
+    // output data of each row
+    while ($row = $result->fetch_assoc()) {
+        $internRecords[] = $row;
+    }
+} else {
+    $internRecords = []; // Set $internRecords as an empty array if no results
+}
+$stmt->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -44,7 +113,7 @@
     </div>
   </div>
   <div class="page-content">
-    <div class="header">Welcome sa records page "NAME" !!!</div>
+  <div class="header">Welcome sa home page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>
     <div class="content-categories">
       <div class="label-wrapper">
       </div>
@@ -52,6 +121,34 @@
     <div class="image-container">
     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
   </div>
+  <table>
+        <tr>
+
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Hours Completed</th>
+          <th>Hours Remaining</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Record Status</th>
+        </tr>
+        <?php foreach ($internRecords as $intern): ?>
+          <tr>
+          <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['hours_rendered']); ?></td>
+          <td><?php echo htmlspecialchars($intern['hours_remaining']); ?></td>
+          <td><?php echo htmlspecialchars($intern['sd']); ?></td>
+          <td><?php echo htmlspecialchars($intern['ed']); ?></td>
+          <td><?php echo htmlspecialchars($intern['record_status']); ?></td>
+          </tr>
+        <?php endforeach; ?>
+        <?php if (empty($internRecords)): ?>
+          <tr>
+            <td colspan="6">No programs found.</td>
+          </tr>
+        <?php endif; ?>
+      </table>
   </div>
 </div>
 </body>

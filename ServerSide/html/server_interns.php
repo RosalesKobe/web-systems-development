@@ -38,7 +38,6 @@ if (!empty($detailsTable)) {
 
 // Initialize $internsData
 $internsData = [];
-
 $stmt = $db->prepare("SELECT 
         i.firstName AS InternFirstName,
         i.lastName AS InternLastName, 

@@ -1,3 +1,43 @@
+<?php
+session_start();
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+// require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+  header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
+  exit;
+}
+
+$userID = $_SESSION['user_id'];
+$userType = $_SESSION['userType'];
+
+$lastName = '';
+
+// Determine the table to query based on user type
+if ($userType === 'Adviser') {
+  $detailsTable = 'adviserdetails';
+} elseif ($userType === 'Administrator') {
+  $detailsTable = 'admindetails';
+} else {
+  // Add logic for Adviser or any other user types
+}
+
+// Query for the last name if a details table has been identified
+if (!empty($detailsTable)) {
+  $stmt = $db->prepare("SELECT lastName FROM $detailsTable WHERE user_id = ?");
+  $stmt->bind_param("i", $userID);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+      $row = $result->fetch_assoc();
+      $lastName = $row['lastName'];
+  }
+  $stmt->close();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -44,7 +84,7 @@
     </div>
   </div>
   <div class="page-content">
-    <div class="header">Welcome sa docs page "NAME" !!!</div>
+  <div class="header">Welcome sa home page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>
     <div class="content-categories">
       <div class="label-wrapper">
       </div>
