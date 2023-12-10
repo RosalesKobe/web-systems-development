@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intern Details</title>
+</head>
+<body>
+  <h1>Intern Details</h1>
+  <table border="1">
+    <tr>
+      <th>Intern ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <!-- Add more columns as needed -->
+    </tr>
+    <% data.forEach((row) => { %>
+      <tr>
+        <td><%= row.intern_id %></td>
+        <td><%= row.firstName %></td>
+        <td><%= row.lastName %></td>
+        <!-- Add more columns as needed -->
+      </tr>
+    <% }); %>
+  </table>
+</body>
+</html>

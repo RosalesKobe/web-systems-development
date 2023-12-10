@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Interns Overview</title>
+    <!-- Add your CSS and other head content here -->
+</head>
+<body>
+    <h1>Intern Details</h1>
+    <ul>
+        <% internDetails.forEach((intern) => { %>
+            <li><%= intern.firstName %> <%= intern.lastName %></li>
+        <% }); %>
+    </ul>
+
+    <h1>Internship Records</h1>
+    <ul>
+        <% internshipRecords.forEach((record) => { %>
+            <li><%= record.start_date %> to <%= record.end_date %></li>
+        <% }); %>
+    </ul>
+
+    <h1>Feedback</h1>
+    <ul>
+        <% feedback.forEach((fb) => { %>
+            <li><%= fb.feedback_text %> - <%= fb.feedback_date %></li>
+        <% }); %>
+    </ul>
+</body>
+</html>

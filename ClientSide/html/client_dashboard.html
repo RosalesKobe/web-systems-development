@@ -19,33 +19,6 @@
     </div>
     <div class="content">
         <h1>Welcome to Your Dashboard</h1>
-        
-        <div class="task-chart-container">
-            <div class="task-chart-shadow">
-                <div class="task-chart">
-                    <p class="task-summary">Task Summary</p>
-                    <canvas id="taskChart"></canvas>
-                    
-                </div>
-            </div>
-        </div>
-    
-        <div class="recent-activity-container">
-            <div class="recent-activity-shadow">
-                <div class="recent-activity">
-                    
-                    <h2>Recent Activity</h2>
-                    <ul>
-                        <li>Task 1 completed on MM/DD/YYYY</li>
-                        <li>Task 2 assigned on MM/DD/YYYY</li>
-                        <li>Task 3 assigned on MM/DD/YYYY</li>
-                        <li>Task 4 assigned on MM/DD/YYYY</li>
-                        <li>Task 5 assigned on MM/DD/YYYY</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
         <div class="progress-bar-container">
             <div class="progress-bar html">
                 <progress id="html" min="0" max="150" value="92"></progress>
@@ -55,42 +28,5 @@
                 <p class="time-remaining">Time Remaining: 30</p>
             </div>
         </div>
-        
-
-    <script>
-        //  (replace with your actual data)
-        var completedTasksData = 7;
-        var pendingTasksData = 3;
-
-        // Update the chart based on the data
-        function updateChart() {
-            var ctx = document.getElementById('taskChart').getContext('2d');
-            var taskChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Completed Tasks', 'Pending Tasks'],
-                    datasets: [{
-                        label: 'Tasks',
-                        data: [completedTasksData, pendingTasksData],
-                        backgroundColor: ['#4CAF50', '#FF5733'],
-                        borderColor: ['#4CAF50', '#FF5733'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // Call the updateChart function when the page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            updateChart();
-        });
-    </script>
 </body>
 </html>
