@@ -25,11 +25,41 @@
 
     <div class="content">
         <h1>Your Assigned Tasks</h1>
-        <ul>
-            <li>Task 1: Description</li>
-            <li>Task 2: Description</li>
+        
+        <table id="myTaskTable">
+            <tr>
+                <th>TASK CODE</th>
+                <th>TASK NAME</th>
+                <th>DATE OF COMPLETION</th>
+                <th>REMARKS</th>
+                <th>ACTION</th>
+            </tr>
+            <tr>
+                <td>Task 1</td>
+                <td>Task Name 1</td>
+                <td>MM/DD/YYYY</td>
+                <td>Remarks 1</td>
+                <td>
+                    <select>
+                        <option value="approved">Approved</option>
+                        <option value="done">Done</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Task 2</td>
+                <td>Task Name 2</td>
+                <td>MM/DD/YYYY</td>
+                <td>Remarks 2</td>
+                <td>
+                    <select>
+                        <option value="approved">Approved</option>
+                        <option value="done">Done</option>
+                    </select>
+                </td>
+            </tr>
             <!-- Add more tasks as needed -->
-        </ul>
+        </table>
     </div>
 </body>
 </html>

@@ -25,19 +25,85 @@
 
     <div class="content">
         <h1>Your Task Records</h1>
-        <table>
+        
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="taskSearch" placeholder="Search Task Records...">
+            <button onclick="searchTask()">Search</button>
+            <button onclick="returnToAllTasks()">Return to All Tasks</button>
+        </div>
+        
+        <table id="taskTable">
             <tr>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Completion Date</th>
+                <th>TASK CODE</th>
+                <th>TASK NAME</th>
+                <th>DATE OF COMPLETION</th>
+                <th>REMARKS</th>
+                <th>ACTION</th>
             </tr>
             <tr>
                 <td>Task 1</td>
-                <td>Completed</td>
+                <td>Task Name 1</td>
                 <td>MM/DD/YYYY</td>
+                <td>Remarks 1</td>
+                <td>
+                    <select>
+                        <option value="approved">Approved</option>
+                        <option value="declined">Declined</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Task 2</td>
+                <td>Task Name 2</td>
+                <td>MM/DD/YYYY</td>
+                <td>Remarks 2</td>
+                <td>
+                    <select>
+                        <option value="approved">Approved</option>
+                        <option value="declined">Declined</option>
+                    </select>
+                </td>
             </tr>
             <!-- Add more task records as needed -->
         </table>
     </div>
+
+    <script>
+        // Add a simple search function to filter task records
+        function searchTask() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("taskSearch");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("taskTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) { // Start from 1 to skip the header row
+                var found = false; // Reset the flag for each row
+                for (var j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break; // Break loop if found in any cell
+                        }
+                    }
+                }
+                // Set display based on the flag
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+
+        // Function to return to all tasks
+        function returnToAllTasks() {
+            var table = document.getElementById("taskTable");
+            var tr = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < tr.length; i++) {
+                tr[i].style.display = ""; // Display all rows
+            }
+        }
+    </script>
 </body>
 </html>

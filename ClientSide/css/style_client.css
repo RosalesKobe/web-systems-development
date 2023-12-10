@@ -182,4 +182,59 @@ height: 0;
     margin: 5px 0;
     font-size: 14px;
 }
+/* Add styles for the task record table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #555;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Add styles for the search bar */
+.search-bar {
+    margin-top: 20px;
+}
+
+#taskSearch {
+    padding: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .left-manager {
+        width: 100%;
+        position: relative;
+        padding-top: 0;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .recent-activity-container {
+        position: relative;
+        width: 100%;
+        left: 0;
+        top: auto;
+    }
+
+    .progress-bar-container {
+        position: relative;
+        right: auto;
+    }
+}
 
