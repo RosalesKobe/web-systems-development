@@ -145,17 +145,34 @@ tr:hover {
   background-color: #f5f5f5;
 }
 .logout-button {
-  display: inline-block;
-  padding: 8px 12px; /* Adjust padding as needed */
+  display: block; /* Change to block to make it a block-level element */
+  margin-top: 10px;
+  padding: 8px 12px;
   background-color: var(--button-color);
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
-  margin-top: 5px;
   transition: background-color 0.3s;
 }
 
 .logout-button:hover {
-  background-color: #3e8e87; /* Darker shade for hover effect */
+  background-color: #3e8e87;
 }
 
+.header {
+  position: relative;
+}
+
+
+.image-container {
+  position: absolute;
+  top: 16px; 
+  right: 230px; 
+  z-index: 1;
+}
+
+.image-container img {
+  width: 160px;
+  height: 150px;
+  border-radius: 50%;
+}

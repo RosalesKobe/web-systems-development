@@ -39,6 +39,7 @@
         <li class="item">
           <a href="server_feedbacks.php">Feedback</a>
         </li>
+        <a href="server_logout.php" class="logout-button">Logout</a>  
       </ul>
     </div>
   </div>
@@ -48,6 +49,9 @@
       <div class="label-wrapper">
       </div>
     </div>
+    <div class="image-container">
+    <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
+  </div>
   </div>
 </div>
 </body>
