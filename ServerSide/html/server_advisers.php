@@ -131,8 +131,7 @@ $stmt->close();
             <td><?php echo htmlspecialchars($adviser['School']); ?></td>
             <td><?php echo htmlspecialchars($adviser['address']); ?></td>
             <td><?php echo htmlspecialchars($adviser['other_adviser_details']); ?></td>
-            <td>
-               </td>
+            
           </tr>
         <?php endforeach; ?>
         <?php if (empty($adviserData)): ?>

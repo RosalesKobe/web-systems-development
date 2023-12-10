@@ -133,8 +133,6 @@ $stmt->close();
             <td><?php echo htmlspecialchars($intern['address']); ?></td>
             <td><?php echo htmlspecialchars($intern['School']); ?></td>
             <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
-            <td>
-               </td>
           </tr>
         <?php endforeach; ?>
         <?php if (empty($internsData)): ?>

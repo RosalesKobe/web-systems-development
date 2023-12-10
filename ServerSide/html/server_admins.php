@@ -128,8 +128,7 @@ $stmt->close();
             <td><?php echo htmlspecialchars($admin['address']); ?></td>
             <td><?php echo htmlspecialchars($admin['other_administrator_details']); ?></td>
             <td><?php echo htmlspecialchars($admin['companyName']); ?></td>
-            <td>
-               </td>
+            
           </tr>
         <?php endforeach; ?>
         <?php if (empty($adminData)): ?>
