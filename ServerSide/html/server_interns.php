@@ -121,7 +121,7 @@ $stmt->close();
   Welcome sa intern page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>  
   <div class="content-categories">
       <div class="label-wrapper">
-        </div>
+        </div>    
         <div class="image-container">
     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
   </div>
