@@ -1,7 +1,7 @@
 <?php
 session_start();
-//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
