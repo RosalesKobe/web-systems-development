@@ -1,10 +1,12 @@
 const express = require('express');
 const mysql = require('mysql');
 const ejs = require('ejs');
+const session = require('express-session');
 
 const app = express();
 const port = 3333;
 
+// Database connection setup
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -23,12 +25,24 @@ db.connect((err) => {
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
+
+// Serve static files
 app.use(express.static('public'));
-app.use(express.json()); // to parse JSON bodies
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Session middleware setup
+app.use(session({
+  secret: 'secret', // Secret key "slu"
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if you're using HTTPS
+}));
 
 // Route to render the index page
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Client Login Page' }); // You can pass any necessary data to your EJS template here
+  res.render('index', { title: 'Client Login Page' }); // Pass any necessary data to your EJS template
 });
 
 // Login route
@@ -39,33 +53,47 @@ app.post('/login', (req, res) => {
   
   db.query(query, [username, userType], (err, results) => {
       if (err) {
-          // Handle error
+          console.error('MySQL error:', err);
           return res.status(500).json({ success: false, message: 'Internal Server Error' });
       }
       
       if (results.length > 0) {
           const user = results[0];
           
-          // Since we're not using hashed passwords, compare directly
           if (password === user.password) {
-              // Correct password
+              req.session.username = username; // Save username in session
               console.log("Login success");
               return res.json({ success: true, redirectUrl: '/dashboard' });
           } else {
-              // Incorrect password
               console.log("Incorrect Credentials");
               return res.json({ success: false, message: 'Invalid credentials' });
           }
       } else {
-          // No user found with the username and user type
-          console.log("Incorrect User Type");
+          console.log("User not found or incorrect user type");
           return res.json({ success: false, message: 'Invalid credentials' });
       }
   });
 });
 
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  if (req.session.username) {
+    console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
+    res.render('dashboard', { username: req.session.username });
+  } else {
+    res.redirect('/');
+  }
+});
 
-
+app.get('/message', (req, res) => {
+  if (req.session.username) {
+    // Render dashboard with username
+    res.render('message', { username: req.session.username });
+  } else {
+    // If no username in session, redirect to login page
+    res.redirect('/');
+  }
+});
 
 // Route to fetch intern details and render them in a table
 app.get('/interndetails', (req, res) => {
