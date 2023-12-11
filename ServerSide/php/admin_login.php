@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
+require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 // Adjust the path as needed to your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
