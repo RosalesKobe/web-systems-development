@@ -23,6 +23,47 @@ db.connect((err) => {
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.json()); // to parse JSON bodies
+
+// Route to render the index page
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Client Login Page' }); // You can pass any necessary data to your EJS template here
+});
+
+// Login route
+app.post('/login', (req, res) => {
+  const { username, password, userType } = req.body;
+  
+  const query = 'SELECT * FROM users WHERE username = ? AND user_type = ?';
+  
+  db.query(query, [username, userType], (err, results) => {
+      if (err) {
+          // Handle error
+          return res.status(500).json({ success: false, message: 'Internal Server Error' });
+      }
+      
+      if (results.length > 0) {
+          const user = results[0];
+          
+          // Since we're not using hashed passwords, compare directly
+          if (password === user.password) {
+              // Correct password
+              console.log("Login success");
+              return res.json({ success: true, redirectUrl: '/dashboard' });
+          } else {
+              // Incorrect password
+              return res.json({ success: false, message: 'Invalid credentials' });
+          }
+      } else {
+          // No user found with the username and user type
+          return res.json({ success: false, message: 'Invalid credentials' });
+      }
+  });
+});
+
+
+
 
 // Route to fetch intern details and render them in a table
 app.get('/interndetails', (req, res) => {
@@ -39,9 +80,6 @@ app.get('/interndetails', (req, res) => {
   });
 });
 
-app.get('/intern', (req, res) => {
-
-});
 
 // Route to fetch intern details and render them in a table
 app.get('/internshiprecords', (req, res) => {
