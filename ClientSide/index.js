@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const ejs = require('ejs');
 
 const app = express();
-const port = 3000;
+const port = 3333;
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -35,6 +35,39 @@ app.get('/interndetails', (req, res) => {
     } else {
       // Render the 'interndetails.ejs' template with the data
       res.render('interndetails', { data: results });
+    }
+  });
+});
+
+app.get('/intern', (req, res) => {
+
+});
+
+// Route to fetch intern details and render them in a table
+app.get('/internshiprecords', (req, res) => {
+  const sql = 'SELECT * FROM internshiprecords';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('MySQL error:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      // Render the 'interndetails.ejs' template with the data
+      res.render('internshiprecords', { data: results });
+    }
+  });
+});
+
+app.get('/feedback', (req, res) => {
+  const sql = 'SELECT * FROM feedback';
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('MySQL error:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      // Render the 'interndetails.ejs' template with the data
+      res.render('feedback', { data: results });
     }
   });
 });
