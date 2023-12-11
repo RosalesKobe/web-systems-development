@@ -11,6 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 $userID = $_SESSION['user_id'];
 $userType = $_SESSION['userType'];
 
+$firstName = '';
 $lastName = '';
 
 // Determine the table to query based on user type
@@ -24,13 +25,14 @@ if ($userType === 'Adviser') {
 
 // Query for the last name if a details table has been identified
 if (!empty($detailsTable)) {
-  $stmt = $db->prepare("SELECT lastName FROM $detailsTable WHERE user_id = ?");
+  $stmt = $db->prepare("SELECT firstName, lastName FROM $detailsTable WHERE user_id = ?");
   $stmt->bind_param("i", $userID);
   $stmt->execute();
   $result = $stmt->get_result();
 
   if ($result->num_rows > 0) {
       $row = $result->fetch_assoc();
+      $firstName = $row['firstName'];
       $lastName = $row['lastName'];
   }
   $stmt->close();
@@ -117,8 +119,7 @@ $stmt->close();
     </div>
   </div>
   <div class="page-content">
-  <div class="header">
-  Welcome sa intern page "<?php echo htmlspecialchars($lastName); ?>" !!!</div>  
+  <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
   <div class="content-categories">
       <div class="label-wrapper">
         </div>    
