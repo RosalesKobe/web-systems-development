@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
@@ -39,9 +39,11 @@ if (!empty($detailsTable)) {
 // Initialize $programsData
 $programsData = [];
 
-$stmt = $db->prepare("SELECT program_id, administrator_id, program_name, start_datee, end_date FROM ojtprograms");
+$stmt = $db->prepare("SELECT o.program_id, o.administrator_id, a.firstName AS administrator_name, o.program_name, o.start_datee, o.end_date FROM ojtprograms o
+                      JOIN admindetails a ON o.administrator_id = a.administrator_id");
 $stmt->execute();
 $result = $stmt->get_result();
+
 
 // Store the data in an array to use later in the HTML
 if ($result->num_rows > 0) {
@@ -68,12 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_program'])) {
   // Execute and check for successful insertion
   if ($stmt->execute()) {
       $message = "New program added successfully!";
+      
+      // Close the statement
+      $stmt->close();
+
+      // Redirect to prevent form resubmission
+      header('Location: server_programs.php');
+      exit();
   } else {
       $message = "Error: " . $stmt->error;
   }
-
-  // Close the statement
-  $stmt->close();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
@@ -98,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   // Close the statement
   $stmt->close();
 }
-
 ?>
 
 
@@ -109,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   <title>TEAMPOGI OJT ADMIN MOD</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 <div class="task-manager">
@@ -165,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
             <label for="end_date">End Date:</label>
             <input type="date" name="end_date" id="end_date">
             <input type="submit" name="add_program" value="Add Program">
+            <button type="button" onclick="cancelAddProgram()">Cancel</button>
           </form>
         </div>
 
@@ -178,6 +185,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
     <input type="date" id="editForm-start_datee" name="start_datee">
     <input type="date" id="editForm-end_date" name="end_date">
     <input type="submit" name="edit_program" value="Update Program">
+        <!-- Add Cancel button -->
+        <button type="button" onclick="cancelEditProgram()">Cancel</button>
 </form>
 
         </div>
@@ -186,35 +195,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   </div>
       <!-- Table for displaying program data -->
       <table>
-        <tr>
-          <th>Program ID</th>
-          <th>Administrator ID</th>
-          <th>Program Name</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Actions</th>
-        </tr>
-        <?php foreach ($programsData as $program): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($program['program_id']); ?></td>
-            <td><?php echo htmlspecialchars($program['administrator_id']); ?></td>
-            <td><?php echo htmlspecialchars($program['program_name']); ?></td>
-            <td><?php echo htmlspecialchars($program['start_datee']); ?></td>
-            <td><?php echo htmlspecialchars($program['end_date']); ?></td>
-            <td>
-              <!-- Edit button for each row -->
-              <button type="button" onclick="editProgram('<?php echo $program['program_id']; ?>', '<?php echo $program['administrator_id']; ?>', '<?php echo htmlspecialchars(addslashes($program['program_name'])); ?>', '<?php echo $program['start_datee']; ?>', '<?php echo $program['end_date']; ?>')">Edit</button>
-
-
-            </td>
-          </tr>
-        <?php endforeach; ?>
-        <?php if (empty($programsData)): ?>
-          <tr>
-            <td colspan="6">No programs found.</td>
-          </tr>
-        <?php endif; ?>
-      </table>
+  <tr>
+    <th>Program ID</th>
+    <th>Administrator Name</th>
+    <th>Program Name</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Actions</th>
+  </tr>
+  <?php foreach ($programsData as $program): ?>
+    <tr>
+      <td><?php echo htmlspecialchars($program['program_id']); ?></td>
+      <td><?php echo htmlspecialchars($program['administrator_name']); ?></td>
+      <td><?php echo htmlspecialchars($program['program_name']); ?></td>
+      <td><?php echo htmlspecialchars($program['start_datee']); ?></td>
+      <td><?php echo htmlspecialchars($program['end_date']); ?></td>
+      <td>
+        <!-- Edit button for each row -->
+        <button type="button" onclick="editProgram('<?php echo $program['program_id']; ?>', '<?php echo $program['administrator_id']; ?>', '<?php echo htmlspecialchars(addslashes($program['program_name'])); ?>', '<?php echo $program['start_datee']; ?>', '<?php echo $program['end_date']; ?>')">Edit</button>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+  <?php if (empty($programsData)): ?>
+    <tr>
+      <td colspan="6">No programs found.</td>
+    </tr>
+  <?php endif; ?>
+</table>
       <!-- Add button below the table -->
       <button type="button" onclick="addProgram()">Add New Program</button>
     </div>
@@ -224,6 +231,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
 function addProgram() {
   var form = document.getElementById('addForm');
   form.style.display = form.style.display === 'none' ? 'block' : 'none';
+
+    // Scroll to the add form
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function editProgram(programId, administratorId, programName, startDate, endDate) {
@@ -235,6 +245,18 @@ function editProgram(programId, administratorId, programName, startDate, endDate
 
   var form = document.getElementById('editForm');
   form.style.display = 'block';
+
+  // Scroll to the edit form
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function cancelEditProgram() {
+  var form = document.getElementById('editForm');
+  form.style.display = 'none';
+}
+
+function cancelAddProgram() {
+  var form = document.getElementById('addForm');
+  form.style.display = 'none';
 }
 </script>
 </body>
