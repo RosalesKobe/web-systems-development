@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
@@ -109,20 +109,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   <title>TEAMPOGI OJT ADMIN MOD</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
 </head>
 <body>
 <div class="task-manager">
