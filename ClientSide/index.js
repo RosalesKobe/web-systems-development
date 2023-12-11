@@ -53,10 +53,12 @@ app.post('/login', (req, res) => {
               return res.json({ success: true, redirectUrl: '/dashboard' });
           } else {
               // Incorrect password
+              console.log("Incorrect Credentials");
               return res.json({ success: false, message: 'Invalid credentials' });
           }
       } else {
           // No user found with the username and user type
+          console.log("Incorrect User Type");
           return res.json({ success: false, message: 'Invalid credentials' });
       }
   });
