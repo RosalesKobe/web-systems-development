@@ -4,7 +4,7 @@ require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjus
 //require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: web-systems-development/Index/index.html"); // redirect to login if not logged in
+  header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
     exit;
 }
 
