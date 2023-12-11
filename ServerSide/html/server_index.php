@@ -8,10 +8,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-	<img class="wave" src="/web-systems-development/ServerSide/img/wave.png">
+	<img class="wave" src="/web-systems-development/ServerSide/img/imageedit_2_7058122710.png">
 	<div class="container">
 		<div class="img">
-			<img src="/web-systems-development/ServerSide/img/bg.svg">
+			<img src="/web-systems-development/ServerSide/img/bg-removebg-preview.png">
 		</div>
 		<div class="login-content">
 			<form id="login-form" method="POST" action="/web-systems-development/ServerSide/php/admin_login.php" class="login-form">
