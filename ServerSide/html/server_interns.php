@@ -15,13 +15,7 @@ $firstName = '';
 $lastName = '';
 
 // Determine the table to query based on user type
-if ($userType === 'Adviser') {
-  $detailsTable = 'adviserdetails';
-} elseif ($userType === 'Administrator') {
-  $detailsTable = 'admindetails';
-} else {
-  // Add logic for Adviser or any other user types
-}
+$detailsTable = 'admindetails';
 
 // Query for the last name if a details table has been identified
 if (!empty($detailsTable)) {
@@ -113,6 +107,9 @@ $stmt->close();
         </li>
         <li class="item">
           <a href="server_feedbacks.php">Feedback</a>
+        </li>
+        <li class="item">
+          <a href="server_addIntern.php">Add Intern</a>
         </li>
         <a href="server_logout.php" class="logout-button">Logout</a>  
       </ul>

@@ -13,14 +13,8 @@ $userType = $_SESSION['userType'];
 
 $lastName = '';
 $firstName = '';
-// Determine the table to query based on user type
-if ($userType === 'Adviser') {
-    $detailsTable = 'adviserdetails';
-} elseif ($userType === 'Administrator') {
-    $detailsTable = 'admindetails';
-} else {
-    // Add logic for Adviser or any other user types
-}
+
+$detailsTable = 'admindetails';
 
 // Query for the last name if a details table has been identified
 if (!empty($detailsTable)) {
