@@ -62,8 +62,19 @@ app.post('/login', (req, res) => {
           
           if (password === user.password) {
               req.session.username = username; // Save username in session
+              req.session.userType = userType; // Save userType in session
               console.log("Login success");
-              return res.json({ success: true, redirectUrl: '/profile' });
+
+              // Redirect to different pages based on the user type
+              let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
+              if (userType === 'Adviser') {
+                  redirectUrl = '/adviser_profile'; // Redirect for 'Adviser'
+              } else if (userType === 'Intern') {
+                  redirectUrl = '/intern_profile'; // Redirect for 'Administrator'
+              }
+              // Add more 'else if' conditions if there are more user types
+
+              return res.json({ success: true, redirectUrl: redirectUrl });
           } else {
               console.log("Incorrect Credentials");
               return res.json({ success: false, message: 'Invalid credentials' });
@@ -75,34 +86,75 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Dashboard route
-app.get('/profile', (req, res) => {
+
+// Profile route for intern
+app.get('/intern_profile', (req, res) => {
   if (req.session.username) {
+    // Render profile with username
     console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
-    res.render('profile', { username: req.session.username });
+    res.render('intern_profile', { username: req.session.username });
+  } else {
+    // If no username in session, redirect to login page
+    res.redirect('/');
+  }
+});
+
+// Work Track route for intern
+app.get('/intern_worktrack', (req, res) => {
+  if (req.session.username) {
+    res.render('intern_worktrack', { username: req.session.username });
   } else {
     res.redirect('/');
   }
 });
 
-app.get('/worktrack', (req, res) => {
+
+// Documents route for intern
+app.get('/intern_documents', (req, res) => {
   if (req.session.username) {
     // Render profile with username
-    res.render('worktrack', { username: req.session.username });
+    res.render('intern_documents', { username: req.session.username });
   } else {
     // If no username in session, redirect to login page
     res.redirect('/');
   }
 });
-app.get('/documents', (req, res) => {
+
+
+// Profile route for adviser
+app.get('/adviser_profile', (req, res) => {
   if (req.session.username) {
     // Render profile with username
-    res.render('documents', { username: req.session.username });
+    console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
+    res.render('adviser_profile', { username: req.session.username });
   } else {
     // If no username in session, redirect to login page
     res.redirect('/');
   }
 });
+
+// Work Track route for adviser
+app.get('/adviser_worktrack', (req, res) => {
+  if (req.session.username) {
+    // Render profile with username
+    res.render('adviser_worktrack', { username: req.session.username });
+  } else {
+    // If no username in session, redirect to login page
+    res.redirect('/');
+  }
+});
+
+// Documents route for adviser
+app.get('/adviser_documents', (req, res) => {
+  if (req.session.username) {
+    // Render profile with username
+    res.render('adviser_documents', { username: req.session.username });
+  } else {
+    // If no username in session, redirect to login page
+    res.redirect('/');
+  }
+});
+
 
 // Route to fetch intern details and render them in a table
 // app.get('/interndetails', (req, res) => {
