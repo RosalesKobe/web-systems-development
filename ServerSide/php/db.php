@@ -1,5 +1,5 @@
 <?php
-$servername = "localhost"; // Server name, usually localhost
+$servername = "localhost"; // Server name, usually localhost (127.0.0.1)
 $username = "root"; // Your database username
 $password = ""; // Your database password
 $dbname = "teampogi"; // Your database name
