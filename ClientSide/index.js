@@ -63,7 +63,7 @@ app.post('/login', (req, res) => {
           if (password === user.password) {
               req.session.username = username; // Save username in session
               console.log("Login success");
-              return res.json({ success: true, redirectUrl: '/dashboard' });
+              return res.json({ success: true, redirectUrl: '/profile' });
           } else {
               console.log("Incorrect Credentials");
               return res.json({ success: false, message: 'Invalid credentials' });
@@ -76,19 +76,28 @@ app.post('/login', (req, res) => {
 });
 
 // Dashboard route
-app.get('/dashboard', (req, res) => {
+app.get('/profile', (req, res) => {
   if (req.session.username) {
     console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
-    res.render('dashboard', { username: req.session.username });
+    res.render('profile', { username: req.session.username });
   } else {
     res.redirect('/');
   }
 });
 
-app.get('/message', (req, res) => {
+app.get('/worktrack', (req, res) => {
   if (req.session.username) {
-    // Render dashboard with username
-    res.render('message', { username: req.session.username });
+    // Render profile with username
+    res.render('worktrack', { username: req.session.username });
+  } else {
+    // If no username in session, redirect to login page
+    res.redirect('/');
+  }
+});
+app.get('/documents', (req, res) => {
+  if (req.session.username) {
+    // Render profile with username
+    res.render('documents', { username: req.session.username });
   } else {
     // If no username in session, redirect to login page
     res.redirect('/');
@@ -96,50 +105,49 @@ app.get('/message', (req, res) => {
 });
 
 // Route to fetch intern details and render them in a table
-app.get('/interndetails', (req, res) => {
-  const sql = 'SELECT * FROM interndetails';
+// app.get('/interndetails', (req, res) => {
+//   const sql = 'SELECT * FROM interndetails';
 
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('MySQL error:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      // Render the 'interndetails.ejs' template with the data
-      res.render('interndetails', { data: results });
-    }
-  });
-});
-
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       console.error('MySQL error:', err);
+//       res.status(500).send('Internal Server Error');
+//     } else {
+//       // Render the 'interndetails.ejs' template with the data
+//       res.render('interndetails', { data: results });
+//     }
+//   });
+// });
 
 // Route to fetch intern details and render them in a table
-app.get('/internshiprecords', (req, res) => {
-  const sql = 'SELECT * FROM internshiprecords';
+// app.get('/internshiprecords', (req, res) => {
+//   const sql = 'SELECT * FROM internshiprecords';
 
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('MySQL error:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      // Render the 'interndetails.ejs' template with the data
-      res.render('internshiprecords', { data: results });
-    }
-  });
-});
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       console.error('MySQL error:', err);
+//       res.status(500).send('Internal Server Error');
+//     } else {
+//       // Render the 'interndetails.ejs' template with the data
+//       res.render('internshiprecords', { data: results });
+//     }
+//   });
+// });
 
-app.get('/feedback', (req, res) => {
-  const sql = 'SELECT * FROM feedback';
+// app.get('/feedback', (req, res) => {
+//   const sql = 'SELECT * FROM feedback';
 
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('MySQL error:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      // Render the 'interndetails.ejs' template with the data
-      res.render('feedback', { data: results });
-    }
-  });
-});
-// Similar routes for other tables...
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       console.error('MySQL error:', err);
+//       res.status(500).send('Internal Server Error');
+//     } else {
+//       // Render the 'interndetails.ejs' template with the data
+//       res.render('feedback', { data: results });
+//     }
+//   });
+// });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
