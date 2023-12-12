@@ -58,13 +58,15 @@ app.post('/login', (req, res) => {
       }
       
       if (results.length > 0) {
-          const user = results[0];
-          
-          if (password === user.password) {
-              req.session.username = username; // Save username in session
-              req.session.userType = userType; // Save userType in session
+        const user = results[0];
+        
+        if (password === user.password) {
+          req.session.username = username; // Save username in session
+          req.session.userType = userType; // Save userType in session
+          req.session.userId = user.user_id; // Save the user's ID in the session
               console.log("Login success");
-
+              console.log(req.session.username)
+              console.log(req.session.userType)
               // Redirect to different pages based on the user type
               let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
               if (userType === 'Adviser') {
@@ -89,15 +91,35 @@ app.post('/login', (req, res) => {
 
 // Profile route for intern
 app.get('/intern_profile', (req, res) => {
-  if (req.session.username) {
-    // Render profile with username
-    console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
-    res.render('intern_profile', { username: req.session.username });
+  // Check if the user is logged in and is an intern
+  if (req.session.userType === 'Intern' && req.session.userId) {
+    const sql = 'SELECT * FROM interndetails WHERE user_id = ?';
+    db.query(sql, [req.session.userId], (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else if (results.length > 0) {
+        // Pass the intern details to the EJS template
+        res.render('intern_profile', {
+          username: req.session.username,
+          interndetails: results[0]
+        });
+      } else {
+        // Handle the case where no intern details are found
+        console.log('No intern details found for the user.');
+        res.render('intern_profile', {
+          username: req.session.username,
+          interndetails: {}
+        });
+      }
+    });
   } else {
-    // If no username in session, redirect to login page
-    res.redirect('/');
+    // If the user is not an intern or not logged in, redirect to login page
+    console.log('User is not logged in or not an intern.');
+    res.redirect('/login');
   }
 });
+
 
 // Work Track route for intern
 app.get('/intern_worktrack', (req, res) => {

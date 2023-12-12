@@ -1,35 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>OJT Student - Profile</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/style_client.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<style>
+    body {
+  font-family: Arial, sans-serif;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-info,
+.announcement {
+  background-color: #E0F7FA;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px;
+  width: 48%;
+}
+
+.user-info h2,
+.announcement h2 {
+  color: #00695C;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  background-color: #B2EBF2;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 5px;
+}
+
+.work-hours-overview {
+  margin-top: 30px;
+}
+
+.chart-placeholder {
+  background-color: #B2EBF2;
+  height: 200px; /* Placeholder height, adjust as needed */
+  border-radius: 5px;
+}
+
+.announcement-content,
+.feedback-content {
+  background-color: #B2EBF2;
+  padding: 10px;
+  border-radius: 5px;
+  height: 150px; /* Placeholder height, adjust as needed */
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .user-info,
+  .announcement {
+    width: auto;
+  }
+}
+</style>
 </head>
 <body>
-    <div class="left-manager">
-        <div class="client-task">
-            <li class="work">
-                <a href="/intern_profile">Profile</a>
-            </li>
-            <li class="work">
-                <a href="/intern_worktrack">Work Track</a>
-            </li>
-            <li class="work">
-                <a href="/Intern_documents">Documents</a>
-            </li>
-        </div>
+
+<div class="dashboard">
+
+  <div class="user-info">
+    <h2>User Information</h2>
+    <form>
+      <div class="input-group">
+        <label for="last-name">Last Name:</label>
+        <input type="text" id="last-name" value="<%= interndetails.lastName %>">
+      </div>
+      <div class="input-group">
+        <label for="first-name">First Name:</label>
+        <input type="text" id="first-name" value="<%= interndetails.firstName %>">
+      </div>
+      <div class="input-group">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" value="<%= interndetails.email %>">
+      </div>
+      <div class="input-group">
+        <label for="address">Address:</label>
+        <input type="text" id="address" value="<%= interndetails.address %>">
+      </div>
+      <div class="input-group">
+        <label for="school">School:</label>
+        <input type="text" id="school" value="<%= interndetails.School %>">
+      </div>
+      <div class="input-group">
+        <label for="details">Details:</label>
+        <input type="text" id="details" value="<%= interndetails.other_intern_details %>">
+      </div>
+    </form>
+    <div class="work-hours-overview">
+      <h2>Daily Work Hours Overview</h2>
+      <!-- Here you would insert a chart from a charting library -->
+      <div class="chart-placeholder">Chart will go here</div>
     </div>
-    <div class="content">
-        <h1>Welcome to Your Profile</h1>
-        <div class="progress-bar-container">
-            <div class="progress-bar html">
-                <progress id="html" min="0" max="150" value="92"></progress>
-            </div>
-            <div class="progress-info">
-                <p class="hours-spent">Hours Spent: 120</p>
-                <p class="time-remaining">Time Remaining: 30</p>
-            </div>
-        </div>
+  </div>
+
+  <div class="announcement">
+  <h2>Announcement:</h2>
+  <div class="announcement-content">
+      <div class="program">
+        <h3>Announcement: this should be the program_name in ojtprograms</h3>
+      </div>
+  </div>
+  <h2>Feedback:</h2>
+  <div class="feedback-content">Feedback: this should be the feedback_text in the feedback table</div>
+</div>
+
+</div>
+
 </body>
 </html>
