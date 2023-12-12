@@ -130,7 +130,7 @@ $db->close();
           <a href="server_feedbacks.php">Feedback</a>
         </li>
         <li class="item active">
-          <a href="server_addIntern.php">Add User</a>
+          <a href="server_addIntern.php">Add Intern</a>
         </li>
         <a href="server_logout.php" class="logout-button">Logout</a>
       </ul>
