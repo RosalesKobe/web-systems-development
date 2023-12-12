@@ -94,6 +94,9 @@ $adviser_count = $adviser_result['adviser_count'];
         <li class="item">
           <a href="server_feedbacks.php">Feedback</a>
         </li>
+        <li class="item">
+          <a href="server_addIntern.php">Add Intern</a>
+        </li>
         <a href="server_logout.php" class="logout-button">Logout</a>
       </ul>
     </div>
