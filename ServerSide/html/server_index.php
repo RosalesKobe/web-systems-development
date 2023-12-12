@@ -97,13 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: http://localhost/web-systems-development/ServerSide/html/server_home.php");
                 exit();
             } else {
-                echo "Incorrect username or password.";
-                echo "Username: $username, UserType: $userType <br>";
-                echo "SQL Query: " . $statement->sqlstate . "<br>";
+				echo "<script>alert('Incorrect username or password.');</script>";
             }
         } else {
-            echo "Incorrect username or password.";
-            echo "Username: $username, UserType: $userType <br>";
+			echo "<script>alert('Incorrect username or password.');</script>";
         }
 
         // Close the statement

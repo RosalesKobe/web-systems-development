@@ -47,11 +47,10 @@ if ($result->num_rows > 0) {
     $adviserOptions = '<option value="">No advisers found</option>';
 }
 
-// Check if form data is posted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve and sanitize form data
   $username = $db->real_escape_string($_POST['username']);
-  $password = $db->real_escape_string($_POST['password']);
+  $password = $db->real_escape_string($_POST['password']); // Password should be hashed with password_hash in a real application
   $userType = 'Intern'; // Set user type to 'Intern' by default
   $adviserId = $db->real_escape_string($_POST['adviser_id']);
   $firstName = $db->real_escape_string($_POST['first_name']);
@@ -61,32 +60,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $address = $db->real_escape_string($_POST['address']);
   $otherDetails = $db->real_escape_string($_POST['other_intern_details']);
 
-  // Insert into 'users' table
-  $insertUserQuery = "INSERT INTO users (username, password, user_type) VALUES (?, ?, ?)";
-  $stmt = $db->prepare($insertUserQuery);
-  $stmt->bind_param("sss", $username, $password, $userType);
-  
-  if ($stmt->execute()) {
-      $lastUserId = $stmt->insert_id; // Get the last inserted user id
+  // Check if the username or email already exists
+// Check if the username already exists in the 'users' table
+$checkUsernameQuery = "SELECT username FROM users WHERE username = ?";
+$usernameStmt = $db->prepare($checkUsernameQuery);
+if ($usernameStmt === false) {
+    die("Failed to prepare the statement: " . htmlspecialchars($db->error));
+}
 
-      // Insert into 'interndetails' table
-      $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, firstName, lastName, email, address, School, other_intern_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-      $stmt = $db->prepare($insertInternDetailsQuery);
-      $stmt->bind_param("iissssss", $lastUserId, $adviserId, $firstName, $lastName, $email, $address, $school, $otherDetails);
+// Bind parameters and execute the statement for username check
+$usernameStmt->bind_param("s", $username);
+if (!$usernameStmt->execute()) {
+    die("Execute failed: " . htmlspecialchars($usernameStmt->error));
+}
+
+$usernameResult = $usernameStmt->get_result();
+$usernameStmt->close();
+
+if ($usernameResult->num_rows > 0) {
+    echo "Error: Username already exists";
+    exit; // Stop the script if username already exists
+}
+
+// Check if the email already exists in the 'interndetails' table
+$checkEmailQuery = "SELECT email FROM interndetails WHERE email = ?";
+$emailStmt = $db->prepare($checkEmailQuery);
+if ($emailStmt === false) {
+    die("Failed to prepare the statement: " . htmlspecialchars($db->error));
+}
+
+// Bind parameters and execute the statement for email check
+$emailStmt->bind_param("s", $email);
+if (!$emailStmt->execute()) {
+    die("Execute failed: " . htmlspecialchars($emailStmt->error));
+}
+
+$emailResult = $emailStmt->get_result();
+$emailStmt->close();
+
+if ($emailResult->num_rows > 0) {
+    echo "Error: Email already exists";
+    exit; // Stop the script if email already exists
+}
+ else {
+      // Proceed with inserting new user since username and email are unique
+      $insertUserQuery = "INSERT INTO users (username, password, user_type) VALUES (?, ?, ?)";
+      $stmt = $db->prepare($insertUserQuery);
+      $stmt->bind_param("sss", $username, $password, $userType);
       
       if ($stmt->execute()) {
-          echo "New intern added successfully";
+          $lastUserId = $stmt->insert_id; // Get the last inserted user id
+
+          // Insert into 'interndetails' table
+          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, firstName, lastName, email, address, School, other_intern_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+          $stmt = $db->prepare($insertInternDetailsQuery);
+          $stmt->bind_param("iissssss", $lastUserId, $adviserId, $firstName, $lastName, $email, $address, $school, $otherDetails);
+          
+          if ($stmt->execute()) {
+              echo "New intern added successfully";
+          } else {
+              echo "Error: " . $stmt->error;
+          }
+          $stmt->close();
       } else {
           echo "Error: " . $stmt->error;
       }
-  } else {
-      echo "Error: " . $stmt->error;
   }
-  $stmt->close();
+  $db->close();
 }
-
-$db->close();
-
 ?>
 
 <!DOCTYPE html>
