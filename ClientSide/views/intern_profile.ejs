@@ -117,14 +117,29 @@
   </div>
 
   <div class="announcement">
-  <h2>Announcement:</h2>
-  <div class="announcement-content">
-      <div class="program">
-        <h3>Announcement: this should be the program_name in ojtprograms</h3>
-      </div>
-  </div>
+    <h2>Announcements:</h2>
+    <div class="announcement-content">
+      <% if (programNames && programNames.length > 0) { %>
+        <% programNames.forEach(function(program) { %>
+          <div class="program">
+            <h3><%= program.program_name %></h3>
+            <!-- Displaying more information about each program -->
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No program announcements available.</p>
+      <% } %>
+    </div>
   <h2>Feedback:</h2>
-  <div class="feedback-content">Feedback: this should be the feedback_text in the feedback table</div>
+  <div class="feedback-content">
+    <% if (feedback && feedback.length > 0) { %>
+      <% feedback.forEach(function(item) { %>
+        <p><%= item.feedback_text %></p>
+      <% }); %>
+    <% } else { %>
+      <p>No feedback available.</p>
+    <% } %>
+  </div>
 </div>
 
 </div>

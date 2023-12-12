@@ -91,30 +91,52 @@ app.post('/login', (req, res) => {
 
 // Profile route for intern
 app.get('/intern_profile', (req, res) => {
-  // Check if the user is logged in and is an intern
   if (req.session.userType === 'Intern' && req.session.userId) {
-    const sql = 'SELECT * FROM interndetails WHERE user_id = ?';
-    db.query(sql, [req.session.userId], (err, results) => {
+    const internDetailsSql = 'SELECT * FROM interndetails WHERE user_id = ?';
+    db.query(internDetailsSql, [req.session.userId], (err, internResults) => {
       if (err) {
         console.error('MySQL error:', err);
-        res.status(500).send('Internal Server Error');
-      } else if (results.length > 0) {
-        // Pass the intern details to the EJS template
-        res.render('intern_profile', {
-          username: req.session.username,
-          interndetails: results[0]
+        return res.status(500).send('Internal Server Error');
+      } else if (internResults.length > 0) {
+        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 2';
+        db.query(programDetailsSql, (programErr, programResults) => {
+          if (programErr) {
+            console.error('MySQL error:', programErr);
+            return res.status(500).send('Internal Server Error');
+          } else {
+            // New query to fetch feedback for the logged-in intern
+            const feedbackSql = `
+              SELECT feedback.feedback_text FROM feedback
+              JOIN internshiprecords ON feedback.record_id = internshiprecords.record_id
+              WHERE internshiprecords.intern_id = ?
+            `;
+            db.query(feedbackSql, [internResults[0].intern_id], (feedbackErr, feedbackResults) => {
+              if (feedbackErr) {
+                console.error('MySQL error:', feedbackErr);
+                return res.status(500).send('Internal Server Error');
+              } else {
+                // Pass intern details, program names, and feedback to the EJS template
+                res.render('intern_profile', {
+                  username: req.session.username,
+                  interndetails: internResults[0],
+                  programNames: programResults,
+                  feedback: feedbackResults
+                });
+              }
+            });
+          }
         });
       } else {
-        // Handle the case where no intern details are found
         console.log('No intern details found for the user.');
         res.render('intern_profile', {
           username: req.session.username,
-          interndetails: {}
+          interndetails: {},
+          programNames: [],
+          feedback: [] // Add this line to handle the case where intern details are not found
         });
       }
     });
   } else {
-    // If the user is not an intern or not logged in, redirect to login page
     console.log('User is not logged in or not an intern.');
     res.redirect('/login');
   }
