@@ -126,6 +126,7 @@ $stmt->close();
         <div class="image-container">
     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
   </div>
+  </div>
 
       <table>
         <tr>
@@ -158,7 +159,7 @@ $stmt->close();
         <?php endif; ?>
       </table>
 
-    </div>
+    
   </div>
 </div>
 <script>

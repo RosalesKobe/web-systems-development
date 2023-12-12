@@ -84,7 +84,7 @@ th, td {
 }
 
 th {
-  background-color: #4caf50; /* Header background */
+  background-color: #9ab19b; /* Header background */
   color: #ffffff;
 }
 
@@ -93,7 +93,7 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: #598668;
+  background-color: #414a44;
 }
 .logout-button {
   background-color: #e53935;
