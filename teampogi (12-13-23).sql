@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 10, 2023 at 03:28 PM
+-- Generation Time: Dec 12, 2023 at 05:37 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -32,11 +32,11 @@ CREATE TABLE IF NOT EXISTS `admindetails` (
   `administrator_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
   `company_id` int NOT NULL,
-  `firstName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `other_administrator_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `firstName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `other_administrator_details` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`administrator_id`),
   KEY `user_id` (`user_id`),
   KEY `company_id` (`company_id`)
@@ -47,7 +47,6 @@ CREATE TABLE IF NOT EXISTS `admindetails` (
 --
 
 INSERT INTO `admindetails` (`administrator_id`, `user_id`, `company_id`, `firstName`, `lastName`, `email`, `address`, `other_administrator_details`) VALUES
-(1, 3, 1, 'Admin', 'Ito', 'admin@slu.edu.ph', 'Abra', NULL),
 (2, 15, 1, 'Saul', 'Goodman', 'sgoodman@gmail.com', 'Bucay, Abra', 'Company Admin');
 
 -- --------------------------------------------------------
@@ -60,23 +59,24 @@ DROP TABLE IF EXISTS `adviserdetails`;
 CREATE TABLE IF NOT EXISTS `adviserdetails` (
   `adviser_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
-  `firstName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `School` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `other_adviser_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `administrator_id` int NOT NULL,
+  `firstName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `School` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `other_adviser_details` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`adviser_id`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  KEY `administrator_id` (`administrator_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `adviserdetails`
 --
 
-INSERT INTO `adviserdetails` (`adviser_id`, `user_id`, `firstName`, `lastName`, `email`, `School`, `address`, `other_adviser_details`) VALUES
-(1, 2, 'Adviser', 'AdviserR', 'adviser@slu.edu.ph', 'slu', 'baguio', NULL),
-(2, 14, 'Walter ', 'White', 'wwhite@slu.edu.ph', 'Saint Louis University', 'Baguio City', 'Good Teacher');
+INSERT INTO `adviserdetails` (`adviser_id`, `user_id`, `administrator_id`, `firstName`, `lastName`, `email`, `School`, `address`, `other_adviser_details`) VALUES
+(2, 14, 2, 'Walter ', 'White', 'wwhite@slu.edu.ph', 'Saint Louis University', 'Baguio City', 'Good Teacher');
 
 -- --------------------------------------------------------
 
@@ -87,9 +87,9 @@ INSERT INTO `adviserdetails` (`adviser_id`, `user_id`, `firstName`, `lastName`, 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE IF NOT EXISTS `company` (
   `company_id` int NOT NULL AUTO_INCREMENT,
-  `companyName` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `companyAddress` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `companyDetails` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `companyName` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `companyAddress` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `companyDetails` text COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -110,9 +110,9 @@ DROP TABLE IF EXISTS `documents`;
 CREATE TABLE IF NOT EXISTS `documents` (
   `document_id` int NOT NULL AUTO_INCREMENT,
   `record_id` int DEFAULT NULL,
-  `document_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `document_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `other_document_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `document_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `document_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `other_document_details` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`document_id`),
   KEY `record_id` (`record_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -127,20 +127,21 @@ DROP TABLE IF EXISTS `feedback`;
 CREATE TABLE IF NOT EXISTS `feedback` (
   `feedback_id` int NOT NULL AUTO_INCREMENT,
   `record_id` int DEFAULT NULL,
-  `feedback_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `feedback_text` text COLLATE utf8mb4_general_ci NOT NULL,
   `feedback_date` date NOT NULL,
-  `other_feedback_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`feedback_id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `feedback`
 --
 
-INSERT INTO `feedback` (`feedback_id`, `record_id`, `feedback_text`, `feedback_date`, `other_feedback_details`) VALUES
-(1, 1, 'The intern completed his work and performed well in regards to the tasks that is given to him.', '2023-09-05', 'N/A'),
-(2, 2, 'The intern is currently performing well. She complies to the given tasks and do it on time.', '2023-11-21', 'N/A');
+INSERT INTO `feedback` (`feedback_id`, `record_id`, `feedback_text`, `feedback_date`) VALUES
+(1, 1, 'The intern completed his work and performed well in regards to the tasks that is given to him.', '2023-09-05'),
+(2, 2, 'The intern is currently performing well. She complies to the given tasks and do it on time.', '2023-11-21'),
+(12, 1, 'this intern is very good cuh.', '2023-12-11'),
+(13, 2, 'Tangina mo cuh, drop kana!', '2023-12-11');
 
 -- --------------------------------------------------------
 
@@ -153,23 +154,22 @@ CREATE TABLE IF NOT EXISTS `interndetails` (
   `intern_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
   `adviser_id` int NOT NULL,
-  `firstName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `School` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `other_intern_details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `firstName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `School` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `other_intern_details` text COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`intern_id`),
   KEY `user_id` (`user_id`),
   KEY `adviser_id` (`adviser_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `interndetails`
 --
 
 INSERT INTO `interndetails` (`intern_id`, `user_id`, `adviser_id`, `firstName`, `lastName`, `email`, `address`, `School`, `other_intern_details`) VALUES
-(1, 1, 1, 'Intern', 'Ito', 'intern@slu.edu.ph', 'Baguio', 'SLU', NULL),
 (4, 4, 2, 'Jesse', 'Pinkman', 'jpinkman@slu.edu.ph', 'Quezon City', 'Saint Louis University', 'Computer Science Intern Student'),
 (5, 5, 2, 'Gus', 'Fring', 'gfring@slu.edu.ph', 'Quezon City', 'Saint Louis University', 'Computer Science Intern Student'),
 (6, 6, 2, 'Tuco', 'Salamanca', 'tsalamanca@slu.edu.ph', 'Quezon Province', 'Saint Louis University', 'Computer Science Intern Student'),
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `internshiprecords` (
   `hours_remaining` int NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `record_status` enum('In Progress','Completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `record_status` enum('In Progress','Completed') COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`record_id`),
   KEY `intern_id` (`intern_id`),
   KEY `adviser_id` (`adviser_id`),
@@ -211,8 +211,8 @@ CREATE TABLE IF NOT EXISTS `internshiprecords` (
 --
 
 INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `program_id`, `administrator_id`, `hours_completed`, `hours_remaining`, `start_date`, `end_date`, `record_status`) VALUES
-(1, 1, 1, 1, 1, 100, 0, '2023-07-01', '2023-08-31', 'Completed'),
-(2, 4, 2, 23, 2, 70, 30, '2023-11-01', '0000-00-00', 'In Progress');
+(1, 4, 2, 1, 2, 100, 0, '2023-07-01', '2023-08-31', 'Completed'),
+(2, 4, 2, 2, 2, 70, 30, '2023-11-01', '0000-00-00', 'In Progress');
 
 -- --------------------------------------------------------
 
@@ -224,35 +224,22 @@ DROP TABLE IF EXISTS `ojtprograms`;
 CREATE TABLE IF NOT EXISTS `ojtprograms` (
   `program_id` int NOT NULL AUTO_INCREMENT,
   `administrator_id` int DEFAULT NULL,
-  `program_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `program_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `start_datee` date NOT NULL,
   `end_date` date NOT NULL,
   PRIMARY KEY (`program_id`),
   KEY `administrator_id` (`administrator_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ojtprograms`
 --
 
 INSERT INTO `ojtprograms` (`program_id`, `administrator_id`, `program_name`, `start_datee`, `end_date`) VALUES
-(1, 1, 'Ednis the great Birthday', '2023-12-10', '2023-12-11'),
-(2, 1, '1', '0000-00-00', '2023-12-21'),
-(3, 1, '1', '2023-12-20', '2023-12-21'),
-(4, 1, '1', '2023-12-20', '2023-12-21'),
-(12, 1, 'denden', '2023-12-06', '2023-11-30'),
-(13, 1, 'denden', '2023-12-06', '2023-11-30'),
-(14, 1, 'dennis', '2023-12-19', '2023-12-21'),
-(15, 1, 'dennis', '2023-12-19', '2023-12-21'),
-(16, 1, 'ednis', '2023-12-19', '2023-12-20'),
-(17, 1, 'ednis', '2023-12-19', '2023-12-20'),
-(18, 1, 'dendennis', '2023-12-06', '2023-12-16'),
-(19, 1, 'dendennis', '2023-12-06', '2023-12-16'),
-(20, 1, '1', '2023-12-06', '2023-12-07'),
-(21, 1, '1', '2023-12-06', '2023-12-07'),
-(22, 1, '1', '2023-12-06', '2023-12-07'),
-(23, 1, 'BDAY BDAY', '2023-12-25', '2023-12-28'),
-(24, 1, 'BDAY BDAY', '2023-12-25', '2023-12-28');
+(1, 2, 'Product Development Program.\r\n\r\nObjective: To design, develop, and launch new products in the market.\r\nKey Initiatives:\r\nResearch and Development\r\nPrototyping\r\nTesting and Quality Assurance\r\nLaunch Strategy', '2023-12-20', '2023-12-23'),
+(2, 2, 'Marketing and Branding Program.\r\n\r\nObjective: To improve customer satisfaction and service delivery.\r\nKey Initiatives:\r\nCustomer Support Training\r\nService Quality Monitoring\r\nFeedback and Improvement', '2024-01-02', '2024-01-03'),
+(3, 2, 'Customer Service Enhancement Program.\r\n\r\nObjective: To enhance employee skills and foster professional growth.\r\nKey Initiatives:\r\nTraining Workshops\r\nLeadership Development\r\nSkill Enhancement Programs', '2024-01-04', '2024-01-06'),
+(4, 2, 'Employee Training and Development Program.\r\n\r\nObjective: To stay at the forefront of technological advancements.\r\nKey Initiatives:\r\nResearch on Emerging Technologies\r\nSystem Upgrades\r\nInnovation Labs', '2024-01-08', '2024-01-12');
 
 -- --------------------------------------------------------
 
@@ -263,21 +250,18 @@ INSERT INTO `ojtprograms` (`program_id`, `administrator_id`, `program_name`, `st
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_type` enum('Intern','Adviser','Administrator') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_type` enum('Intern','Adviser','Administrator') COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
-(1, 'internK', 'internK', 'Intern'),
-(2, 'adviserK', 'adviserK', 'Adviser'),
-(3, 'adminK', 'adminK', 'Administrator'),
 (4, 'intern1', 'intern1', 'Intern'),
 (5, 'intern2', 'intern2', 'Intern'),
 (6, 'intern3', 'intern3', 'Intern'),
@@ -299,48 +283,49 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 -- Constraints for table `admindetails`
 --
 ALTER TABLE `admindetails`
-  ADD CONSTRAINT `admindetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `admindetails_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `admindetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `admindetails_ibfk_2` FOREIGN KEY (`company_id`) REFERENCES `company` (`company_id`);
 
 --
 -- Constraints for table `adviserdetails`
 --
 ALTER TABLE `adviserdetails`
-  ADD CONSTRAINT `adviserdetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `adviserdetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `adviserdetails_ibfk_2` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `documents`
 --
 ALTER TABLE `documents`
-  ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `internshiprecords` (`record_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `internshiprecords` (`record_id`);
 
 --
 -- Constraints for table `feedback`
 --
 ALTER TABLE `feedback`
-  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `internshiprecords` (`record_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`record_id`) REFERENCES `internshiprecords` (`record_id`);
 
 --
 -- Constraints for table `interndetails`
 --
 ALTER TABLE `interndetails`
-  ADD CONSTRAINT `interndetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `interndetails_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `interndetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `interndetails_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`);
 
 --
 -- Constraints for table `internshiprecords`
 --
 ALTER TABLE `internshiprecords`
-  ADD CONSTRAINT `internshiprecords_ibfk_1` FOREIGN KEY (`intern_id`) REFERENCES `interndetails` (`intern_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `internshiprecords_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `internshiprecords_ibfk_3` FOREIGN KEY (`program_id`) REFERENCES `ojtprograms` (`program_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `internshiprecords_ibfk_4` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `internshiprecords_ibfk_1` FOREIGN KEY (`intern_id`) REFERENCES `interndetails` (`intern_id`),
+  ADD CONSTRAINT `internshiprecords_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`),
+  ADD CONSTRAINT `internshiprecords_ibfk_3` FOREIGN KEY (`program_id`) REFERENCES `ojtprograms` (`program_id`),
+  ADD CONSTRAINT `internshiprecords_ibfk_4` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`);
 
 --
 -- Constraints for table `ojtprograms`
 --
 ALTER TABLE `ojtprograms`
-  ADD CONSTRAINT `ojtprograms_ibfk_1` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `ojtprograms_ibfk_1` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
