@@ -1,7 +1,7 @@
 <?php
 session_start();
-//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
@@ -58,7 +58,7 @@ $adviser_count = $adviser_result['adviser_count'];
 <head>
   <meta charset="UTF-8">
   <title>TEAMPOGI OJT ADMIN MOD</title>
-  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server.css">
+  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_home.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     #myChart {

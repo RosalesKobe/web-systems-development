@@ -77,7 +77,7 @@ if ($result->num_rows > 0) {
 <head>
   <meta charset="UTF-8">
   <title>TEAMPOGI OJT ADMIN MOD</title>
-  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server.css">
+  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_feedbacks.css">
 
 </head>
 <body>
