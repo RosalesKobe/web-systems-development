@@ -1,125 +1,74 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  outline: none;
-}
-
-:root {
-  --bg-color: #f5f8ff;
-  --main-color: #353536;
-  --secondary-color: #8e92a4;
-  --main-text-color: #5d606b;
-  --secondary-dark-color: #9496a5;
-  --tag-color-one: #e0fbf6;
-  --tag-color-text-one: #58c2a9;
-  --tag-color-two: #ece7fe;
-  --tag-color-text-two: #8972f3;
-  --tag-color-three: #fde7ea;
-  --tag-color-text-three: #e77f89;
-  --tag-color-four: #f7f8fc;
-  --tag-color-text-four: #a0a6b5;
-  --checkbox-color: #009e90;
-  --button-color: #49beb7;
-  --box-color: #fff1d6;
-  --box-color-2: #d3e6ff;
-  --box-color-3: #ffd9d9;
-  --box-color-4: #daffe5;
-  --task-color: #777982;
-  --active-bg-color: #353536; /* Active item background color */
-  --active-text-color: #ffffff; /* Active item text color */
-}
-
-.item, body {
-  display: flex;
-  align-items: center;
+  font-family: 'DM Sans', sans-serif;
 }
 
 body {
-  margin: 0;
-  justify-content: center;
-  flex-direction: column;
-  overflow: auto; /* Use auto to allow the browser to decide whether to show a scrollbar */
-  width: 100%;
-    padding: 20px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 12px;
-    background-image: linear-gradient(21deg, rgba(33, 37, 41, 0.95) 68%, rgba(75, 85, 99, 0.85) 163%), 
-                      linear-gradient(163deg, rgba(44, 62, 80, 0.9) 86%, rgba(90, 100, 114, 0.85) 40%), 
-                      linear-gradient(30deg, rgba(39, 49, 56, 0.9) 22%, rgba(103, 128, 159, 0.85) 169%), 
-                      linear-gradient(48deg, rgba(47, 54, 64, 0.95) 64%, rgba(108, 122, 137, 0.85) 43%);
-    background-blend-mode: overlay, multiply, color, normal;
-  }
-  
-
-ul {
-  list-style-type: none;
-  padding: 0;
+  background: linear-gradient(135deg, #1f4037, #99f2c8);
+  font-size: 16px; /* Adjust base font size */
+  color: #fff;
+  line-height: 1.6;
 }
-
-
+  
 .task-manager {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1200px;
   height: 90vh; /* Adjust as needed */
   max-height: 900px;
-  background: #fff;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto; /* Center the task manager */
   border-radius: 4px;
-  box-shadow: 0 0.3px 2.2px rgba(0, 0, 0, 0.011), 0 0.7px 5.3px rgba(0, 0, 0, 0.016), 0 1.3px 10px rgba(0, 0, 0, 0.02), 0 2.2px 17.9px rgba(0, 0, 0, 0.024), 0 4.2px 33.4px rgba(0, 0, 0, 0.029), 0 10px 80px rgba(0, 0, 0, 0.04);
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
-
 .left-bar {
-  background-color: var(--bg-color);
-  width: 230px;
-  border-right: 1px solid #e3e7f7;
-  position: relative;
+  background-color: #353536;
+  width: 240px; /* Adjust sidebar width */
+  padding: 20px; /* Add padding for spacing */
 }
 
-.left-content {
-  padding: 40px;
-}
-
-.item {
-  color: var(--main-color);
-  margin-bottom: 14px;
+.action-list {
+  list-style-type: none;
   font-weight: 500;
 }
 
-.item a {
-    text-decoration: none; /* Removes the underline from links */
-    color: inherit; /* Inherits the color from the .item class */
-    display: block; /* Makes the link fill the entire list item */
-    padding: 10px 15px; /* Adjust padding as needed */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-  }
-  
-  .item a:hover, .item.active a {
-    background-color: var(--active-bg-color); /* Background color for hover and active item */
-    color: var(--active-text-color); /* Text color for hover and active item */
-  }
 
-  .page-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    padding: 40px 40px 0 20px; /* Adjust right padding to accommodate the image */
-    overflow: auto;
-    position: relative; /* Set position to relative for absolute positioning of child elements */
-  }
+.item a {
+  color: #ddd;
+  text-decoration: none;
+  display: block;
+  padding: 15px;
+  transition: background-color 0.3s, color 0.3s;
+}
+  
+.item a:hover, .item.active a {
+  background-color: #4caf50; /* Active/Hover item background color */
+  color: #ffffff;
+}
+
+.page-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto; /* Allows scrolling */
+  position: relative; /* For absolute positioning of elements */
+}
 
 .page-content .header {
-  font-size: 26px;
-  color: var(--main-color);
-  margin-top: 30px;
+  padding-top: 10px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 36px; /* Adjust header font size */
+  margin-bottom: 20px; /* Spacing after header */
 }
 
 .content-categories {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  border-bottom: 1px solid #ddd;
-  padding: 20px 0;
+  padding-bottom: 20px;
+  margin-bottom: 20px; /* Spacing before the next section */
+  border-bottom: 1px solid #181818;
 }
 
 table {
@@ -130,13 +79,13 @@ table {
 
 th, td {
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #050505;
   text-align: left;
 }
 
 th {
-  background-color: var(--active-bg-color);
-  color: var(--active-text-color);
+  background-color: #4caf50; /* Header background */
+  color: #ffffff;
 }
 
 tr:nth-child(even) {
@@ -144,21 +93,23 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-  background-color: #f5f5f5;
+  background-color: #adf0c5;
 }
 .logout-button {
-  display: block; /* Change to block to make it a block-level element */
-  margin-top: 10px;
-  padding: 8px 12px;
-  background-color: var(--button-color);
-  color: #fff;
-  text-decoration: none;
+  background-color: #e53935;
+  color: #ffffff;
+  text-align: center;
+  padding: 12px;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  width: calc(100% - 40px); /* Account for padding */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px; /* Space from the last item */
 }
 
 .logout-button:hover {
-  background-color: #3e8e87;
+  background-color: #d32f2f;
 }
 
 .header {
@@ -168,13 +119,15 @@ tr:hover {
 
 .image-container {
   position: absolute;
-  top: 16px;
-  right: 20px; /* Adjust this value as needed */
+  top: 8px;
+  right: 20px;
   z-index: 1;
 }
 
 .image-container img {
-  width: 130px;
-  height: 120px;
-  border-radius: 50%;
+  width: 130px; /* Adjust image size */
+  height: auto; /* Maintain aspect ratio */
+  border: none; /* If there was a border making the circle, set it to none */
+  display: block; /* Ensure it doesn't have any line around it */
+  margin-bottom: 10px; /* Add some space below the image */
 }

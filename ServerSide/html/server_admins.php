@@ -113,9 +113,11 @@ $stmt->close();
     <div class="content-categories">
       <div class="label-wrapper">
       </div>
-  <div class="image-container">
-    <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
-  </div>
+      </div>
+     <div class="image-container">
+     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
+     </div>
+     
       <table>
         <tr>
           <th>First Name</th>
@@ -143,7 +145,7 @@ $stmt->close();
         <?php endif; ?>
       </table>
 
-    </div>
+  
   </div>
 </div>
 </body>
