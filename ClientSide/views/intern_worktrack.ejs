@@ -22,5 +22,39 @@
     </div>
     <div class="content">
         <h1>Welcome to Your Work Track</h1>
+
+        <br>
+        <br>
+
+        <h2>Records</h2>
+        <table border="1">
+            <tr>
+              <th>Record ID</th>
+              <th>Intern ID</th>
+              <th>Adviser ID</th>
+              <th>Program ID</th>
+              <th>Administrator ID</th>
+              <th>Hours Completed</th>
+              <th>Hours Remaining</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Record Status</th>
+            </tr>
+            <% data.forEach(record => { %>
+                <tr>
+                  <td><%= record.record_id %></td>
+                  <td><%= record.intern_id %></td>
+                  <td><%= record.adviser_id %></td>
+                  <td><%= record.program_id %></td>
+                  <td><%= record.administrator_id %></td>
+                  <td><%= record.hours_completed %></td>
+                  <td><%= record.hours_remaining %></td>
+                  <td><%= record.start_date %></td>
+                  <td><%= record.end_date %></td>
+                  <td><%= record.record_status %></td>
+                </tr>
+              <% }); %>
+            
+          </table>
 </body>
 </html>

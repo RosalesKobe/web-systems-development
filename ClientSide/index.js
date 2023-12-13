@@ -146,8 +146,23 @@ app.get('/intern_profile', (req, res) => {
 // Work Track route for intern
 app.get('/intern_worktrack', (req, res) => {
   if (req.session.username) {
-    res.render('intern_worktrack', { username: req.session.username });
+    // Fetch internship records from the database
+    const sql = 'SELECT * FROM internshiprecords';
+
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'intern_worktrack.ejs' template with the data
+        res.render('intern_worktrack', {
+          username: req.session.username,
+          data: results, // Pass the data variable to the template
+        });
+      }
+    });
   } else {
+    // If no username in session, redirect to login page
     res.redirect('/');
   }
 });
