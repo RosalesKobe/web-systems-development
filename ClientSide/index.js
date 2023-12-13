@@ -2,7 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const ejs = require('ejs');
 const session = require('express-session');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // or another number you choose
 const app = express();
 const port = 3333;
 
@@ -60,7 +61,9 @@ app.post('/login', (req, res) => {
       if (results.length > 0) {
         const user = results[0];
         
-        if (password === user.password) {
+
+        // Verify the hashed password
+        if (bcrypt.compareSync(password, user.password)) {
           req.session.username = username; // Save username in session
           req.session.userType = userType; // Save userType in session
           req.session.userId = user.user_id; // Save the user's ID in the session
@@ -83,7 +86,7 @@ app.post('/login', (req, res) => {
           }
       } else {
           console.log("User not found or incorrect user type");
-          return res.json({ success: false, message: 'Invalid credentials' });
+          return res.json({ success: false, message: 'Invalid user' });
       }
   });
 });
