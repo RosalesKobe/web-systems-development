@@ -34,24 +34,16 @@
         <h2>Records</h2>
         <table border="1">
             <tr>
-              <th>Record ID</th>
-              <th>Intern ID</th>
-              <th>Adviser ID</th>
-              <th>Program ID</th>
-              <th>Administrator ID</th>
+              <th>Adviser</th>
               <th>Hours Completed</th>
               <th>Hours Remaining</th>
               <th>Start Date</th>
               <th>End Date</th>
-              <th>Record Status</th>
+              <th>Progress</th>
             </tr>
             <% data.forEach(record => { %>
                 <tr>
-                  <td><%= record.record_id %></td>
-                  <td><%= record.intern_id %></td>
                   <td><%= record.adviser_id %></td>
-                  <td><%= record.program_id %></td>
-                  <td><%= record.administrator_id %></td>
                   <td><%= record.hours_completed %></td>
                   <td><%= record.hours_remaining %></td>
                   <td><%= record.start_date %></td>
@@ -61,7 +53,7 @@
               <% }); %>
             
           </table>
-//jeus
+
 
     <script>
         // JavaScript code to display current date and time
@@ -73,6 +65,18 @@
             dateTimeElement.textContent = `Current Date and Time: ${formattedDate}`;
         };
     </script>
+
+<h2>Work Track History</h2>
+<table border="1">
+  <tr>
+      <th>Date</th>
+      <th>Time In</th>
+      <th>Time Out</th>
+      <th>Hour Rendered</th>
+  </tr>
+</table>
+
+</table>
 
 </body>
 </html>
