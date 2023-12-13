@@ -182,18 +182,33 @@ app.get('/intern_documents', (req, res) => {
   }
 });
 
-
 // Profile route for adviser
 app.get('/adviser_profile', (req, res) => {
-  if (req.session.username) {
-    // Render profile with username
-    console.log(req.session.username); // tignan sa terminal para maverify kung na store maayos username na nag login
-    res.render('adviser_profile', { username: req.session.username });
+  if (req.session.userType === 'Adviser' && req.session.userId) {
+    const adviserDetailsSql = 'SELECT * FROM adviserdetails WHERE user_id = ?';
+    db.query(adviserDetailsSql, [req.session.userId], (err, adviserResults) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        return res.status(500).send('Internal Server Error');
+      } else if (adviserResults.length > 0) {
+        res.render('adviser_profile', {
+          username: req.session.username,
+          adviserdetails: adviserResults[0],
+        });
+      } else {
+        console.log('No adviser details found for the user.');
+        res.render('adviser_profile', {
+          username: req.session.username,
+          adviserdetails: {},
+        });
+      }
+    });
   } else {
-    // If no username in session, redirect to login page
-    res.redirect('/');
+    console.log('User is not logged in or not an adviser.');
+    res.redirect('/login');
   }
 });
+
 
 // Work Track route for adviser
 app.get('/adviser_worktrack', (req, res) => {
