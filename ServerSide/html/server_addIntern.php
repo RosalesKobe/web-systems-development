@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve and sanitize form data
   $username = $db->real_escape_string($_POST['username']);
-  $password = $db->real_escape_string($_POST['password']); // Password should be hashed with password_hash in a real application
+  $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $userType = 'Intern'; // Set user type to 'Intern' by default
   $adviserId = $db->real_escape_string($_POST['adviser_id']);
   $firstName = $db->real_escape_string($_POST['first_name']);

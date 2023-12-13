@@ -65,7 +65,7 @@ require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userType = $_POST['user-type'];
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = $_POST['password']; // This is the plain text password
 
     // Check if the user is an admin or adviser
     if ($userType === 'Administrator') {
@@ -85,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
 
-            // Compare plain text password with stored password
-            if ($password === $row['password']) {
+            // Now use password_verify to compare the plain text password with the hashed password
+            if (password_verify($password, $row['password'])) {
                 // Set session variables to indicate the user is logged in
                 $_SESSION['loggedin'] = true;
                 $_SESSION['userType'] = $userType;
@@ -97,10 +97,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: http://localhost/web-systems-development/ServerSide/html/server_home.php");
                 exit();
             } else {
-				echo "<script>alert('Incorrect username or password.');</script>";
+                echo "<script>alert('Incorrect username or password.');</script>";
             }
         } else {
-			echo "<script>alert('Incorrect username or password.');</script>";
+            echo "<script>alert('Incorrect username or password.');</script>";
         }
 
         // Close the statement
