@@ -26,6 +26,11 @@
         <br>
         <br>
 
+
+        <h2>Current Date and Time</h2>
+        <p id="currentDateTime"></p> 
+
+        
         <h2>Records</h2>
         <table border="1">
             <tr>
@@ -56,5 +61,17 @@
               <% }); %>
             
           </table>
+
+    <script>
+        // JavaScript code to display current date and time
+        window.onload = function() {
+            const dateTimeElement = document.getElementById('currentDateTime');
+            const currentDate = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            const formattedDate = currentDate.toLocaleDateString('en-US', options);
+            dateTimeElement.textContent = `Current Date and Time: ${formattedDate}`;
+        };
+    </script>
+
 </body>
 </html>
