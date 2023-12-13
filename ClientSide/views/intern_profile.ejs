@@ -1,148 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-<style>
-    body {
-  font-family: Arial, sans-serif;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0; /* Remove default margin */
+      }
 
-.dashboard {
-  display: flex;
-  justify-content: space-between;
-}
+      .dashboard {
+        display: flex;
+        justify-content: space-between;
+      }
 
-.user-info,
-.announcement {
-  background-color: #E0F7FA;
-  padding: 20px;
-  border-radius: 10px;
-  margin: 10px;
-  width: 48%;
-}
+      .user-info,
+      .announcement {
+        background-color: #e0f7fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px;
+        width: 48%;
+      }
 
-.user-info h2,
-.announcement h2 {
-  color: #00695C;
-  margin-bottom: 20px;
-}
+      .user-info h2,
+      .announcement h2 {
+        color: #00695c;
+        margin-bottom: 20px;
+      }
 
-.input-group {
-  background-color: #B2EBF2;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-}
+      .input-group {
+        background-color: #b2ebf2;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-}
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
 
-.input-group input {
-  width: 100%;
-  padding: 5px;
-}
+      .input-group input {
+        width: 100%;
+        padding: 5px;
+      }
 
-.work-hours-overview {
-  margin-top: 30px;
-}
+      .work-hours-overview {
+        margin-top: 30px;
+      }
 
-.chart-placeholder {
-  background-color: #B2EBF2;
-  height: 200px; /* Placeholder height, adjust as needed */
-  border-radius: 5px;
-}
+      .chart-placeholder {
+        background-color: #b2ebf2;
+        height: 200px; /* Placeholder height, adjust as needed */
+        border-radius: 5px;
+      }
 
-.announcement-content,
-.feedback-content {
-  background-color: #B2EBF2;
-  padding: 10px;
-  border-radius: 5px;
-  height: 150px; /* Placeholder height, adjust as needed */
-}
+      .announcement-content,
+      .feedback-content {
+        background-color: #b2ebf2;
+        padding: 10px;
+        border-radius: 5px;
+        height: 150px; /* Placeholder height, adjust as needed */
+      }
 
-/* Responsive layout adjustments */
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-  }
+      /* Responsive layout adjustments */
+      @media (max-width: 768px) {
+        .dashboard {
+          flex-direction: column;
+        }
 
-  .user-info,
-  .announcement {
-    width: auto;
-  }
-}
-</style>
-</head>
-<body>
+        .user-info,
+        .announcement {
+          width: auto;
+        }
+      }
+      .left-manager {
+        background-color: #333; /* Set background color for the left manager */
+        color: #fff; /* Set text color for the left manager */
+        width: 200px; /* Set the width of the left manager */
+        height: 100vh; /* Set the height to 100% of the viewport height */
+        position: fixed; /* Fix the position of the left manager */
+        top: 0; /* Set the top position to 0 */
+        left: 0; /* Set the left position to 0 */
+        padding-top: 20px; /* Add some top padding for better visual appearance */
+      }
 
-<div class="dashboard">
+      .client-task {
+        padding: 0;
+        margin: 0;
+        list-style-type: none; /* Remove default list styles */
+      }
 
-  <div class="user-info">
-    <h2>User Information</h2>
-    <form>
-      <div class="input-group">
-        <label for="last-name">Last Name:</label>
-        <input type="text" id="last-name" value="<%= interndetails.lastName %>">
+      .client-task li {
+        padding: 10px;
+      }
+
+      .client-task a {
+        text-decoration: none;
+        color: #fff;
+        display: block;
+      }
+
+      .client-task a:hover {
+        background-color: #555; /* Change background color on hover */
+      }
+
+      .content {
+        margin-left: 220px; /* Adjusted to accommodate the left manager width */
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="left-manager">
+      <div class="client-task">
+        <li class="work">
+          <a href="/intern_profile">Profile</a>
+        </li>
+        <li class="work">
+          <a href="/intern_worktrack">Work Track</a>
+        </li>
+        <li class="work">
+          <a href="/intern_documents">Documents</a>
+        </li>
       </div>
-      <div class="input-group">
-        <label for="first-name">First Name:</label>
-        <input type="text" id="first-name" value="<%= interndetails.firstName %>">
-      </div>
-      <div class="input-group">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" value="<%= interndetails.email %>">
-      </div>
-      <div class="input-group">
-        <label for="address">Address:</label>
-        <input type="text" id="address" value="<%= interndetails.address %>">
-      </div>
-      <div class="input-group">
-        <label for="school">School:</label>
-        <input type="text" id="school" value="<%= interndetails.School %>">
-      </div>
-      <div class="input-group">
-        <label for="details">Details:</label>
-        <input type="text" id="details" value="<%= interndetails.other_intern_details %>">
-      </div>
-    </form>
-    <div class="work-hours-overview">
-      <h2>Daily Work Hours Overview</h2>
-      <!-- Here you would insert a chart from a charting library -->
-      <div class="chart-placeholder">Chart will go here</div>
     </div>
-  </div>
-
-  <div class="announcement">
-    <h2>Announcements:</h2>
-    <div class="announcement-content">
-      <% if (programNames && programNames.length > 0) { %>
-        <% programNames.forEach(function(program) { %>
-          <div class="program">
-            <h3><%= program.program_name %></h3>
-            <!-- Displaying more information about each program -->
+    <div class="content">
+      <div class="dashboard">
+        <div class="user-info">
+          <h2>User Information</h2>
+          <form>
+            <div class="input-group">
+              <label for="last-name">Last Name:</label>
+              <input
+                type="text"
+                id="last-name"
+                value="<%= interndetails.lastName %>"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <label for="first-name">First Name:</label>
+              <input
+                type="text"
+                id="first-name"
+                value="<%= interndetails.firstName %>"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <label for="email">Email Address:</label>
+              <input
+                type="email"
+                id="email"
+                value="<%= interndetails.email %>"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <label for="address">Address:</label>
+              <input
+                type="text"
+                id="address"
+                value="<%= interndetails.address %>"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <label for="school">School:</label>
+              <input
+                type="text"
+                id="school"
+                value="<%= interndetails.School %>"
+                readonly
+              />
+            </div>
+            <div class="input-group">
+              <label for="details">Details:</label>
+              <input
+                type="text"
+                id="details"
+                value="<%= interndetails.other_intern_details %>"
+                readonly
+              />
+            </div>
+          </form>
+          <div class="work-hours-overview">
+            <h2>Daily Work Hours Overview</h2>
+            <!-- Here you would insert a chart from a charting library -->
+            <div class="chart-placeholder">Chart will go here</div>
           </div>
-        <% }); %>
-      <% } else { %>
-        <p>No program announcements available.</p>
-      <% } %>
+        </div>
+
+        <div class="announcement">
+          <h2>Announcements:</h2>
+          <div class="announcement-content">
+            <% if (programNames && programNames.length > 0) { %> <%
+            programNames.forEach(function(program) { %>
+            <div class="program">
+              <h3><%= program.program_name %></h3>
+              <!-- Displaying more information about each program -->
+            </div>
+            <% }); %> <% } else { %>
+            <p>No program announcements available.</p>
+            <% } %>
+          </div>
+          <h2>Feedback:</h2>
+          <div class="feedback-content">
+            <% if (feedback && feedback.length > 0) { %> <%
+            feedback.forEach(function(item) { %>
+            <p><%= item.feedback_text %></p>
+            <% }); %> <% } else { %>
+            <p>No feedback available.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
     </div>
-  <h2>Feedback:</h2>
-  <div class="feedback-content">
-    <% if (feedback && feedback.length > 0) { %>
-      <% feedback.forEach(function(item) { %>
-        <p><%= item.feedback_text %></p>
-      <% }); %>
-    <% } else { %>
-      <p>No feedback available.</p>
-    <% } %>
-  </div>
-</div>
-
-</div>
-
-</body>
+  </body>
 </html>
