@@ -7,111 +7,118 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        margin: 0; /* Remove default margin */
+        margin: 0;
       }
-
+    
       .dashboard {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
       }
-
+    
       .user-info,
       .announcement {
         background-color: #e0f7fa;
         padding: 20px;
         border-radius: 10px;
         margin: 10px;
-        width: 48%;
+        width: calc(48% - 20px);
+        box-sizing: border-box;
       }
-
+    
       .user-info h2,
       .announcement h2 {
         color: #00695c;
-        margin-bottom: 20px;
+        margin-bottom: 10px; /* Adjusted margin */
       }
-
+    
       .input-group {
         background-color: #b2ebf2;
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 15px;
       }
-
+    
       .input-group label {
         display: block;
         margin-bottom: 5px;
       }
-
+    
       .input-group input {
         width: 100%;
         padding: 5px;
+        box-sizing: border-box; /* Include padding in the input width */
       }
-
+    
       .work-hours-overview {
-        margin-top: 30px;
+        margin-top: 20px; /* Adjusted margin */
       }
-
+    
       .chart-placeholder {
         background-color: #b2ebf2;
-        height: 200px; /* Placeholder height, adjust as needed */
+        height: 200px;
         border-radius: 5px;
       }
-
+    
       .announcement-content,
       .feedback-content {
         background-color: #b2ebf2;
         padding: 10px;
         border-radius: 5px;
-        height: 150px; /* Placeholder height, adjust as needed */
+        height: 150px;
+        margin-top: 20px;
+        overflow: auto; /* Added overflow for text scrolling */
       }
-
+    
       /* Responsive layout adjustments */
       @media (max-width: 768px) {
         .dashboard {
           flex-direction: column;
         }
-
+    
         .user-info,
         .announcement {
-          width: auto;
+          width: 100%;
         }
       }
+    
       .left-manager {
-        background-color: #333; /* Set background color for the left manager */
-        color: #fff; /* Set text color for the left manager */
-        width: 200px; /* Set the width of the left manager */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        position: fixed; /* Fix the position of the left manager */
-        top: 0; /* Set the top position to 0 */
-        left: 0; /* Set the left position to 0 */
-        padding-top: 20px; /* Add some top padding for better visual appearance */
+        background-color: #333;
+        color: #fff;
+        width: 200px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 20px;
       }
-
+    
       .client-task {
         padding: 0;
         margin: 0;
-        list-style-type: none; /* Remove default list styles */
+        list-style-type: none;
       }
-
+    
       .client-task li {
         padding: 10px;
       }
-
+    
       .client-task a {
         text-decoration: none;
         color: #fff;
         display: block;
       }
-
+    
       .client-task a:hover {
-        background-color: #555; /* Change background color on hover */
+        background-color: #555;
       }
-
+    
       .content {
-        margin-left: 220px; /* Adjusted to accommodate the left manager width */
+        margin-left: 220px;
         padding: 20px;
       }
     </style>
+    
   </head>
   <body>
     <div class="left-manager">
