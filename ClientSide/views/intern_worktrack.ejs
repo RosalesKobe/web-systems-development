@@ -117,18 +117,25 @@ h2 {
                 <div id="current-time"></div>
             </div>
         </div>
-        <form action="/submit_time_entry" method="post"></form>
-        <div class="time-entry">
-            <label for="date">Date:</label>
-            <input type="date" id="date" placeholder="Date Today">
-            <label for="time-in">Time-In:</label>
-            <input type="time" id="time-in" placeholder="Your Time IN" onchange="calculateHoursRendered()">
-            <label for="time-out">Time-Out:</label>
-            <input type="time" id="time-out" placeholder="Your Time OUT" onchange="calculateHoursRendered()">
-            <label for="hours-rendered">Hours Rendered:</label>
-            <input type="text" id="hours-rendered" placeholder="Total Hours today">
-            <button type="submit">Submit Time Entry</button>
-        </div>
+        <% records.forEach(function(record) { %>
+            <% if (record.record_status !== 'Completed') { %>
+              <form action="/submit_time_entry" method="post">
+            <div class="time-entry">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" placeholder="Date Today">
+                <label for="time-in">Time-In:</label>
+                <input type="time" id="time-in" name="timeIn" placeholder="Your Time IN" onchange="calculateHoursRendered()">
+                <label for="time-out">Time-Out:</label>
+                <input type="time" id="time-out" name="timeOut" placeholder="Your Time OUT" onchange="calculateHoursRendered()">
+                <label for="hours-rendered">Hours Rendered:</label>
+                <input type="text" id="hours-rendered" name="hoursRendered" placeholder="Total Hours today">
+                <button type="submit">Submit Time Entry</button>
+            </div>
+        </form>
+        <% } else { %>
+            <p>Your internship has been completed. No further time entry is required.</p>
+          <% } %>
+        <% }) %>
         <table class="work-track">
             <tr>
               <th>Adviser</th>
@@ -149,18 +156,25 @@ h2 {
               </tr>
             <% }) %>
           </table>
-        <div class="work-history">
+          <div class="work-history">
             <h2>Work Track History</h2>
             <table>
+              <tr>
+                <th>Date</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Hours Rendered</th>
+              </tr>
+              <% timeEntries.forEach(function(entry) { %>
                 <tr>
-                    <th>Date</th>
-                    <th>Time In</th>
-                    <th>Time Out</th>
-                    <th>Hour Rendered</th>
+                  <td><%= entry.date %></td>
+                  <td><%= entry.timein %></td>
+                  <td><%= entry.timeout %></td>
+                  <td><%= entry.hours_rendered %></td>
                 </tr>
-                <!-- Table rows can be generated dynamically -->
+              <% }) %>
             </table>
-        </div>
+          </div>
     </div>
 </div>
 <script>
