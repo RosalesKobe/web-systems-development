@@ -117,27 +117,38 @@ h2 {
                 <div id="current-time"></div>
             </div>
         </div>
+        <form action="/submit_time_entry" method="post"></form>
         <div class="time-entry">
             <label for="date">Date:</label>
-            <input type="text" id="date" placeholder="Date Today">
+            <input type="date" id="date" placeholder="Date Today">
             <label for="time-in">Time-In:</label>
-            <input type="text" id="time-in" placeholder="Your Time IN">
+            <input type="time" id="time-in" placeholder="Your Time IN" onchange="calculateHoursRendered()">
             <label for="time-out">Time-Out:</label>
-            <input type="text" id="time-out" placeholder="Your Time OUT">
+            <input type="time" id="time-out" placeholder="Your Time OUT" onchange="calculateHoursRendered()">
             <label for="hours-rendered">Hours Rendered:</label>
             <input type="text" id="hours-rendered" placeholder="Total Hours today">
+            <button type="submit">Submit Time Entry</button>
         </div>
         <table class="work-track">
             <tr>
-                <th>Adviser</th>
-                <th>Hours Completed</th>
-                <th>Hours Remaining</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Progress</th>
+              <th>Adviser</th>
+              <th>Hours Completed</th>
+              <th>Hours Remaining</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Progress</th>
             </tr>
-            <!-- Table rows can be generated dynamically -->
-        </table>
+            <% records.forEach(function(record) { %>
+              <tr>
+                <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
+                <td><%= record.hours_completed %></td>
+                <td><%= record.hours_remaining %></td>
+                <td><%= record.start_date.toISOString().split('T')[0] %></td>
+                <td><%= record.end_date.toISOString().split('T')[0] %></td>
+                <td><%= record.record_status %></td>
+              </tr>
+            <% }) %>
+          </table>
         <div class="work-history">
             <h2>Work Track History</h2>
             <table>
@@ -167,6 +178,27 @@ h2 {
 
     // Update the time every second
     setInterval(updateCurrentTime, 1000);
+
+    function calculateHoursRendered() {
+    var timeIn = document.getElementById('time-in').value;
+    var timeOut = document.getElementById('time-out').value;
+
+    // Parse the times and create date objects
+    var timeInDate = new Date('1970-01-01T' + timeIn + 'Z');
+    var timeOutDate = new Date('1970-01-01T' + timeOut + 'Z');
+
+    // Check if both times are set
+    if (timeIn && timeOut) {
+      // Calculate the difference in milliseconds
+      var diff = timeOutDate - timeInDate;
+
+      // Convert milliseconds to hours (1000 milliseconds * 60 seconds * 60 minutes)
+      var hoursRendered = diff / (1000 * 60 * 60);
+
+      // Update the hours rendered input field, rounding to two decimal places
+      document.getElementById('hours-rendered').value = hoursRendered.toFixed(2);
+    }
+  }
 </script>
 </body>
 </html>

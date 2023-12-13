@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10; // or another number you choose
 const app = express();
 const port = 3333;
+const bodyParser = require('body-parser');
 
 // Database connection setup
 const db = mysql.createConnection({
@@ -23,6 +24,8 @@ db.connect((err) => {
     console.log('Connected to the database');
   }
 });
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
@@ -148,11 +151,16 @@ app.get('/intern_profile', (req, res) => {
 
 // Work Track route for intern
 app.get('/intern_worktrack', (req, res) => {
-  if (req.session.username) {
-    // Fetch internship records from the database
-    const sql = 'SELECT * FROM internshiprecords';
+  if (req.session.userType === 'Intern' && req.session.userId) {
+    // Fetch internship records for the logged-in intern from the database
+    const sql = `
+      SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName
+      FROM internshiprecords AS ir
+      JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
+      WHERE ir.intern_id = ?
+    `;
 
-    db.query(sql, (err, results) => {
+    db.query(sql, [req.session.userId], (err, results) => {
       if (err) {
         console.error('MySQL error:', err);
         res.status(500).send('Internal Server Error');
@@ -160,14 +168,54 @@ app.get('/intern_worktrack', (req, res) => {
         // Render the 'intern_worktrack.ejs' template with the data
         res.render('intern_worktrack', {
           username: req.session.username,
-          data: results, // Pass the data variable to the template
+          records: results, // Pass the fetched data to the template
         });
       }
     });
   } else {
-    // If no username in session, redirect to login page
+    // If no username in session or user is not an intern, redirect to login page
     res.redirect('/');
   }
+});
+
+app.post('/submit_time_entry', (req, res) => {
+  const { date, timeIn, timeOut, hoursRendered } = req.body;
+  const internUserId = req.session.userId; // Get the intern's user ID from session
+
+  // First, find the record_id for the logged-in intern
+  const recordQuery = `
+      SELECT record_id FROM internshiprecords
+      WHERE intern_id = (
+          SELECT intern_id FROM interndetails WHERE user_id = ?
+      );
+  `;
+
+  db.query(recordQuery, [internUserId], (err, recordResults) => {
+      if (err) {
+          console.error('Error querying record_id:', err);
+          return res.status(500).send('Error finding your record');
+      }
+
+      if (recordResults.length > 0) {
+          const record_id = recordResults[0].record_id;
+
+          // Query to insert data into the timetrack table
+          const insertQuery = `
+              INSERT INTO timetrack (record_id, date, timein, timeout, hours_rendered)
+              VALUES (?, ?, ?, ?, ?);
+          `;
+
+          db.query(insertQuery, [record_id, date, timeIn, timeOut, hoursRendered], (insertErr, insertResults) => {
+              if (insertErr) {
+                  console.error('Error inserting into timetrack:', insertErr);
+                  return res.status(500).send('Error submitting time entry');
+              }
+              res.redirect('/intern_worktrack'); // Redirect back to the work track page
+          });
+      } else {
+          res.status(400).send('No internship record found for you');
+      }
+  });
 });
 
 
