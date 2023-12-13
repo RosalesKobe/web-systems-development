@@ -10,7 +10,8 @@ const bodyParser = require('body-parser');
 
 // Database connection setup
 const db = mysql.createConnection({
-  host: 'localhost',
+ // host: '192.168.0.207',
+ host: 'localhost',
   user: 'root',
   password: '',
   database: 'teampogi',
@@ -239,15 +240,26 @@ app.get('/adviser_profile', (req, res) => {
         console.error('MySQL error:', err);
         return res.status(500).send('Internal Server Error');
       } else if (adviserResults.length > 0) {
-        res.render('adviser_profile', {
-          username: req.session.username,
-          adviserdetails: adviserResults[0],
+        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 2';
+        db.query(programDetailsSql, (programErr, programResults) => {
+          if (programErr) {
+            console.error('MySQL error:', programErr);
+            return res.status(500).send('Internal Server Error');
+          } else {
+            // Pass adviser details, program names, and feedback to the EJS template
+            res.render('adviser_profile', {
+              username: req.session.username,
+              adviserdetails: adviserResults[0],
+              programNames: programResults,
+            });
+          }
         });
       } else {
         console.log('No adviser details found for the user.');
         res.render('adviser_profile', {
           username: req.session.username,
           adviserdetails: {},
+          programNames: [],
         });
       }
     });
@@ -256,6 +268,8 @@ app.get('/adviser_profile', (req, res) => {
     res.redirect('/login');
   }
 });
+
+
 
 
 // Work Track route for adviser
