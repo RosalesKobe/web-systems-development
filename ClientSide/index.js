@@ -343,11 +343,29 @@ app.get('/adviser_profile', (req, res) => {
 
 // Work Track route for adviser
 app.get('/adviser_worktrack', (req, res) => {
-  if (req.session.username) {
-    // Render profile with username
-    res.render('adviser_worktrack', { username: req.session.username });
+  if (req.session.userType === 'Adviser' && req.session.userId) {
+    // Fetch internship records for all students associated with the logged-in adviser from the database
+    const sql = `
+    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status
+    FROM internshiprecords AS ir
+    JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
+    WHERE ir.adviser_id = 2
+    `;
+
+    db.query(sql, [req.session.userId], (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'adviser_worktrack.ejs' template with the data
+        res.render('adviser_worktrack', {
+          username: req.session.username,
+          records: results, // Pass the fetched data to the template
+        });
+      }
+    });
   } else {
-    // If no username in session, redirect to login page
+    // If no username in session or user is not an adviser, redirect to login page
     res.redirect('/');
   }
 });
