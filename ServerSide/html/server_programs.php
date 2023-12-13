@@ -137,10 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
         </li>
         <li class="item">
           <a href="server_records.php">Records</a>
-        </li>
-        <li class="item">
-          <a href="server_docs.php">Documents</a>
-        </li>
+        </li> 
         <li class="item">
           <a href="server_feedbacks.php">Feedback</a>
         </li>

@@ -7,8 +7,6 @@ const saltRounds = 10; // or another number you choose
 const app = express();
 const port = 3333;
 const bodyParser = require('body-parser');
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 // Database connection setup
 const db = mysql.createConnection({

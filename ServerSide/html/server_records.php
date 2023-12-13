@@ -97,9 +97,7 @@ $stmt->close();
         <li class="item active">
           <a href="server_records.php">Records</a>    
         </li>
-        <li class="item">
-          <a href="server_docs.php">Documents</a>         
-        </li>
+
         <li class="item">
           <a href="server_feedbacks.php">Feedback</a>
         </li>
