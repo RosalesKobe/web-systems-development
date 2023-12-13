@@ -25,12 +25,19 @@
 
         <br>
         <br>
-
-
         <h2>Current Date and Time</h2>
         <p id="currentDateTime"></p> 
-
-        
+        <div class="work-track-container">
+            <div class="date-time-section">
+                <label>Date:</label>
+                <span id="currentDateTime"></span>
+                <label>Time In:</label>
+                <span><!-- Time in value --></span>
+                <label>Time Out:</label>
+                <span><!-- Time out value --></span>
+                <label>Hours Rendered:</label>
+                <span><!-- Hours rendered value --></span>
+            </div>
         <h2>Records</h2>
         <table border="1">
             <tr>
@@ -65,18 +72,19 @@
             dateTimeElement.textContent = `Current Date and Time: ${formattedDate}`;
         };
     </script>
-
-<h2>Work Track History</h2>
-<table border="1">
-  <tr>
-      <th>Date</th>
-      <th>Time In</th>
-      <th>Time Out</th>
-      <th>Hour Rendered</th>
-  </tr>
-</table>
-
-</table>
-
+ </div>
+ <div class="work-track-history">
+     <h2>Work Track History</h2>
+     <table>
+         <tr>
+             <th>Date</th>
+             <th>Time In</th>
+             <th>Time Out</th>
+             <th>Hour Rendered</th>
+         </tr>
+         <!-- Dynamic rows will be inserted here -->
+     </table>
+ </div>
+</div>
 </body>
 </html>
