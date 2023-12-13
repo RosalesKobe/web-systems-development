@@ -1,7 +1,7 @@
 <?php
 session_start();
-//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
@@ -152,9 +152,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
     </div>
   </div>
     <div class="page-content">
-    <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
+     <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
   
-    <div class="content-categories">
+     <div class="content-categories">
+     </div>
       <div class="label-wrapper">
         <!-- Add Program Form -->
         <div id="addForm" style="display:none;">
@@ -178,23 +179,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
         <div id="editForm" style="display:none;">
           <h2>Edit Program</h2>
           <form action="server_programs.php" method="post">
-    <input id="editForm-program_id" name="program_id">
-    <input type="hidden" id="editForm-administrator_id" name="administrator_id">
-    <input type="text" id="editForm-program_name" name="program_name">
-    <input type="date" id="editForm-start_datee" name="start_datee">
-    <input type="date" id="editForm-end_date" name="end_date">
-    <input type="submit" name="edit_program" value="Update Program">
+     <input id="editForm-program_id" name="program_id">
+     <input type="hidden" id="editForm-administrator_id" name="administrator_id">
+     <input type="text" id="editForm-program_name" name="program_name">
+     <input type="date" id="editForm-start_datee" name="start_datee">
+     <input type="date" id="editForm-end_date" name="end_date">
+     <input type="submit" name="edit_program" value="Update Program">
         <!-- Add Cancel button -->
         <button type="button" onclick="cancelEditProgram()">Cancel</button>
-</form>
+       </form>
 
         </div>
         <div class="image-container">
-    <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
-  </div>
+     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
+     </div>
       <!-- Table for displaying program data -->
       <table>
-  <tr>
+     <tr>
     <th>Program ID</th>
     <th>Administrator Name</th>
     <th>Program Name</th>
@@ -223,7 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
 </table>
       <!-- Add button below the table -->
       <button type="button" onclick="addProgram()">Add New Program</button>
-    </div>
+    
   </div>
 </div>
 <script>
