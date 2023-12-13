@@ -289,17 +289,6 @@ app.post('/submit_time_entry', (req, res) => {
 
 
 
-// Documents route for intern
-app.get('/intern_documents', (req, res) => {
-  if (req.session.username) {
-    // Render profile with username
-    res.render('intern_documents', { username: req.session.username });
-  } else {
-    // If no username in session, redirect to login page
-    res.redirect('/');
-  }
-});
-
 // Profile route for adviser
 app.get('/adviser_profile', (req, res) => {
   if (req.session.userType === 'Adviser' && req.session.userId) {
@@ -346,10 +335,12 @@ app.get('/adviser_worktrack', (req, res) => {
   if (req.session.userType === 'Adviser' && req.session.userId) {
     // Fetch internship records for all students associated with the logged-in adviser from the database
     const sql = `
-    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status
+    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status,
+           id.firstName AS internFirstName, id.lastName AS internLastName
     FROM internshiprecords AS ir
     JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-    WHERE ir.adviser_id = 2
+    JOIN interndetails AS id ON ir.intern_id = id.intern_id
+    WHERE ad.adviser_id = 2
     `;
 
     db.query(sql, [req.session.userId], (err, results) => {
@@ -370,61 +361,6 @@ app.get('/adviser_worktrack', (req, res) => {
   }
 });
 
-// Documents route for adviser
-app.get('/adviser_documents', (req, res) => {
-  if (req.session.username) {
-    // Render profile with username
-    res.render('adviser_documents', { username: req.session.username });
-  } else {
-    // If no username in session, redirect to login page
-    res.redirect('/');
-  }
-});
-
-
-// Route to fetch intern details and render them in a table
-// app.get('/interndetails', (req, res) => {
-//   const sql = 'SELECT * FROM interndetails';
-
-//   db.query(sql, (err, results) => {
-//     if (err) {
-//       console.error('MySQL error:', err);
-//       res.status(500).send('Internal Server Error');
-//     } else {
-//       // Render the 'interndetails.ejs' template with the data
-//       res.render('interndetails', { data: results });
-//     }
-//   });
-// });
-
-// Route to fetch intern details and render them in a table
-// app.get('/internshiprecords', (req, res) => {
-//   const sql = 'SELECT * FROM internshiprecords';
-
-//   db.query(sql, (err, results) => {
-//     if (err) {
-//       console.error('MySQL error:', err);
-//       res.status(500).send('Internal Server Error');
-//     } else {
-//       // Render the 'interndetails.ejs' template with the data
-//       res.render('internshiprecords', { data: results });
-//     }
-//   });
-// });
-
-// app.get('/feedback', (req, res) => {
-//   const sql = 'SELECT * FROM feedback';
-
-//   db.query(sql, (err, results) => {
-//     if (err) {
-//       console.error('MySQL error:', err);
-//       res.status(500).send('Internal Server Error');
-//     } else {
-//       // Render the 'interndetails.ejs' template with the data
-//       res.render('feedback', { data: results });
-//     }
-//   });
-// });
 
 
 app.listen(port, () => {

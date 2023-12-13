@@ -106,9 +106,6 @@ h2 {
             <li class="work">
                 <a href="/adviser_worktrack">Work Track</a>
             </li>
-            <li class="work">
-                <a href="/adviser_documents">Documents</a>
-            </li>
         </div>
     </div>
     <div class="container">
@@ -119,6 +116,8 @@ h2 {
         </div>
         <table class="work-track">
             <tr>
+                <th>Student First Name</th>
+                <th>Student Last Name</th>
               <th>Hours Completed</th>
               <th>Hours Remaining</th>
               <th>Start Date</th>
@@ -128,10 +127,19 @@ h2 {
             <% records.forEach(function(record) { %>
               <tr>
                 <!-- Update variable names based on your SQL query -->
+                <td><%= record.internFirstName %></td>
+                <td><%= record.internLastName %></td>
                 <td><%= record.hours_completed %></td>
                 <td><%= record.hours_remaining %></td>
                 <td><%= record.start_date.toISOString().split('T')[0] %></td>
-                <td><%= record.end_date.toISOString().split('T')[0] %></td>
+                <td>
+                    <% if (record.end_date && record.end_date instanceof Date && !isNaN(record.end_date.getTime())) { %>
+                        <%= record.end_date.toISOString().split('T')[0] %>
+                    <% } else { %>
+                        <!-- Provide an alternative value or an empty string -->
+                        N/A
+                    <% } %>
+                </td>
                 <td><%= record.record_status %></td>
               </tr>
             <% }) %>
