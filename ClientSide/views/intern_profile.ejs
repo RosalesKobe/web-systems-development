@@ -117,6 +117,8 @@
         margin-left: 220px;
         padding: 20px;
       }
+
+      
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
@@ -128,6 +130,9 @@
         </li>
         <li class="work">
           <a href="/intern_worktrack">Work Track</a>
+        </li>
+        <li class="work">
+          <button id="logoutButton" class="logout-button">Logout</button>
         </li>
       </div>
     </div>
@@ -232,6 +237,11 @@
               }
             }
           });
+
+          document.getElementById('logoutButton').addEventListener('click', function() {
+    // Redirect to the login page
+    window.location.href = '/';
+  });
         </script>
         <div class="announcement">
           <h2>Announcements:</h2>

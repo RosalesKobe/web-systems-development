@@ -321,7 +321,6 @@ app.post('/submit_time_entry', (req, res) => {
 });
 
 
-
 // Profile route for adviser
 app.get('/adviser_profile', (req, res) => {
   if (req.session.userType === 'Adviser' && req.session.userId) {
@@ -361,8 +360,6 @@ app.get('/adviser_profile', (req, res) => {
 });
 
 
-
-
 // Work Track route for adviser
 app.get('/adviser_worktrack', (req, res) => {
   if (req.session.userType === 'Adviser' && req.session.userId) {
@@ -393,7 +390,6 @@ app.get('/adviser_worktrack', (req, res) => {
     res.redirect('/');
   }
 });
-
 
 
 app.listen(port, () => {

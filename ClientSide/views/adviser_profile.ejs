@@ -122,15 +122,23 @@
 </head>
 <body>
     <div class="left-manager">
-      <div class="client-task">
+      <ul class="client-task">
         <li class="work">
           <a href="/adviser_profile">Profile</a>
         </li>
         <li class="work">
           <a href="/adviser_worktrack">Work Track</a>
         </li>
-      </div>
+        <li class="work">
+          <button id="logoutButton">Logout</button>
+        </li>
+      </ul>
     </div>
+    <script>document.getElementById('logoutButton').addEventListener('click', function() {
+      // Redirect to the login page
+      window.location.href = '/';
+    });
+    </script>
     <div class="content">
       <div class="dashboard">
         <div class="user-info">
@@ -191,7 +199,6 @@
               />
             </div>
           </form>
-
         </div>
         <div class="announcement">
           <h2>Announcements:</h2>
@@ -207,6 +214,7 @@
             <% } %>
           </div>
       </div>
+      
     </div>
   </body>
 </html>

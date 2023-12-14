@@ -106,6 +106,9 @@ h2 {
             <li class="work">
                 <a href="/intern_worktrack">Work Track</a>
             </li>
+            <li class="work">
+                <button id="logoutButton" class="logout-button">Logout</button>
+              </li>
         </div>
     </div>
     <div class="container">
@@ -215,6 +218,10 @@ h2 {
       document.getElementById('hours-rendered').value = hoursRendered.toFixed(2);
     }
   }
+  document.getElementById('logoutButton').addEventListener('click', function() {
+    // Redirect to the login page
+    window.location.href = '/';
+  });
 </script>
 </body>
 </html>
