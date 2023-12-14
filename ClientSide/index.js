@@ -51,47 +51,52 @@ app.get('/', (req, res) => {
 });
 
 // Login route
+// Login route
 app.post('/login', (req, res) => {
   const { username, password, userType } = req.body;
-  
-  const query = 'SELECT * FROM users WHERE username = ? AND user_type = ?';
-  
-  db.query(query, [username, userType], (err, results) => {
-      if (err) {
-          console.error('MySQL error:', err);
-          return res.status(500).json({ success: false, message: 'Internal Server Error' });
-      }
-      
-      if (results.length > 0) {
-        const user = results[0];
-        
 
-        // Verify the hashed password
-        if (bcrypt.compareSync(password, user.password)) {
+  const query = 'SELECT * FROM users WHERE username = ? AND user_type = ?';
+
+  db.query(query, [username, userType], (err, results) => {
+    if (err) {
+      console.error('MySQL error:', err);
+      return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+
+    if (results.length > 0) {
+      const user = results[0];
+
+      // Verify the hashed password using bcrypt
+      bcrypt.compare(password, user.password.replace(/^\$2y\$/, '$2b$'), (bcryptErr, passwordMatch) => {
+        if (bcryptErr) {
+          console.error('bcrypt error:', bcryptErr);
+          return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+
+        if (passwordMatch) {
           req.session.username = username; // Save username in session
           req.session.userType = userType; // Save userType in session
           req.session.userId = user.user_id; // Save the user's ID in the session
-              console.log("Login success");
-              console.log(req.session.username)
-              console.log(req.session.userType)
-              // Redirect to different pages based on the user type
-              let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
-              if (userType === 'Adviser') {
-                  redirectUrl = '/adviser_profile'; // Redirect for 'Adviser'
-              } else if (userType === 'Intern') {
-                  redirectUrl = '/intern_profile'; // Redirect for 'Administrator'
-              }
-              // Add more 'else if' conditions if there are more user types
-
-              return res.json({ success: true, redirectUrl: redirectUrl });
-          } else {
-              console.log("Incorrect Credentials");
-              return res.json({ success: false, message: 'Invalid credentials' });
+          console.log('Login success');
+          // Redirect to different pages based on the user type
+          let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
+          if (userType === 'Adviser') {
+            redirectUrl = '/adviser_profile'; // Redirect for 'Adviser'
+          } else if (userType === 'Admin') {
+            redirectUrl = '/admin_profile'; // Redirect for 'Administrator'
           }
-      } else {
-          console.log("User not found or incorrect user type");
-          return res.json({ success: false, message: 'Invalid user' });
-      }
+          // Add more 'else if' conditions if there are more user types
+
+          return res.json({ success: true, redirectUrl: redirectUrl });
+        } else {
+          console.log('Incorrect Credentials');
+          return res.json({ success: false, message: 'Invalid credentials' });
+        }
+      });
+    } else {
+      console.log('User not found or incorrect user type');
+      return res.json({ success: false, message: 'Invalid user' });
+    }
   });
 });
 
