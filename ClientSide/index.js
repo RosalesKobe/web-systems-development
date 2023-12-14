@@ -170,42 +170,59 @@ app.get('/intern_profile', (req, res) => {
 // Work Track route for intern
 app.get('/intern_worktrack', (req, res) => {
   if (req.session.userType === 'Intern' && req.session.userId) {
-    // Query to get the internship records
-    const internshipRecordsSql = `
-      SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName
-      FROM internshiprecords AS ir
-      JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-      WHERE ir.intern_id = ?
+    // First, update any records that should be marked as completed
+    const updateStatusSql = `
+      UPDATE internshiprecords
+      SET record_status = 'Completed'
+      WHERE intern_id = (
+        SELECT intern_id FROM interndetails WHERE user_id = ?
+      ) AND (hours_remaining <= 0 AND record_status <> 'Completed')
     `;
 
-    // Query to get the timetrack records
-    const timeTrackSql = `
-      SELECT * FROM timetrack WHERE record_id IN (
-        SELECT record_id FROM internshiprecords WHERE intern_id = (
-          SELECT intern_id FROM interndetails WHERE user_id = ?
-        )
-      )
-    `;
-
-    // Execute the first query to get the internship records
-    db.query(internshipRecordsSql, [req.session.userId], (internshipErr, internshipResults) => {
-      if (internshipErr) {
-        console.error('MySQL error:', internshipErr);
+    // Execute the update query
+    db.query(updateStatusSql, [req.session.userId], (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error('MySQL error during status update:', updateErr);
         return res.status(500).send('Internal Server Error');
       }
+      console.log(`${updateResults.affectedRows} records updated`);
+      // Continue with fetching the internship records after the update
+      const internshipRecordsSql = `
+        SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName
+        FROM internshiprecords AS ir
+        JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
+        WHERE ir.intern_id = ?
+      `;
 
-      // Execute the second query to get the timetrack records
-      db.query(timeTrackSql, [req.session.userId], (timetrackErr, timetrackResults) => {
-        if (timetrackErr) {
-          console.error('MySQL error:', timetrackErr);
+      // Query to get the timetrack records
+      const timeTrackSql = `
+        SELECT * FROM timetrack WHERE record_id IN (
+          SELECT record_id FROM internshiprecords WHERE intern_id = (
+            SELECT intern_id FROM interndetails WHERE user_id = ?
+          )
+        )
+      `;
+
+      // Execute the first query to get the internship records
+      db.query(internshipRecordsSql, [req.session.userId], (internshipErr, internshipResults) => {
+        if (internshipErr) {
+          console.error('MySQL error:', internshipErr);
           return res.status(500).send('Internal Server Error');
         }
 
-        // Render the 'intern_worktrack.ejs' template with both sets of data
-        res.render('intern_worktrack', {
-          username: req.session.username,
-          records: internshipResults,
-          timeEntries: timetrackResults, // Pass the timetrack data to the template
+        // Execute the second query to get the timetrack records
+        db.query(timeTrackSql, [req.session.userId], (timetrackErr, timetrackResults) => {
+          if (timetrackErr) {
+            console.error('MySQL error:', timetrackErr);
+            return res.status(500).send('Internal Server Error');
+          }
+
+          // Render the 'intern_worktrack.ejs' template with both sets of data
+          res.render('intern_worktrack', {
+            username: req.session.username,
+            records: internshipResults,
+            timeEntries: timetrackResults, // Pass the timetrack data to the template
+          });
         });
       });
     });
@@ -214,6 +231,7 @@ app.get('/intern_worktrack', (req, res) => {
     res.redirect('/');
   }
 });
+
 
 //Route for adding data to the timetrack table
 app.post('/submit_time_entry', (req, res) => {
