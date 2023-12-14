@@ -1,6 +1,6 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
 //require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -134,7 +134,7 @@ if ($emailResult->num_rows > 0) {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TEAMPOGI OJT ADMIN MOD</title>
+  <title>ADMIN - ADD INTERN PAGE</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_addIntern.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

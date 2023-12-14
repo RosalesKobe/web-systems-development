@@ -121,7 +121,7 @@ $stmt->close();
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TEAMPOGI OJT ADMIN MOD</title>
+  <title>ADMIN - PROGRAMS PAGE</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_programs.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

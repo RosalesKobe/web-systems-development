@@ -127,7 +127,32 @@ tr:hover {
 .image-container img {
   width: 130px; /* Adjust image size */
   height: auto; /* Maintain aspect ratio */
-  border: none; /* If there was a border making the circle, set it to none */
+  border: none; 
   display: block; /* Ensure it doesn't have any line around it */
   margin-bottom: 10px; /* Add some space below the image */
+}
+
+.sort-button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.sortable {
+  cursor: default; /* Ensures the cursor is default when not hovered */
+  transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+/* When you hover over the sortable th elements, change background color and cursor */
+.sortable:hover {
+  background-color: black; 
+  cursor: pointer; /* Changes the cursor to the hand icon */
 }

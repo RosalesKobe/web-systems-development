@@ -1,40 +1,35 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-  header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
-  exit;
+    header("Location: web-systems-development/ServerSide/html/server_index.php");
+    exit;
 }
 
 $userID = $_SESSION['user_id'];
-$userType = $_SESSION['userType'];
-
 $firstName = '';
 $lastName = '';
 
-// Determine the table to query based on user type
 $detailsTable = 'admindetails';
+$stmt = $db->prepare("SELECT firstName, lastName FROM $detailsTable WHERE user_id = ?");
+$stmt->bind_param("i", $userID);
+$stmt->execute();
+$result = $stmt->get_result();
 
-// Query for the last name if a details table has been identified
-if (!empty($detailsTable)) {
-  $stmt = $db->prepare("SELECT firstName, lastName FROM $detailsTable WHERE user_id = ?");
-  $stmt->bind_param("i", $userID);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows > 0) {
-      $row = $result->fetch_assoc();
-      $firstName = $row['firstName'];
-      $lastName = $row['lastName'];
-  }
-  $stmt->close();
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $firstName = $row['firstName'];
+    $lastName = $row['lastName'];
 }
+$stmt->close();
 
-// Initialize $internsData
-$internsData = [];
-$stmt = $db->prepare("SELECT 
+$filterName = isset($_GET['filterName']) ? $_GET['filterName'] : '';
+$sort = isset($_GET['sort']) ? $_GET['sort'] : 'InternFirstName';
+$order = isset($_GET['order']) && $_GET['order'] == 'desc' ? 'DESC' : 'ASC';
+
+// Define $query at the top level of the script
+$query = "SELECT 
         i.firstName AS InternFirstName,
         i.lastName AS InternLastName, 
         i.email, 
@@ -46,32 +41,69 @@ $stmt = $db->prepare("SELECT
     FROM 
         interndetails i
     JOIN 
-        adviserdetails a ON i.adviser_id = a.adviser_id
-");
-$stmt->execute();
-$result = $stmt->get_result();
+        adviserdetails a ON i.adviser_id = a.adviser_id";
 
-// Store the data in an array to use later in the HTML
+// Append the WHERE clause if a filter is set
+if (!empty($filterName)) {
+    $query .= " WHERE i.firstName LIKE CONCAT('%', ?, '%') OR i.lastName LIKE CONCAT('%', ?, '%')";
+}
+
+// Append the ORDER BY clause
+$query .= " ORDER BY " . $sort . " " . $order;
+
+// Prepare the statement
+$stmt = $db->prepare($query);
+if (!$stmt) {
+    // Handle error here
+    die('Prepare failed: ' . $db->error);
+}
+
+// Bind parameters if needed
+if (!empty($filterName)) {
+    $stmt->bind_param("ss", $filterName, $filterName);
+}
+
+// Execute the statement
+if (!$stmt->execute()) {
+    // Handle error here
+    die('Execute failed: ' . $stmt->error);
+}
+
+// Fetch the results
+$result = $stmt->get_result();
+$internsData = [];
 if ($result->num_rows > 0) {
-    // output data of each row
     while ($row = $result->fetch_assoc()) {
         $internsData[] = $row;
     }
 } else {
-    $internsData = []; // Set $internsData as an empty array if no results
+    $internsData = [];
 }
+
+// Close the statement
 $stmt->close();
 
+// Define the sort_order and sort_link functions
+function sort_order($current_order) {
+    return $current_order == 'ASC' ? 'desc' : 'asc';
+}
+
+function sort_link($column, $current_sort, $current_order) {
+  $order = $column == $current_sort ? sort_order($current_order) : 'asc';
+  return "server_interns.php?sort=" . $column . "&order=" . $order;
+}
+
+// Use PHP to generate the URLs ahead of time
+$firstNameSortUrl = sort_link('InternFirstName', $sort, $order);
+$lastNameSortUrl = sort_link('InternLastName', $sort, $order);
+$emailSortUrl = sort_link('email', $sort, $order);
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>TEAMPOGI OJT ADMIN MOD</title>
+  <title>ADMIN - INTERNS PAGE</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_interns.css">
 
 </head>
@@ -114,29 +146,27 @@ $stmt->close();
     </div>
   </div>
   <div class="page-content">
-  <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
-  <div class="content-categories">
-      <div class="label-wrapper">
-        </div>    
-        <div class="image-container">
-    <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
-  </div>
-  </div>
+    <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
+    <form action="server_interns.php" method="get">
+      <label for="filterName">Filter by Name:</label>
+      <input type="text" id="filterName" name="filterName" value="<?php echo isset($_GET['filterName']) ? htmlspecialchars($_GET['filterName']) : ''; ?>">
+      <input type="submit" value="Filter">
+    </form>
 
-      <table>
+    <table>
+      <tr>
+      <th class="sortable" onmouseover="hovered('firstName')" onclick="sortColumn('firstName')">First Name</th>
+<th class="sortable" onmouseover="hovered('lastName')" onclick="sortColumn('lastName')">Last Name</th>
+<th class="sortable" onmouseover="hovered('email')" onclick="sortColumn('email')">Email</th>
+
+        <th>Address</th>
+        <th>School</th>
+        <th>Other Intern Details</th>
+        <th>Adviser First Name</th>
+        <th>Adviser Last Name</th>
+      </tr>
+      <?php foreach ($internsData as $intern): ?>
         <tr>
-
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>School</th>
-          <th>Other Intern Details</th>
-          <th>Adviser First Name</th>
-          <th>Adviser Last Name</th>
-        </tr>
-        <?php foreach ($internsData as $intern): ?>
-          <tr>
           <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
           <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
           <td><?php echo htmlspecialchars($intern['email']); ?></td>
@@ -145,21 +175,50 @@ $stmt->close();
           <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
-          </tr>
-        <?php endforeach; ?>
-        <?php if (empty($internsData)): ?>
-          <tr>
-            <td colspan="6">No programs found.</td>
-          </tr>
-        <?php endif; ?>
-      </table>
-
-    
+        </tr>
+      <?php endforeach; ?>
+      <?php if (empty($internsData)): ?>
+        <tr>
+          <td colspan="8">No interns found.</td>
+        </tr>
+      <?php endif; ?>
+    </table>
   </div>
 </div>
 <script>
+var hoverFlags = { firstName: false, lastName: false, email: false };
+
+function hovered(column) {
+  // Set the hover flag for the column to true
+  hoverFlags[column] = true;
+}
+
+function sortColumn(column) {
+  // Check if the column was hovered over before sorting
+  if (hoverFlags[column]) {
+    var sortURL = '';
+    switch(column) {
+      case 'firstName':
+        sortURL = '<?php echo sort_link('InternFirstName', $sort, $order); ?>';
+        break;
+      case 'lastName':
+        sortURL = '<?php echo sort_link('InternLastName', $sort, $order); ?>';
+        break;
+      case 'email':
+        sortURL = '<?php echo sort_link('email', $sort, $order); ?>';
+        break;
+    }
+    window.location.href = sortURL;
+  }
+}
+
+// Optional: Reset the hover flag when the mouse leaves the column header
+function resetHover(column) {
+  hoverFlags[column] = false;
+}
 </script>
 </body>
+
 </html>
 
 

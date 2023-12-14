@@ -51,7 +51,7 @@ $adviser_count = $adviser_result['adviser_count'];
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>TEAMPOGI OJT ADMIN MOD</title>
+  <title>ADMIN - HOME PAGE</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_home.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

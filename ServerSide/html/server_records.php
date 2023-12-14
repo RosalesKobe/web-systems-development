@@ -158,7 +158,7 @@ if ($result = $db->query($query)) {
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>TEAMPOGI OJT ADMIN MOD</title>
+  <title>ADMIN - RECORDS PAGE</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_records.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>

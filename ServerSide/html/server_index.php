@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>OJT</title>
+<title>ADMIN - LOGIN PAGE</title>
 	<link rel="stylesheet" type="text/css" href="/web-systems-development/ServerSide/css/style_server_index.css">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
 	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
@@ -60,7 +60,6 @@
 session_start();
 require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
 //require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
-// Adjust the path as needed to your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $userType = $_POST['user-type'];
