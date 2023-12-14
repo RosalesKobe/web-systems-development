@@ -73,11 +73,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
   $startDate = $_POST['startDate'];
   $endDate = $_POST['endDate'];
   $recordStatus = $_POST['recordStatus'];
-    // Check if start_date is before end_date
-    // Automatically set status to 'Completed' if hours remaining is 0 or negative
+
+
+  // Check if a record for the same intern already exists
+  $stmt = $db->prepare("SELECT * FROM internshiprecords WHERE intern_id = ?");
+  $stmt->bind_param("i", $internId);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($result->num_rows > 0) {
+      // Record exists, set error message
+      $_SESSION['error_message'] = "A record for this intern already exists.";
+      header("Location: server_records.php");
+      exit;
+  }
+  $stmt->close();
+
+      // Automatically set status to 'Completed' if hours remaining is 0 or negative
   if ($hoursRemaining <= 0) {
     $recordStatus = "Completed";
   }
+      // Check if start_date is before end_date
     if (strtotime($startDate) >= strtotime($endDate)) {
       $_SESSION['error_message'] = "The start date must be before the end date.";
   } else {
@@ -307,5 +322,10 @@ window.onclick = function(event) {
   }
 }
   </script>
+
+  <?php if (isset($_SESSION['error_message'])): ?>
+  <script>alert('<?php echo $_SESSION['error_message']; ?>');</script>
+  <?php unset($_SESSION['error_message']); ?>
+<?php endif; ?>
 </body>
 </html>
