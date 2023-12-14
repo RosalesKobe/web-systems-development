@@ -1,8 +1,8 @@
 <?php
 ob_start(); // Start output buffering at the very beginning of the script
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+//require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
+require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
   header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
