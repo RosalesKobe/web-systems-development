@@ -162,9 +162,14 @@ h2 {
                 <th>Time Out</th>
                 <th>Hours Rendered</th>
               </tr>
-              <% timeEntries.forEach(function(entry) { %>
+              <% timeEntries.forEach(function(entry) { 
+                // Create a new date object and add one day
+                let date = new Date(entry.date);
+                date.setDate(date.getDate() + 1); 
+              %>
                 <tr>
-                  <td><%= entry.date %></td>
+                  <!-- Output the adjusted date -->
+                  <td><%= date.toISOString().split('T')[0] %></td>
                   <td><%= entry.timein %></td>
                   <td><%= entry.timeout %></td>
                   <td><%= entry.hours_rendered %></td>

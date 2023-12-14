@@ -131,3 +131,71 @@ tr:hover {
   display: block; /* Ensure it doesn't have any line around it */
   margin-bottom: 10px; /* Add some space below the image */
 }
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+form {
+  background-color: #ffffff;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: #666;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Makes sure padding doesn't affect width */
+}
+
+input[type="submit"] {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #4cae4c;
+}
+
+input[type="date"]::before {
+  content: attr(value), !important;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical; /* Allows user to resize textarea vertically */
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+    margin: 20px auto;
+  }
+}

@@ -34,6 +34,7 @@ if (!empty($detailsTable)) {
 // Initialize $internRecords
 $internRecords = [];
 $stmt = $db->prepare("SELECT 
+        r.record_id AS RecordID,
         d.firstName AS InternFirstName, 
         d.lastName AS InternLastName,
         r.hours_completed AS hours_rendered, 
@@ -59,8 +60,84 @@ if ($result->num_rows > 0) {
     $internRecords = []; // Set $internRecords as an empty array if no results
 }
 $stmt->close();
-?>
 
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+  // Get form data
+  $internId = $_POST['internId'];
+  $adviserId = $_POST['adviserId'];
+  $programId = null;
+  $administratorId = $_POST['administratorId'];
+  $hoursCompleted = $_POST['hoursCompleted'];
+  $hoursRemaining = $_POST['hoursRemaining'];
+  $startDate = $_POST['startDate'];
+  $endDate = $_POST['endDate'];
+  $recordStatus = $_POST['recordStatus'];
+    // Check if start_date is before end_date
+    // Automatically set status to 'Completed' if hours remaining is 0 or negative
+  if ($hoursRemaining <= 0) {
+    $recordStatus = "Completed";
+  }
+    if (strtotime($startDate) >= strtotime($endDate)) {
+      $_SESSION['error_message'] = "The start date must be before the end date.";
+  } else {
+  // Prepare the insert query
+  $stmt = $db->prepare("INSERT INTO internshiprecords (intern_id, adviser_id, program_id, administrator_id, hours_completed, hours_remaining, start_date, end_date, record_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("iiiiiiiss", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus);
+  
+ // Execute the query and check for errors
+ if ($stmt->execute()) {
+  $_SESSION['success_message'] = "New record created successfully";
+} else {
+  $_SESSION['error_message'] = "Error: " . $stmt->error;
+}
+$stmt->close();
+
+// Redirect to the same page with a GET request
+header("Location: server_records.php");
+exit;
+}
+}
+
+// Fetch Intern IDs
+$internIds = [];
+$query = "SELECT intern_id, firstName, lastName FROM interndetails";
+if ($result = $db->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        $internIds[$row['intern_id']] = $row['firstName'] . ' ' . $row['lastName'];
+    }
+}
+
+
+
+// Fetch Adviser IDs
+$adviserIds = [];
+$query = "SELECT adviser_id, firstName, lastName FROM adviserdetails";
+if ($result = $db->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        $adviserIds[$row['adviser_id']] = $row['firstName'] . ' ' . $row['lastName'];
+    }
+}
+
+// Fetch Program IDs
+$programIds = [];
+$query = "SELECT program_id, program_name FROM ojtprograms";
+if ($result = $db->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        $programIds[$row['program_id']] = $row['program_name'];
+    }
+}
+
+// Fetch Administrator IDs
+$administratorIds = [];
+$query = "SELECT administrator_id, firstName, lastName FROM admindetails";
+if ($result = $db->query($query)) {
+    while ($row = $result->fetch_assoc()) {
+        $administratorIds[$row['administrator_id']] = $row['firstName'] . ' ' . $row['lastName'];
+    }
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en" >
@@ -68,7 +145,7 @@ $stmt->close();
   <meta charset="UTF-8">
   <title>TEAMPOGI OJT ADMIN MOD</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_records.css">
-
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
@@ -118,34 +195,117 @@ $stmt->close();
     <img src="\web-systems-development\ServerSide\img\Saint_Louis_University_PH_Logo.svg.png" alt="Profile Image">
   </div>
   <table>
-        <tr>
+  <tr>
+    <th>Record ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Hours Completed</th>
+    <th>Hours Remaining</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Record Status</th>
+  </tr>
 
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Hours Completed</th>
-          <th>Hours Remaining</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Record Status</th>
-        </tr>
-        <?php foreach ($internRecords as $intern): ?>
-          <tr>
-          <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['hours_rendered']); ?></td>
-          <td><?php echo htmlspecialchars($intern['hours_remaining']); ?></td>
-          <td><?php echo htmlspecialchars($intern['sd']); ?></td>
-          <td><?php echo htmlspecialchars($intern['ed']); ?></td>
-          <td><?php echo htmlspecialchars($intern['record_status']); ?></td>
-          </tr>
-        <?php endforeach; ?>
-        <?php if (empty($internRecords)): ?>
-          <tr>
-            <td colspan="6">No programs found.</td>
-          </tr>
-        <?php endif; ?>
-      </table>
+  <?php foreach ($internRecords as $intern): ?>
+    <tr>
+    <td><?php echo htmlspecialchars($intern['RecordID']); ?></td>
+    <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
+    <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
+    <td><?php echo htmlspecialchars($intern['hours_rendered']); ?></td>
+    <td><?php echo htmlspecialchars($intern['hours_remaining']); ?></td>
+    <td><?php echo htmlspecialchars($intern['sd']); ?></td>
+    <td><?php echo htmlspecialchars($intern['ed']); ?></td>
+    <td><?php echo htmlspecialchars($intern['record_status']); ?></td>
+    </tr>
+  <?php endforeach; ?>
+  <?php if (empty($internRecords)): ?>
+    <tr>
+      <td colspan="8">No records found.</td>
+    </tr>
+  <?php endif; ?>
+</table>
+<!-- Button to Open the Modal -->
+<button type="button" id="myBtn">Add New Internship Record</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form action="server_records.php" method="post">
+    <h2>Add Internship Record</h2>
+    <label for="internId">Intern Name:</label>
+<select id="internId" name="internId" required>
+    <?php foreach ($internIds as $id => $name): ?>
+        <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
+    <?php endforeach; ?>
+</select><br>
+
+<label for="adviserId">Adviser Name:</label>
+<select id="adviserId" name="adviserId" required>
+    <?php foreach ($adviserIds as $id => $name): ?>
+        <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
+    <?php endforeach; ?>
+</select><br>
+
+<label for="administratorId">Administrator Name:</label>
+<select id="administratorId" name="administratorId" required>
+    <?php foreach ($administratorIds as $id => $name): ?>
+        <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
+    <?php endforeach; ?>
+</select><br>
+
+<label for="hoursCompleted">Hours Completed:</label>
+<input type="number" id="hoursCompleted" name="hoursCompleted" value="0" readonly><br>
+
+    <label for="hoursRemaining">Hours Remaining:</label>
+    <input type="number" id="hoursRemaining" name="hoursRemaining" value="100" readonly><br>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" required><br>
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" required><br>
+
+    <label for="recordStatus">Record Status:</label>
+    <select id="recordStatus" name="recordStatus">
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select><br>
+
+    <input type="submit" name="submit" value="Add Record">
+    </form>
   </div>
 </div>
+  </div>
+</div>
+<script>
+  // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+  </script>
 </body>
 </html>

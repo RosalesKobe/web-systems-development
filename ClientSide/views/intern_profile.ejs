@@ -118,7 +118,7 @@
         padding: 20px;
       }
     </style>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="left-manager">
@@ -193,11 +193,46 @@
           </form>
           <div class="work-hours-overview">
             <h2>Daily Work Hours Overview</h2>
-            <!-- Here you would insert a chart from a charting library -->
-            <div class="chart-placeholder">Chart will go here</div>
-          </div>
+            <canvas id="workHoursChart" width="400" height="400"></canvas>
+          </div>          
         </div>
+<script>
+  const dates = <%- JSON.stringify(timeEntries.map(entry => {
+    // Create a Date object from the date string
+    const tempDate = new Date(entry.date);
+    // Adjust the date by setting the hours to midday to avoid timezone issues
+    tempDate.setHours(12);
+    // Format the date to a more readable format (e.g., "2023-12-13")
+    return tempDate.toISOString().split('T')[0];
+  })) %>;
+  const hours = <%- JSON.stringify(timeEntries.map(entry => entry.hours_rendered)) %>;
 
+        
+          // Get the context of the canvas to draw the chart
+          const ctx = document.getElementById('workHoursChart').getContext('2d');
+        
+          // Create the line chart
+          const workHoursChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: dates, // X-axis labels
+              datasets: [{
+                label: 'Hours Rendered',
+                data: hours, // Y-axis data
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
         <div class="announcement">
           <h2>Announcements:</h2>
           <div class="announcement-content">

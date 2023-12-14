@@ -100,6 +100,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   // Close the statement
   $stmt->close();
 }
+
+// Fetch Administrator IDs and Names for the dropdown
+$adminOptions = [];
+
+// Prepare the SQL statement
+$stmt = $db->prepare("SELECT administrator_id, firstName, lastName FROM admindetails");
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Fetch the results and store them in an array
+while ($admin = $result->fetch_assoc()) {
+    $adminOptions[$admin['administrator_id']] = $admin['firstName'] . ' ' . $admin['lastName'];
+}
+$stmt->close();
 ?>
 
 
@@ -154,21 +168,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
      <div class="content-categories">
      </div>
       <div class="label-wrapper">
-        <!-- Add Program Form -->
-        <div id="addForm" style="display:none;">
-          <h2>Add New Program</h2>
-          <form action="server_programs.php" method="post">
-          <input type="hidden" name="program_id" id="program_id">
-            <label for="administrator_id">Administrator ID:</label>
-            <input type="text" name="administrator_id" id="administrator_id">
+      <div id="addForm" style="display:none;">
+  <h2>Add New Program</h2>
+  <form action="server_programs.php" method="post">
+    <!-- Other input fields -->
+    <label for="administrator_id">Administrator ID:</label>
+    <select name="administrator_id" id="administrator_id">
+      <?php foreach ($adminOptions as $id => $name): ?>
+        <option value="<?php echo htmlspecialchars($id); ?>">
+          <?php echo htmlspecialchars($name); ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
             <label for="program_name">Program Name:</label>
             <input type="text" name="program_name" id="program_name">
             <label for="start_datee">Start Date:</label>
             <input type="date" name="start_datee" id="start_datee">
             <label for="end_date">End Date:</label>
             <input type="date" name="end_date" id="end_date">
-            <input type="submit" name="add_program" value="Add Program">
-            <button type="button" onclick="cancelAddProgram()">Cancel</button>
+            <div class="button-container">
+  <input type="submit" name="add_program" value="Add Program">
+  <button type="button" onclick="cancelAddProgram()">Cancel</button>
+</div>
           </form>
         </div>
 
@@ -176,10 +197,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
         <div id="editForm" style="display:none;">
           <h2>Edit Program</h2>
           <form action="server_programs.php" method="post">
+          <label for="editForm-program_id">Program ID:</label>
      <input id="editForm-program_id" name="program_id">
      <input type="hidden" id="editForm-administrator_id" name="administrator_id">
+     <label for="editForm-program_name">Program Name:</label>
      <input type="text" id="editForm-program_name" name="program_name">
+     <label for="editForm-start_datee">Start Date:</label>
      <input type="date" id="editForm-start_datee" name="start_datee">
+     <label for="editForm-end_date">End Date:</label>
      <input type="date" id="editForm-end_date" name="end_date">
      <input type="submit" name="edit_program" value="Update Program">
         <!-- Add Cancel button -->
@@ -220,7 +245,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_program'])) {
   <?php endif; ?>
 </table>
       <!-- Add button below the table -->
-      <button type="button" onclick="addProgram()">Add New Program</button>
+      <button type="button" id="addprogbtn" onclick="addProgram()">Add New Program</button>
     
   </div>
 </div>

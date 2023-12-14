@@ -111,7 +111,6 @@ app.get('/intern_profile', (req, res) => {
             console.error('MySQL error:', programErr);
             return res.status(500).send('Internal Server Error');
           } else {
-            // New query to fetch feedback for the logged-in intern
             const feedbackSql = `
               SELECT feedback.feedback_text FROM feedback
               JOIN internshiprecords ON feedback.record_id = internshiprecords.record_id
@@ -122,12 +121,28 @@ app.get('/intern_profile', (req, res) => {
                 console.error('MySQL error:', feedbackErr);
                 return res.status(500).send('Internal Server Error');
               } else {
-                // Pass intern details, program names, and feedback to the EJS template
-                res.render('intern_profile', {
-                  username: req.session.username,
-                  interndetails: internResults[0],
-                  programNames: programResults,
-                  feedback: feedbackResults
+                // Add new query for time track here
+                const timeTrackSql = `
+                  SELECT date, hours_rendered FROM timetrack
+                  WHERE record_id IN (
+                    SELECT record_id FROM internshiprecords WHERE intern_id = ?
+                  )
+                  ORDER BY date ASC
+                `;
+                db.query(timeTrackSql, [internResults[0].intern_id], (timeTrackErr, timeTrackResults) => {
+                  if (timeTrackErr) {
+                    console.error('MySQL error:', timeTrackErr);
+                    return res.status(500).send('Internal Server Error');
+                  } else {
+                    // Now pass all the data to the EJS template
+                    res.render('intern_profile', {
+                      username: req.session.username,
+                      interndetails: internResults[0],
+                      programNames: programResults,
+                      feedback: feedbackResults,
+                      timeEntries: timeTrackResults // Add this line for time track data
+                    });
+                  }
                 });
               }
             });
@@ -139,7 +154,8 @@ app.get('/intern_profile', (req, res) => {
           username: req.session.username,
           interndetails: {},
           programNames: [],
-          feedback: [] // Add this line to handle the case where intern details are not found
+          feedback: [],
+          timeEntries: [] // Handle the case where time track data is not found
         });
       }
     });
@@ -148,6 +164,7 @@ app.get('/intern_profile', (req, res) => {
     res.redirect('/login');
   }
 });
+
 
 
 // Work Track route for intern

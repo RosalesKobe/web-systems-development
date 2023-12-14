@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering at the very beginning of the script
 session_start();
 require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
 //require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
@@ -65,6 +66,9 @@ if ($result->num_rows > 0) {
         $feedbackData[] = $row;
     }
 }
+
+$recordIdsQuery = "SELECT record_id FROM internshiprecords";
+$recordIdsResult = $db->query($recordIdsQuery);
 ?>
 <!DOCTYPE html>
 <html lang="en" >
@@ -72,7 +76,77 @@ if ($result->num_rows > 0) {
   <meta charset="UTF-8">
   <title>TEAMPOGI OJT ADMIN MOD</title>
   <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_feedbacks.css">
+  <style>
+    body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
 
+form {
+  background-color: #ffffff;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  color: #666;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+input[type="submit"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Makes sure padding doesn't affect width */
+}
+
+input[type="submit"] {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #4cae4c;
+}
+
+input[type="date"]::before {
+  content: attr(value), !important;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical; /* Allows user to resize textarea vertically */
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+    margin: 20px auto;
+  }
+}
+
+    </style>
 </head>
 <body>
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
@@ -140,10 +214,18 @@ if ($result->num_rows > 0) {
   <?php endforeach; ?>
 </table>
   <!-- Form for adding new feedback data -->
-  <h2>Add New Feedback</h2>
-<form action="server_feedbacks.php" method="post">
-  <label for="new_record_id">Record ID:</label>
-  <input type="text" name="new_record_id" id="new_record_id">
+  <form action="server_feedbacks.php" method="post" onsubmit="return confirm('Are you sure you want to add this feedback?');">
+<label for="new_record_id">Record ID:</label>
+  <select name="new_record_id" id="new_record_id" required>
+    <option value="">Select a Record ID</option>
+    <?php
+    if ($recordIdsResult->num_rows > 0) {
+        while($row = $recordIdsResult->fetch_assoc()) {
+            echo '<option value="'.htmlspecialchars($row['record_id']).'">'.htmlspecialchars($row['record_id']).'</option>';
+        }
+    }
+    ?>
+  </select>
   <label for="new_feedback_text">Feedback Text:</label>
   <textarea name="new_feedback_text" id="new_feedback_text"></textarea>
   <label for="new_feedback_date">Feedback Date:</label>
@@ -166,17 +248,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_feedback'])) {
   if ($stmt->execute()) {
     echo "New feedback added successfully!";
     
-    // Redirect to avoid form resubmission on page refresh
-    $redirectURL = $_SERVER['PHP_SELF'];
-    header("Location: $redirectURL");
-    exit();
   } else {
     echo "Error: " . $stmt->error;
   }
 
   // Close the statement
   $stmt->close();
-}
+
+      // Redirect to prevent form resubmission
+      header('Location: server_feedbacks.php');
+      exit();
+  }
+  ob_end_flush();
 ?>
   </div>
 </div>
