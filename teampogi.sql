@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 14, 2023 at 06:14 AM
+-- Generation Time: Dec 14, 2023 at 06:20 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -209,7 +209,7 @@ INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `progra
 (10, 12, 2, 38, 2, 0, 100, '2023-10-31', '2023-11-30', 'In Progress'),
 (11, 13, 2, 38, 2, 0, 100, '2023-10-31', '2023-11-30', 'In Progress'),
 (12, 19, 2, 39, 2, 0, 100, '2023-10-31', '2023-11-30', 'In Progress'),
-(44, 20, 2, NULL, 2, 0, 100, '0000-00-00', '2023-12-30', 'In Progress');
+(44, 20, 2, NULL, 2, 0, 100, '2023-10-31', '2023-12-30', 'In Progress');
 
 -- --------------------------------------------------------
 

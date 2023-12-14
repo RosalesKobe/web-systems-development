@@ -134,7 +134,14 @@ h2 {
                 <td><%= record.internLastName %></td>
                 <td><%= record.hours_completed %></td>
                 <td><%= record.hours_remaining %></td>
-                <td><%= record.start_date.toISOString().split('T')[0] %></td>
+                <td>
+                    <% if (record.start_date && record.start_date instanceof Date && !isNaN(record.start_date.getTime())) { %>
+                        <%= record.start_date.toISOString().split('T')[0] %>
+                    <% } else { %>
+                        <!-- Provide an alternative value or an empty string -->
+                        N/A
+                    <% } %>
+                </td>
                 <td>
                     <% if (record.end_date && record.end_date instanceof Date && !isNaN(record.end_date.getTime())) { %>
                         <%= record.end_date.toISOString().split('T')[0] %>
