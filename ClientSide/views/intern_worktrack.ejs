@@ -37,30 +37,54 @@
     border-radius: 5px;
 }
 
+
+
+.work-track, .work-history {
+  border-collapse: collapse;
+  margin:25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0, 15);
+}
+
+.work-track thead tr, .work-history thead tr{
+  background-color: #444;
+  color: #fafcfd;
+  text-align: left;
+  font-weight: bold;
+}
+
+.work-track th
+.work-track td
+.work-history th
+.work-history td{
+  padding: 12px 15px;
+}
+
+.work-track tbody tr, .work-history{
+  border-bottom: 1px solid lightgray;
+}
+
+.work-track tbody tr, .work-history tbody tr:nth-last-of-type(even){
+  background-color: #f3f3f3;
+
+}
+
+.work-track tbody tr, .work-history tbody tr:last :last-of-type{
+border-bottom: 2px solid #444;
+}
+
 .work-track, .work-history table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    border-radius: 22px;
-    background: linear-gradient(145deg, #fefefe, #d5d5d5);
     box-shadow:  13px 13px 26px #dcdcdc,
              -13px -13px 26px #fefefe;
 }
 
 
-
-.work-track th, .work-history th {
-    background-color: #585858;
-    color: white;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.work-track td, .work-history td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
 
 h2 {
     color: #333;
