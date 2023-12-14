@@ -41,10 +41,16 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, #fefefe, #d5d5d5);
+    box-shadow:  13px 13px 26px #dcdcdc,
+             -13px -13px 26px #fefefe;
 }
 
+
+
 .work-track th, .work-history th {
-    background-color: #4CAF50;
+    background-color: #585858;
     color: white;
     padding: 10px;
     border: 1px solid #ddd;
@@ -151,6 +157,7 @@ h2 {
           <% } %>
         <% }) %>
         <table class="work-track">
+          <thead>
             <tr>
               <th>Adviser</th>
               <th>Hours Completed</th>
@@ -159,6 +166,7 @@ h2 {
               <th>End Date</th>
               <th>Progress</th>
             </tr>
+          </thead>
             <% records.forEach(function(record) { %>
               <tr>
                 <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
