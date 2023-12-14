@@ -115,6 +115,21 @@
           margin-left: 220px;
           padding: 20px;
         }
+        .logout-button {
+  background-color: #e0f7fa;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #00695c;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #b2ebf2;
+}
+
       </style>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/style_client.css">
@@ -130,7 +145,7 @@
           <a href="/adviser_worktrack">Work Track</a>
         </li>
         <li class="work">
-          <button id="logoutButton">Logout</button>
+          <button id="logoutButton" class="logout-button">Logout</button>
         </li>
       </ul>
     </div>
