@@ -6,89 +6,82 @@
     <title>OJT Student - Profile</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-      }
-    
-      .dashboard {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-    
-      .user-info,
-      .announcement {
-        background-color: #c9cbcb;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px;
-        width: calc(48% - 20px);
-        box-sizing: border-box;
-      }
-    
-      .user-info h2,
-      .announcement h2 {
-        color: #010101;
-        margin-bottom: 10px; /* Adjusted margin */
-      }
-    
-      .input-group {
-        background-color: #b2b1b1;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        background: linear-gradient(145deg, #9e9e9e, #858585);
-        box-shadow:  6px 6px 0px #767676,
-             -6px -6px 0px #b2b2b2;
-      }
-    
-      .input-group label {
-        display: block;
-        margin-bottom: 5px;
-      }
-    
-      .input-group input {
-        width: 100%;
-        padding: 5px;
-        box-sizing: border-box; /* Include padding in the input width */
-      }
-    
-      .work-hours-overview {
-        margin-top: 20px; /* Adjusted margin */
-      }
-    
-      .chart-placeholder {
-        background-color: #b2ebf2;
-        height: 200px;
-        border-radius: 5px;
-      }
-    
-      .announcement-content,
-      .feedback-content {
-        background-color: #cbcdcd;
-        padding: 10px;
-        border-radius: 5px;
-        height: 150px;
-        margin-top: 20px;
-        overflow: auto; /* Added overflow for text scrolling */
-        background: linear-gradient(145deg, #9e9e9e, #858585);
-        box-shadow:  6px 6px 0px #767676,
-             -6px -6px 0px #b2b2b2;
-      }
-    
-      /* Responsive layout adjustments */
-      @media (max-width: 768px) {
-        .dashboard {
-          flex-direction: column;
+          font-family: Arial, sans-serif;
+          margin: 0;
         }
-    
+      
+        .dashboard {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+      
         .user-info,
         .announcement {
-          width: 100%;
-          height: 50%;
+          background-color: #e0f7fa;
+          padding: 20px;
+          border-radius: 10px;
+          margin: 10px;
+          width: calc(48% - 20px);
+          box-sizing: border-box;
         }
-      }
-    
+      
+        .user-info h2,
+        .announcement h2 {
+          color: #00695c;
+          margin-bottom: 10px; /* Adjusted margin */
+        }
+      
+        .input-group {
+          background-color: #b2ebf2;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 15px;
+        }
+      
+        .input-group label {
+          display: block;
+          margin-bottom: 5px;
+        }
+      
+        .input-group input {
+          width: 100%;
+          padding: 5px;
+          box-sizing: border-box; /* Include padding in the input width */
+        }
+      
+        .work-hours-overview {
+          margin-top: 20px; /* Adjusted margin */
+        }
+      
+        .chart-placeholder {
+          background-color: #b2ebf2;
+          height: 200px;
+          border-radius: 5px;
+        }
+      
+        .announcement-content,
+        .feedback-content {
+          background-color: #b2ebf2;
+          padding: 10px;
+          border-radius: 5px;
+          height: 500px;
+          margin-top: 20px;
+          overflow: auto; /* Added overflow for text scrolling */
+        }
+      
+        /* Responsive layout adjustments */
+        @media (max-width: 768px) {
+          .dashboard {
+            flex-direction: column;
+          }
+      
+          .user-info,
+          .announcement {
+            width: 100%;
+          }
+        }
+      
       .left-manager {
         background-color: #333;
         color: #fff;
