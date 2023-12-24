@@ -14,6 +14,7 @@ $userType = $_SESSION['userType'];
 $firstName = '';
 $lastName = '';
 
+//sdsd
 // Determine the table to query based on user type
 $detailsTable = 'admindetails';
 
