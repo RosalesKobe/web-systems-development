@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 16, 2024 at 02:59 PM
+-- Generation Time: Jan 19, 2024 at 05:54 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -114,15 +114,14 @@ CREATE TABLE IF NOT EXISTS `feedback` (
   `feedback_date` date NOT NULL,
   PRIMARY KEY (`feedback_id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `feedback`
 --
 
 INSERT INTO `feedback` (`feedback_id`, `record_id`, `feedback_text`, `feedback_date`) VALUES
-(1, 1, 'Very Good', '2024-01-16'),
-(2, 2, 'Nice', '2024-01-16');
+(3, 23, 'Very Good!', '2024-01-19');
 
 -- --------------------------------------------------------
 
@@ -147,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `interndetails` (
   KEY `adviser_id` (`adviser_id`),
   KEY `supervisor_id` (`supervisor_id`),
   KEY `company_id` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `interndetails`
@@ -156,7 +155,8 @@ CREATE TABLE IF NOT EXISTS `interndetails` (
 INSERT INTO `interndetails` (`intern_id`, `user_id`, `adviser_id`, `supervisor_id`, `company_id`, `firstName`, `lastName`, `email`, `classCode`, `requirements`) VALUES
 (4, 4, 1, 1, 1, 'Hev', 'Abi', 'habi@slu.edu.ph', 8888, b'0'),
 (5, 5, 1, 1, 1, 'Skusta', 'Clee', 'sclee@slu.edu.ph', 8888, b'0'),
-(6, 6, 1, 1, 2, 'Flow', 'Gee', 'fgee@slu.edu.ph', 7777, b'0');
+(6, 6, 1, 1, 2, 'Flow', 'Gee', 'fgee@slu.edu.ph', 7777, b'0'),
+(8, 8, 1, 1, 2, 'Bur', 'Ger', 'bger@slu.edu.ph', 7777, b'0');
 
 -- --------------------------------------------------------
 
@@ -181,16 +181,15 @@ CREATE TABLE IF NOT EXISTS `internshiprecords` (
   KEY `adviser_id` (`adviser_id`),
   KEY `program_id` (`program_id`),
   KEY `administrator_id` (`administrator_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `internshiprecords`
 --
 
 INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `program_id`, `administrator_id`, `hours_completed`, `hours_remaining`, `start_date`, `end_date`, `record_status`) VALUES
-(1, 5, 1, 1, 1, 0, 100, '2023-10-31', '2023-11-30', 'In Progress'),
-(2, 4, 1, 1, 1, 0, 100, '2023-10-31', '2023-11-30', 'In Progress'),
-(5, 6, 1, 1, 1, 0, 100, '2023-10-31', '2023-11-30', 'In Progress');
+(23, 4, 1, NULL, 1, 0, 100, '2024-01-01', '2024-02-01', 'In Progress'),
+(26, 8, 1, NULL, 1, 0, 100, '0000-00-00', '2024-01-31', 'In Progress');
 
 -- --------------------------------------------------------
 
@@ -257,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `timetrack` (
   `hours_rendered` decimal(5,2) NOT NULL,
   PRIMARY KEY (`timetrack_id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -273,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_type` enum('Intern','Adviser','Supervisor','Administrator') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -285,7 +284,8 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 (3, 'adviser', '$2a$08$e7..AGJcKW8UZokOKLBMo.FzgrQYNUAU41/ChyxhHECu7pAB6X8dS', 'Adviser'),
 (4, 'intern1', '$2a$08$wHzNa3NJ6dJnCvdxvt8pTOd2z.KvAHufd2Da2Qs4AbQyIAbpO4/rK', 'Intern'),
 (5, 'intern2', '$2a$08$Xfj3xXMqMfNlaFNg.8KccubOHRwUfyIO7KlHcpKaFmqNnEuTZoAuW', 'Intern'),
-(6, 'intern3', '$2a$08$2jEU.KDI6Tig8asmS3ni6.03LOcbNQbPW3NEQ7bM/T1aE5zJY/gRW', 'Intern');
+(6, 'intern3', '$2a$08$2jEU.KDI6Tig8asmS3ni6.03LOcbNQbPW3NEQ7bM/T1aE5zJY/gRW', 'Intern'),
+(8, 'intern4', '$2y$10$mY.nzqcYiRATSvHnXCzTy.eH6OPWwN/qIHkmjwRfLYqydmMFpSd.W', 'Intern');
 
 --
 -- Constraints for dumped tables

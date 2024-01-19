@@ -33,9 +33,8 @@ $query = "SELECT
         i.firstName AS InternFirstName,
         i.lastName AS InternLastName, 
         i.email, 
-        i.address, 
-        i.School, 
-        i.other_intern_details,
+        i.classCode, 
+        i.requirements,
         a.firstName AS AdviserFirstName,
         a.lastName AS AdviserLastName
     FROM 
@@ -159,9 +158,8 @@ $emailSortUrl = sort_link('email', $sort, $order);
 <th class="sortable" onmouseover="hovered('lastName')" onclick="sortColumn('lastName')">Last Name</th>
 <th class="sortable" onmouseover="hovered('email')" onclick="sortColumn('email')">Email</th>
 
-        <th>Address</th>
-        <th>School</th>
-        <th>Other Intern Details</th>
+        <th>Class Code</th>
+        <th>Requirements</th>
         <th>Adviser First Name</th>
         <th>Adviser Last Name</th>
       </tr>
@@ -170,9 +168,8 @@ $emailSortUrl = sort_link('email', $sort, $order);
           <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
           <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
           <td><?php echo htmlspecialchars($intern['email']); ?></td>
-          <td><?php echo htmlspecialchars($intern['address']); ?></td>
-          <td><?php echo htmlspecialchars($intern['School']); ?></td>
-          <td><?php echo htmlspecialchars($intern['other_intern_details']); ?></td>
+          <td><?php echo htmlspecialchars($intern['classCode']); ?></td>
+          <td><?php echo htmlspecialchars($intern['requirements']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
         </tr>

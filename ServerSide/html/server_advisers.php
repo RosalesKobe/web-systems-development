@@ -34,7 +34,7 @@ if (!empty($detailsTable)) {
 // Initialize $adviserData
 $adviserData = [];
 
-$stmt = $db->prepare("SELECT firstName, lastName, email, School, address, other_adviser_details FROM adviserdetails");
+$stmt = $db->prepare("SELECT firstName, lastName, email, School, address FROM adviserdetails");
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -123,7 +123,6 @@ $stmt->close();
           <th>Email</th>
           <th>Address</th>
           <th>School</th>
-          <th>Other Adviser Details</th>
         </tr>
         <?php foreach ($adviserData as $adviser): ?>
           <tr>
@@ -132,7 +131,6 @@ $stmt->close();
             <td><?php echo htmlspecialchars($adviser['email']); ?></td>
             <td><?php echo htmlspecialchars($adviser['School']); ?></td>
             <td><?php echo htmlspecialchars($adviser['address']); ?></td>
-            <td><?php echo htmlspecialchars($adviser['other_adviser_details']); ?></td>
             
           </tr>
         <?php endforeach; ?>

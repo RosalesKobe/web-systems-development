@@ -47,18 +47,49 @@ if ($result->num_rows > 0) {
     $adviserOptions = '<option value="">No advisers found</option>';
 }
 
+// Fetch supervisor details
+$supervisorOptions = '';
+$supervisorQuery = "SELECT supervisor_id, firstName, lastName FROM supervisordetails ORDER BY lastName, firstName";
+$supervisorResult = $db->query($supervisorQuery);
+
+if ($supervisorResult->num_rows > 0) {
+    while($row = $supervisorResult->fetch_assoc()) {
+        $supervisorId = $row['supervisor_id'];
+        $supervisorName = $row['firstName'] . ' ' . $row['lastName'];
+        $supervisorOptions .= "<option value='{$supervisorId}'>{$supervisorName}</option>";
+    }
+} else {
+    $supervisorOptions = '<option value="">No supervisors found</option>';
+}
+
+// Fetch company details
+$companyOptions = '';
+$companyQuery = "SELECT company_id, companyName FROM company ORDER BY companyName";
+$companyResult = $db->query($companyQuery);
+
+if ($companyResult->num_rows > 0) {
+    while($row = $companyResult->fetch_assoc()) {
+        $companyId = $row['company_id'];
+        $companyName = $row['companyName'];
+        $companyOptions .= "<option value='{$companyId}'>{$companyName}</option>";
+    }
+} else {
+    $companyOptions = '<option value="">No companies found</option>';
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve and sanitize form data
   $username = $db->real_escape_string($_POST['username']);
   $password = password_hash($_POST['password'], PASSWORD_BCRYPT, ["version" => '2b']);
   $userType = 'Intern'; // Set user type to 'Intern' by default
   $adviserId = $db->real_escape_string($_POST['adviser_id']);
+  $supervisorId = $db->real_escape_string($_POST['supervisor_id']);
+  $companyId = $db->real_escape_string($_POST['company_id']);
   $firstName = $db->real_escape_string($_POST['first_name']);
   $lastName = $db->real_escape_string($_POST['last_name']);
   $email = $db->real_escape_string($_POST['email']);
-  $school = $db->real_escape_string($_POST['school']);
-  $address = $db->real_escape_string($_POST['address']);
-  $otherDetails = $db->real_escape_string($_POST['other_intern_details']);
+  $classCode = $db->real_escape_string($_POST['classCode']);
+  // $requirements = $db->real_escape_string($_POST['requirements']);
 
   // Check if the username or email already exists
 // Check if the username already exists in the 'users' table
@@ -112,9 +143,9 @@ if ($emailResult->num_rows > 0) {
           $lastUserId = $stmt->insert_id; // Get the last inserted user id
 
           // Insert into 'interndetails' table
-          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, firstName, lastName, email, address, School, other_intern_details) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, supervisor_id, company_id, firstName, lastName, email, classCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
           $stmt = $db->prepare($insertInternDetailsQuery);
-          $stmt->bind_param("iissssss", $lastUserId, $adviserId, $firstName, $lastName, $email, $address, $school, $otherDetails);
+          $stmt->bind_param("iiiissss", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode);        
           
           if ($stmt->execute()) {
               echo "New intern added successfully";
@@ -195,6 +226,18 @@ if ($emailResult->num_rows > 0) {
     <?php echo $adviserOptions; ?>
   </select>
 </div>
+<div class="form-group">
+  <label for="supervisor-id">Supervisor Name</label>
+  <select id="supervisor-id" name="supervisor_id" required>
+    <?php echo $supervisorOptions; ?>
+  </select>
+</div>
+<div class="form-group">
+  <label for="company-id">Company Name</label>
+  <select id="company-id" name="company_id" required>
+    <?php echo $companyOptions; ?>
+  </select>
+</div>
       <div class="form-group">
         <label for="first-name">First Name</label>
         <input type="text" id="first-name" name="first_name" required>
@@ -208,17 +251,13 @@ if ($emailResult->num_rows > 0) {
         <input type="email" id="email" name="email" required>
       </div>
       <div class="form-group">
-        <label for="school">School</label>
-        <input type="text" id="school" name="school">
+        <label for="class-code">Class Code</label>
+        <input type="text" id="classCode" name="classCode">
       </div>
-      <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" id="address" name="address">
-      </div>
-      <div class="form-group">
-        <label for="other-details">Other Intern Details</label>
-        <textarea id="other-details" name="other_intern_details"></textarea>
-      </div>
+      <!-- <div class="form-group">
+        <label for="requirements">Requirements</label>
+        <input type="text" id="requirements" name="requirements">
+      </div> -->
       <div class="form-group">
         <input type="submit" class="btn" value="Add User">
       </div>
