@@ -135,18 +135,15 @@ h2 {
         <% records.forEach(function(record) { %>
             <% if (record.record_status !== 'Completed') { %>
               <form action="/submit_time_entry" method="post">
-            <div class="time-entry">
-                <label for="date">Date:</label>
-                <input type="date" id="date" name="date" placeholder="Date Today">
-                <label for="time-in">Time-In:</label>
-                <input type="time" id="time-in" name="timeIn" placeholder="Your Time IN" onchange="calculateHoursRendered()">
-                <label for="time-out">Time-Out:</label>
-                <input type="time" id="time-out" name="timeOut" placeholder="Your Time OUT" onchange="calculateHoursRendered()">
-                <label for="hours-rendered">Hours Rendered:</label>
-                <input type="text" id="hours-rendered" name="hoursRendered" placeholder="Total Hours today">
-                <button type="submit">Submit Time Entry</button>
-            </div>
-        </form>
+                <div class="time-entry">
+                  <label for="date">Date:</label>
+                  <input type="date" id="date" name="date" placeholder="Date Today" required>
+                  <label for="hours-submitted">Hours Submitted:</label>
+                  <!-- Ensure the 'name' attribute matches the server-side code -->
+                  <input type="number" id="hours-submitted" name="hoursSubmit" placeholder="Total Hours today" step="0.01" required>
+                  <button type="submit">Submit Time Entry</button>
+                </div>
+              </form>
         <% } else { %>
             <p>Your internship has been completed. No further time entry is required.</p>
           <% } %>
@@ -178,8 +175,6 @@ h2 {
             <table>
               <tr>
                 <th>Date</th>
-                <th>Time In</th>
-                <th>Time Out</th>
                 <th>Hours Rendered</th>
               </tr>
               <% timeEntries.forEach(function(entry) { 
@@ -190,9 +185,7 @@ h2 {
                 <tr>
                   <!-- Output the adjusted date -->
                   <td><%= date.toISOString().split('T')[0] %></td>
-                  <td><%= entry.timein %></td>
-                  <td><%= entry.timeout %></td>
-                  <td><%= entry.hours_rendered %></td>
+                  <td><%= entry.hours_submit %></td>
                 </tr>
               <% }) %>
             </table>
@@ -215,26 +208,7 @@ h2 {
     // Update the time every second
     setInterval(updateCurrentTime, 1000);
 
-    function calculateHoursRendered() {
-    var timeIn = document.getElementById('time-in').value;
-    var timeOut = document.getElementById('time-out').value;
-
-    // Parse the times and create date objects
-    var timeInDate = new Date('1970-01-01T' + timeIn + 'Z');
-    var timeOutDate = new Date('1970-01-01T' + timeOut + 'Z');
-
-    // Check if both times are set
-    if (timeIn && timeOut) {
-      // Calculate the difference in milliseconds
-      var diff = timeOutDate - timeInDate;
-
-      // Convert milliseconds to hours (1000 milliseconds * 60 seconds * 60 minutes)
-      var hoursRendered = diff / (1000 * 60 * 60);
-
-      // Update the hours rendered input field, rounding to two decimal places
-      document.getElementById('hours-rendered').value = hoursRendered.toFixed(2);
-    }
-  }
+    
   document.getElementById('logoutButton').addEventListener('click', function() {
     // Redirect to the login page
     window.location.href = '/';

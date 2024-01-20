@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 19, 2024 at 05:54 PM
+-- Generation Time: Jan 20, 2024 at 07:27 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `internshiprecords` (
 
 INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `program_id`, `administrator_id`, `hours_completed`, `hours_remaining`, `start_date`, `end_date`, `record_status`) VALUES
 (23, 4, 1, NULL, 1, 0, 100, '2024-01-01', '2024-02-01', 'In Progress'),
-(26, 8, 1, NULL, 1, 0, 100, '0000-00-00', '2024-01-31', 'In Progress');
+(26, 8, 1, NULL, 1, 18, 82, '2024-01-01', '2024-01-31', 'In Progress');
 
 -- --------------------------------------------------------
 
@@ -252,11 +252,19 @@ CREATE TABLE IF NOT EXISTS `timetrack` (
   `timetrack_id` int NOT NULL AUTO_INCREMENT,
   `record_id` int NOT NULL,
   `date` date NOT NULL,
-  `hours_submit` time NOT NULL,
-  `hours_rendered` decimal(5,2) NOT NULL,
+  `hours_submit` decimal(5,2) NOT NULL,
   PRIMARY KEY (`timetrack_id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `timetrack`
+--
+
+INSERT INTO `timetrack` (`timetrack_id`, `record_id`, `date`, `hours_submit`) VALUES
+(9, 26, '2024-01-21', '8.00'),
+(10, 26, '2024-01-22', '6.00'),
+(11, 26, '2024-01-23', '4.00');
 
 -- --------------------------------------------------------
 

@@ -184,29 +184,11 @@
               />
             </div>
             <div class="input-group">
-              <label for="address">Address:</label>
+              <label for="classCode">Class Code:</label>
               <input
                 type="text"
-                id="address"
-                value="<%= interndetails.address %>"
-                readonly
-              />
-            </div>
-            <div class="input-group">
-              <label for="school">School:</label>
-              <input
-                type="text"
-                id="school"
-                value="<%= interndetails.School %>"
-                readonly
-              />
-            </div>
-            <div class="input-group">
-              <label for="details">Details:</label>
-              <input
-                type="text"
-                id="details"
-                value="<%= interndetails.other_intern_details %>"
+                id="classCode"
+                value="<%= interndetails.classCode %>"
                 readonly
               />
             </div>
@@ -226,7 +208,7 @@
     // Format the date to a more readable format (e.g., "2023-12-13")
     return tempDate.toISOString().split('T')[0];
   })) %>;
-  const hours = <%- JSON.stringify(timeEntries.map(entry => entry.hours_rendered)) %>;
+  const hours = <%- JSON.stringify(timeEntries.map(entry => entry.hours_submit)) %>;
 
         
           // Get the context of the canvas to draw the chart

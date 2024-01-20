@@ -128,7 +128,7 @@ app.get('/intern_profile', (req, res) => {
               } else {
                 // Add new query for time track here
                 const timeTrackSql = `
-                  SELECT date, hours_rendered FROM timetrack
+                  SELECT date, hours_submit FROM timetrack
                   WHERE record_id IN (
                     SELECT record_id FROM internshiprecords WHERE intern_id = ?
                   )
@@ -240,7 +240,7 @@ app.get('/intern_worktrack', (req, res) => {
 
 //Route for adding data to the timetrack table
 app.post('/submit_time_entry', (req, res) => {
-  const { date, timeIn, timeOut, hoursRendered } = req.body;
+  const { date, hoursSubmit } = req.body; // Assuming 'hoursSubmit' is the name attribute in your form
   const internUserId = req.session.userId; // Get the intern's user ID from session
 
   // Begin transaction to ensure data consistency
@@ -259,68 +259,70 @@ app.post('/submit_time_entry', (req, res) => {
     `;
 
     db.query(recordQuery, [internUserId], (err, recordResults) => {
-        if (err) {
-            console.error('Error querying record_id:', err);
+      if (err) {
+        console.error('Error querying record_id:', err);
+        db.rollback(() => {
+          res.status(500).send('Error finding your record');
+        });
+        return;
+      }
+
+      if (recordResults.length > 0) {
+        const record = recordResults[0];
+        const record_id = record.record_id;
+        const newHoursRemaining = record.hours_remaining - parseFloat(hoursSubmit);
+
+        // Query to insert data into the timetrack table
+        const insertQuery = `
+            INSERT INTO timetrack (record_id, date, hours_submit)
+            VALUES (?, ?, ?);
+        `;
+
+        // Execute the insert query with hoursSubmit
+        db.query(insertQuery, [record_id, date, hoursSubmit], (insertErr, insertResults) => {
+          if (insertErr) {
+            console.error('Error inserting into timetrack:', insertErr);
             db.rollback(() => {
-              res.status(500).send('Error finding your record');
+              res.status(500).send('Error submitting time entry');
             });
             return;
-        }
+          }
+          
+          // Update the hours in the internshiprecords table
+          const updateInternshipRecordQuery = `
+            UPDATE internshiprecords
+            SET hours_completed = hours_completed + ?, hours_remaining = ?
+            WHERE record_id = ?;
+          `;
 
-        if (recordResults.length > 0) {
-            const record = recordResults[0];
-            const record_id = record.record_id;
-            const newHoursRemaining = record.hours_remaining - parseFloat(hoursRendered);
+          // Execute the update query with hoursSubmit converted to a decimal
+          db.query(updateInternshipRecordQuery, [parseFloat(hoursSubmit), newHoursRemaining, record_id], (updateErr, updateResults) => {
+            if (updateErr) {
+              console.error('Error updating internship record:', updateErr);
+              db.rollback(() => {
+                res.status(500).send('Error updating internship hours');
+              });
+              return;
+            }
 
-            // Query to insert data into the timetrack table
-            const insertQuery = `
-                INSERT INTO timetrack (record_id, date, timein, timeout, hours_rendered)
-                VALUES (?, ?, ?, ?, ?);
-            `;
-
-            db.query(insertQuery, [record_id, date, timeIn, timeOut, hoursRendered], (insertErr, insertResults) => {
-                if (insertErr) {
-                    console.error('Error inserting into timetrack:', insertErr);
-                    db.rollback(() => {
-                      res.status(500).send('Error submitting time entry');
-                    });
-                    return;
-                }
-                
-                // Update the hours in the internshiprecords table
-                const updateInternshipRecordQuery = `
-                  UPDATE internshiprecords
-                  SET hours_completed = hours_completed + ?, hours_remaining = ?
-                  WHERE record_id = ?;
-                `;
-
-                db.query(updateInternshipRecordQuery, [parseFloat(hoursRendered), newHoursRemaining, record_id], (updateErr, updateResults) => {
-                  if (updateErr) {
-                      console.error('Error updating internship record:', updateErr);
-                      db.rollback(() => {
-                        res.status(500).send('Error updating internship hours');
-                      });
-                      return;
-                  }
-
-                  // If everything went well, commit the transaction
-                  db.commit((commitErr) => {
-                    if (commitErr) {
-                      console.error('Error committing transaction:', commitErr);
-                      db.rollback(() => {
-                        res.status(500).send('Error finalizing your request');
-                      });
-                      return;
-                    }
-                    res.redirect('/intern_worktrack'); // Redirect back to the work track page
-                  });
+            // If everything went well, commit the transaction
+            db.commit((commitErr) => {
+              if (commitErr) {
+                console.error('Error committing transaction:', commitErr);
+                db.rollback(() => {
+                  res.status(500).send('Error finalizing your request');
                 });
+                return;
+              }
+              res.redirect('/intern_worktrack'); // Redirect back to the work track page
             });
-        } else {
-            db.rollback(() => {
-              res.status(400).send('No internship record found for you');
-            });
-        }
+          });
+        });
+      } else {
+        db.rollback(() => {
+          res.status(400).send('No internship record found for you');
+        });
+      }
     });
   });
 });
@@ -371,11 +373,11 @@ app.get('/adviser_worktrack', (req, res) => {
     // Fetch internship records for all students associated with the logged-in adviser from the database
     const sql = `
     SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status,
-           id.firstName AS internFirstName, id.lastName AS internLastName
+           id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode AS internCC
     FROM internshiprecords AS ir
     JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
     JOIN interndetails AS id ON ir.intern_id = id.intern_id
-    WHERE ad.adviser_id = 2
+    WHERE ad.adviser_id = 1
     `;
 
     db.query(sql, [req.session.userId], (err, results) => {
