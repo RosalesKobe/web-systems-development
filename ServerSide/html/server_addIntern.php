@@ -76,6 +76,97 @@ if ($companyResult->num_rows > 0) {
 } else {
     $companyOptions = '<option value="">No companies found</option>';
 }
+// Function to look up ID by first and last name
+function lookupAdviserIdByFullName($db, $firstName, $lastName) {
+  $query = "SELECT adviser_id FROM adviserdetails WHERE firstName = ? AND lastName = ?";
+  $stmt = $db->prepare($query);
+  $stmt->bind_param("bd", $firstName, $lastName);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($row = $result->fetch_assoc()) {
+      return $row['adviser_id']; 
+  }
+  $stmt->close();
+  return null;
+}
+
+// Function to look up ID by first and last name
+function lookupSupervisorIdByFullName($db, $firstName, $lastName) {
+  $query = "SELECT supervisor_id FROM supervisordetails WHERE firstName = ? AND lastName = ?";
+  $stmt = $db->prepare($query);
+  $stmt->bind_param("ds", $firstName, $lastName);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($row = $result->fetch_assoc()) {
+      return $row['supervisor_id']; 
+  $stmt->close();
+  return null;
+}
+}
+
+// Function to look up company ID by company name
+function lookupCompanyIdByName($db, $companyName) {
+  $query = "SELECT company_id FROM company WHERE companyName = ?";
+  $stmt = $db->prepare($query);
+  $stmt->bind_param("s", $companyName);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($row = $result->fetch_assoc()) {
+      return $row['company_id'];
+  }
+  $stmt->close();
+  return null;
+}
+
+// Check if a POST request with a file upload has been made
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
+  $csvFile = $_FILES['csv_file']['tmp_name'];
+  if (($handle = fopen($csvFile, 'r')) !== FALSE) {
+      fgetcsv($handle); // Skip the header line
+
+      while (($row = fgetcsv($handle)) !== FALSE) {
+          list($username, $password, $adviserFullName, $supervisorFullName, $companyName, $firstName, $lastName, $email, $classCode, $requirements) = $row;
+
+          // Separate the full names into first and last names
+          list($adviserFirstName, $adviserLastName) = explode(' ', $adviserFullName);
+          list($supervisorFirstName, $supervisorLastName) = explode(' ', $supervisorFullName);
+
+          // Look up the IDs by the names provided
+          $adviserId = lookupAdviserIdByFullName($db, $adviserFirstName, $adviserLastName);
+          $supervisorId = lookupSupervisorIdByFullName($db, $supervisorFirstName, $supervisorLastName);
+          $companyId = lookupCompanyIdByName($db, $companyName);
+
+          if ($adviserId === null || $supervisorId === null || $companyId === null) {
+              // Handle error: one of the entities was not found by name
+              // You might want to log this error or notify the user
+              continue; // Skip this row or handle as appropriate
+          }
+
+          // Insert into `users` table
+          $insertUserQuery = "INSERT INTO users (username, password, user_type) VALUES (?, ?, 'Intern')";
+          $stmt = $db->prepare($insertUserQuery);
+          $passwordHash = password_hash($password, PASSWORD_BCRYPT); // Hash the password
+          $stmt->bind_param("ss", $username, $passwordHash);
+          $stmt->execute();
+          $lastUserId = $stmt->insert_id;
+          $stmt->close();
+
+          // Insert into `interndetails` table
+          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, supervisor_id, company_id, firstName, lastName, email, classCode, requirements) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          $stmt = $db->prepare($insertInternDetailsQuery);
+          $stmt->bind_param("iiiissssi", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode, $requirements);
+          $stmt->execute();
+          $stmt->close();
+      }
+      fclose($handle);
+  }
+  // Redirect or display a success message
+  echo "Bulk upload successful!";
+  // Redirect to a confirmation page or back to the form
+  // header('Location: success_page.php');
+  exit;
+}
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Retrieve and sanitize form data
@@ -159,6 +250,9 @@ if ($emailResult->num_rows > 0) {
   }
   $db->close();
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -254,14 +348,20 @@ if ($emailResult->num_rows > 0) {
         <label for="class-code">Class Code</label>
         <input type="text" id="classCode" name="classCode">
       </div>
-      <!-- <div class="form-group">
-        <label for="requirements">Requirements</label>
-        <input type="text" id="requirements" name="requirements">
-      </div> -->
       <div class="form-group">
         <input type="submit" class="btn" value="Add User">
       </div>
     </form>
+    <form id="bulk-upload-form" method="POST" action="/web-systems-development/ServerSide/html/server_addIntern.php" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="csv-file">Upload Interns CSV</label>
+      <input type="file" id="csv-file" name="csv_file" accept=".csv" required>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="btn" value="Upload CSV">
+    </div>
+  </form>
+</div>
   </div>
 </div>
 </body>
