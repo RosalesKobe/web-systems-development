@@ -76,11 +76,13 @@ if ($companyResult->num_rows > 0) {
 } else {
     $companyOptions = '<option value="">No companies found</option>';
 }
+
+
 // Function to look up ID by first and last name
-function lookupAdviserIdByFullName($db, $firstName, $lastName) {
+function lookupAdviserIdByFullName($db, $adviserFirstName, $adviserLastName) {
   $query = "SELECT adviser_id FROM adviserdetails WHERE firstName = ? AND lastName = ?";
   $stmt = $db->prepare($query);
-  $stmt->bind_param("bd", $firstName, $lastName);
+  $stmt->bind_param("bd", $adviserFirstName, $adviserLastName);
   $stmt->execute();
   $result = $stmt->get_result();
   if ($row = $result->fetch_assoc()) {
@@ -91,10 +93,10 @@ function lookupAdviserIdByFullName($db, $firstName, $lastName) {
 }
 
 // Function to look up ID by first and last name
-function lookupSupervisorIdByFullName($db, $firstName, $lastName) {
+function lookupSupervisorIdByFullName($db, $supervisorFirstName, $supervisorLastName) {
   $query = "SELECT supervisor_id FROM supervisordetails WHERE firstName = ? AND lastName = ?";
   $stmt = $db->prepare($query);
-  $stmt->bind_param("ds", $firstName, $lastName);
+  $stmt->bind_param("ds", $supervisorFirstName, $supervisorLastName);
   $stmt->execute();
   $result = $stmt->get_result();
   if ($row = $result->fetch_assoc()) {
@@ -125,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
       fgetcsv($handle); // Skip the header line
 
       while (($row = fgetcsv($handle)) !== FALSE) {
-          list($username, $password, $adviserFullName, $supervisorFullName, $companyName, $firstName, $lastName, $email, $classCode, $requirements) = $row;
+          list($username, $password, $adviserFullName, $supervisorFullName, $companyName, $firstName, $lastName, $email, $classCode) = $row;
 
           // Separate the full names into first and last names
           list($adviserFirstName, $adviserLastName) = explode(' ', $adviserFullName);
@@ -145,18 +147,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
           // Insert into `users` table
           $insertUserQuery = "INSERT INTO users (username, password, user_type) VALUES (?, ?, 'Intern')";
           $stmt = $db->prepare($insertUserQuery);
-          $passwordHash = password_hash($password, PASSWORD_BCRYPT); // Hash the password
+          $passwordHash = password_hash($password,  PASSWORD_BCRYPT, ["version" => '2b']); // Hash the password
           $stmt->bind_param("ss", $username, $passwordHash);
           $stmt->execute();
           $lastUserId = $stmt->insert_id;
           $stmt->close();
 
           // Insert into `interndetails` table
-          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, supervisor_id, company_id, firstName, lastName, email, classCode, requirements) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, supervisor_id, company_id, firstName, lastName, email, classCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
           $stmt = $db->prepare($insertInternDetailsQuery);
-          $stmt->bind_param("iiiissssi", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode, $requirements);
+          $stmt->bind_param("iiiissssi", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode);
           $stmt->execute();
-          $stmt->close();
+          $stmt->close();   
       }
       fclose($handle);
   }
