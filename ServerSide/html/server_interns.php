@@ -96,6 +96,7 @@ function sort_link($column, $current_sort, $current_order) {
 $firstNameSortUrl = sort_link('InternFirstName', $sort, $order);
 $lastNameSortUrl = sort_link('InternLastName', $sort, $order);
 $emailSortUrl = sort_link('email', $sort, $order);
+$classCodeSortUrl = sort_link('classCode', $sort, $order);
 ?>
 
 <!DOCTYPE html>
@@ -157,8 +158,7 @@ $emailSortUrl = sort_link('email', $sort, $order);
       <th class="sortable" onmouseover="hovered('firstName')" onclick="sortColumn('firstName')">First Name</th>
 <th class="sortable" onmouseover="hovered('lastName')" onclick="sortColumn('lastName')">Last Name</th>
 <th class="sortable" onmouseover="hovered('email')" onclick="sortColumn('email')">Email</th>
-
-        <th>Class Code</th>
+<th class="sortable" onmouseover="hovered('classCode')" onclick="sortColumn('classCode')">Class Code</th>
         <th>Requirements</th>
         <th>Adviser First Name</th>
         <th>Adviser Last Name</th>
@@ -183,7 +183,7 @@ $emailSortUrl = sort_link('email', $sort, $order);
   </div>
 </div>
 <script>
-var hoverFlags = { firstName: false, lastName: false, email: false };
+var hoverFlags = { firstName: false, lastName: false, email: false, classCode: false };
 
 function hovered(column) {
   // Set the hover flag for the column to true
@@ -203,6 +203,9 @@ function sortColumn(column) {
         break;
       case 'email':
         sortURL = '<?php echo sort_link('email', $sort, $order); ?>';
+        break;
+      case 'classCode':
+        sortURL = '<?php echo sort_link('classCode', $sort, $order); ?>';
         break;
     }
     window.location.href = sortURL;

@@ -1,3 +1,5 @@
-username,password,adviserFullName,supervisorFullName,companName,firstName,lastName,email,classCode
-intern5,intern5,Jesse Pinkman,Mike Estes,Amazon,try,try,ttry@slu.edu.ph,8888
-intern6,intern6,Jesse Pinkman,Mike Estes,Google,try2,try2,ttry2@slu.edu.ph,7777
+username,password,adviserFullName,supervisorFullName,companyName,firstName,lastName,email,classCode
+intern6,intern6,Jesse Pinkman,Mike Estes,Google,Air,Supply,ttry2@slu.edu.ph,7777
+intern7,intern7,Jesse Pinkman,Mike Estes,Google,Lebron,James,ttry3@slu.edu.ph,8888
+intern8,intern8,Jesse Pinkman,Mike Estes,Amazon,Kobe,Bryant,ttry4@slu.edu.ph,7777
+intern9,intern9,Jesse Pinkman,Mike Estes,Google,Michael,Jordan,ttry5@slu.edu.ph,8888

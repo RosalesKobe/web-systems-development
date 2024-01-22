@@ -82,42 +82,52 @@ if ($companyResult->num_rows > 0) {
 function lookupAdviserIdByFullName($db, $adviserFirstName, $adviserLastName) {
   $query = "SELECT adviser_id FROM adviserdetails WHERE firstName = ? AND lastName = ?";
   $stmt = $db->prepare($query);
-  $stmt->bind_param("bd", $adviserFirstName, $adviserLastName);
+  if (!$stmt) {
+    die("Error preparing statement: " . $db->error);
+  }
+  $stmt->bind_param("ss", $adviserFirstName, $adviserLastName); // Use "ss" for two string parameters
   $stmt->execute();
   $result = $stmt->get_result();
+  $adviserId = null;
   if ($row = $result->fetch_assoc()) {
-      return $row['adviser_id']; 
+      $adviserId = $row['adviser_id']; 
   }
   $stmt->close();
-  return null;
+  return $adviserId;
 }
 
-// Function to look up ID by first and last name
 function lookupSupervisorIdByFullName($db, $supervisorFirstName, $supervisorLastName) {
   $query = "SELECT supervisor_id FROM supervisordetails WHERE firstName = ? AND lastName = ?";
   $stmt = $db->prepare($query);
-  $stmt->bind_param("ds", $supervisorFirstName, $supervisorLastName);
+  if (!$stmt) {
+    die("Error preparing statement: " . $db->error);
+  }
+  $stmt->bind_param("ss", $supervisorFirstName, $supervisorLastName);
   $stmt->execute();
   $result = $stmt->get_result();
+  $supervisorId = null;
   if ($row = $result->fetch_assoc()) {
-      return $row['supervisor_id']; 
+      $supervisorId = $row['supervisor_id']; 
+  }
   $stmt->close();
-  return null;
-}
+  return $supervisorId;
 }
 
-// Function to look up company ID by company name
 function lookupCompanyIdByName($db, $companyName) {
   $query = "SELECT company_id FROM company WHERE companyName = ?";
   $stmt = $db->prepare($query);
+  if (!$stmt) {
+    die("Error preparing statement: " . $db->error);
+  }
   $stmt->bind_param("s", $companyName);
   $stmt->execute();
   $result = $stmt->get_result();
+  $companyId = null;
   if ($row = $result->fetch_assoc()) {
-      return $row['company_id'];
+      $companyId = $row['company_id'];
   }
   $stmt->close();
-  return null;
+  return $companyId;
 }
 
 // Check if a POST request with a file upload has been made
@@ -130,10 +140,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
           list($username, $password, $adviserFullName, $supervisorFullName, $companyName, $firstName, $lastName, $email, $classCode) = $row;
 
           // Separate the full names into first and last names
-          list($adviserFirstName, $adviserLastName) = explode(' ', $adviserFullName);
-          list($supervisorFirstName, $supervisorLastName) = explode(' ', $supervisorFullName);
-
-          // Look up the IDs by the names provided
+          list($adviserFirstName, $adviserLastName) = explode(' ', $adviserFullName, 2);
+          list($supervisorFirstName, $supervisorLastName) = explode(' ', $supervisorFullName, 2);
+          
           $adviserId = lookupAdviserIdByFullName($db, $adviserFirstName, $adviserLastName);
           $supervisorId = lookupSupervisorIdByFullName($db, $supervisorFirstName, $supervisorLastName);
           $companyId = lookupCompanyIdByName($db, $companyName);
@@ -156,7 +165,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
           // Insert into `interndetails` table
           $insertInternDetailsQuery = "INSERT INTO interndetails (user_id, adviser_id, supervisor_id, company_id, firstName, lastName, email, classCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
           $stmt = $db->prepare($insertInternDetailsQuery);
-          $stmt->bind_param("iiiissssi", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode);
+          $stmt->bind_param("iiiissss", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode);
           $stmt->execute();
           $stmt->close();   
       }
