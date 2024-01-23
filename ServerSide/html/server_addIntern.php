@@ -174,7 +174,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
   // Redirect or display a success message
   echo "Bulk upload successful!";
   // Redirect to a confirmation page or back to the form
-  // header('Location: success_page.php');
+ header('Location: server_addIntern.php');
   exit;
 }
 
