@@ -82,8 +82,9 @@ app.post('/login', (req, res) => {
           let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
           if (userType === 'Adviser') {
             redirectUrl = '/adviser_profile'; // Redirect for 'Adviser'
-          } else if (userType === 'Admin') {
-            redirectUrl = '/admin_profile'; // Redirect for 'Administrator'
+          } 
+          else if (userType === 'Supervisor') {
+            redirectUrl = '/supervisor_profile'; // Redirect for 'Supervisor'
           }
           // Add more 'else if' conditions if there are more user types
 
@@ -387,6 +388,67 @@ app.get('/adviser_worktrack', (req, res) => {
       } else {
         // Render the 'adviser_worktrack.ejs' template with the data
         res.render('adviser_worktrack', {
+          username: req.session.username,
+          records: results, // Pass the fetched data to the template
+        });
+      }
+    });
+  } else {
+    // If no username in session or user is not an adviser, redirect to login page
+    res.redirect('/');
+  }
+});
+
+// Profile route for supervisor
+app.get('/supervisor_profile', (req, res) => {
+  if (req.session.userType === 'Supervisor' && req.session.userId) {
+    const supervisorDetailsSql = 'SELECT * FROM supervisordetails WHERE user_id = ?';
+    db.query(supervisorDetailsSql, [req.session.userId], (err, supervisorResults) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        return res.status(500).send('Internal Server Error');
+      } else if (supervisorResults.length > 0) {
+            // Pass adviser details, program names, and feedback to the EJS template
+            res.render('supervisor_profile', {
+              username: req.session.username,
+              supervisordetails: supervisorResults[0],
+            });
+
+      } else {
+        console.log('No supervisor details found for the user.');
+        res.render('supervisor_profile', {
+          username: req.session.username,
+          supervisordetails: {},
+        });
+      }
+    });
+  } else {
+    console.log('User is not logged in or not an supervisor.');
+    res.redirect('/login');
+  }
+});
+
+
+// Work Track route for supervisor
+app.get('/supervisor_worktrack', (req, res) => {
+  if (req.session.userType === 'Supervisor' && req.session.userId) {
+    // Fetch internship records for all students associated with the logged-in adviser from the database
+    const sql = `
+    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status,
+           id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode AS internCC
+    FROM internshiprecords AS ir
+    JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
+    JOIN interndetails AS id ON ir.intern_id = id.intern_id
+    WHERE ad.adviser_id = 1
+    `;
+
+    db.query(sql, [req.session.userId], (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'adviser_worktrack.ejs' template with the data
+        res.render('supervisor_worktrack', {
           username: req.session.username,
           records: results, // Pass the fetched data to the template
         });
