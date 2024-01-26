@@ -7,6 +7,7 @@ const saltRounds = 10; // or another number you choose
 const app = express();
 const port = 3333;
 const bodyParser = require('body-parser');
+const async = require('async');
 
 // Database connection setup
 const db = mysql.createConnection({
@@ -460,7 +461,91 @@ app.get('/supervisor_worktrack', (req, res) => {
   }
 });
 
+app.get('/adviser_checklist', (req, res) => {
+  if (req.session.userType === 'Adviser' && req.session.userId) {
+    const sql = `
+    SELECT id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode,
+           ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
+           c.companyName, ir.checklist_completed
+    FROM interndetails AS id
+    JOIN adviserdetails AS ad ON id.adviser_id = ad.adviser_id
+    JOIN company AS c ON id.company_id = c.company_id
+    JOIN internshiprecords AS ir ON id.intern_id = ir.intern_id
+    WHERE ad.adviser_id = 1
+    `;
+
+    db.query(sql, [req.session.userId], (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'adviser_checklist.ejs' template with the data
+        res.render('adviser_checklist', {
+          records: results, // Pass the fetched data to the template
+        });
+      }
+    });
+  } else {
+    // If no username in session or user is not an adviser, redirect to login page
+    res.redirect('/login');
+  }
+});
+
+app.post('/update_checklist', (req, res) => {
+  // Extract the checkbox values from req.body
+  const checklistUpdates = req.body.checklistCompleted;
+
+  // Start a transaction
+  db.beginTransaction(err => {
+      if (err) {
+          console.error('Error starting transaction:', err);
+          return res.status(500).send('Could not start database transaction');
+      }
+
+      // Helper function to update a single record
+      const updateRecord = (record_id, isChecked, done) => {
+          const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
+          db.query(sql, [isChecked ? 1 : 0, record_id], (updateErr, result) => {
+              if (updateErr) {
+                  return done(updateErr);
+              }
+              done(null, result);
+          });
+      };
+
+      // Process all updates
+      const tasks = Object.keys(checklistUpdates).map(record_id => {
+          return done => {
+              const isChecked = checklistUpdates[record_id] === 'on'; // 'on' if checked, undefined if not
+              updateRecord(record_id, isChecked, done);
+          };
+      });
+
+      // Execute all tasks
+      async.series(tasks, (err, results) => {
+          if (err) {
+              console.error('Error updating records:', err);
+              return db.rollback(() => {
+                  res.status(500).send('Failed to update records');
+              });
+          }
+
+          // Commit the transaction
+          db.commit(commitErr => {
+              if (commitErr) {
+                  console.error('Error committing transaction:', commitErr);
+                  return db.rollback(() => {
+                      res.status(500).send('Failed to commit changes');
+                  });
+              }
+              res.redirect('/adviser_checklist'); // Redirect back to the checklist page
+          });
+      });
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+

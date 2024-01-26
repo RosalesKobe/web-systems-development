@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>OJT Adviser - MOA Checklist</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style_client.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<style>
+/* You may need to add more CSS for full resemblance, this is just a basic layout */
+.left-manager {
+    width: 200px; /* Set a fixed width for the sidebar */
+    float: left; /* Float it to the left */
+    background-color: #333; /* Just for visual separation, match to your design */
+    height: 100vh; /* Full height */
+    color: white; /* Assuming a dark theme for the sidebar */
+}
+
+.left-manager .client-task {
+    list-style-type: none; /* Remove list bullets */
+    padding: 0; /* Remove default padding */
+}
+
+.left-manager .client-task .work {
+    padding: 10px; /* Add some padding for each item */
+    border-bottom: 1px solid #444; /* Add a separator between items */
+}
+
+.left-manager .client-task .work a {
+    color: white; /* Color of the links */
+    text-decoration: none; /* No underline */
+    display: block; /* Make the link fill the entire list item for easier clicking */
+}
+
+.container {
+    margin-left: 220px; /* Add margin to the left that is slightly more than the width of the sidebar */
+}
+
+/* After the floating elements, clear the floats to maintain layout structure */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.logout-button {
+  background-color: #e0f7fa;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #00695c;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #b2ebf2;
+}
+</style>
+<body>
+    <div class="left-manager">
+        <div class="client-task">
+            <li class="work">
+                <a href="/adviser_profile">Profile</a>
+            </li>
+            <li class="work">
+                <a href="/adviser_worktrack">Work Track</a>
+            </li>
+            <li class="checklist">
+                <a href="/adviser_checklist">MOA Checklist</a>
+              </li>
+              <button id="logoutButton" class="logout-button">Logout</button>
+        </div>
+    </div>
+    <div class="container">
+            <h2>Intern Checklist</h2>
+            <form method="POST" action="/update_checklist">
+                <table class="work-track">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Class Code</th>
+        <th>Adviser Name</th>
+        <th>Company</th>
+        <th>Checklist Completed</th>
+            </tr>
+            <% records.forEach(function(record) { %>
+                <tr>
+          <td><%= record.internFirstName %></td>
+          <td><%= record.internLastName %></td>
+          <td><%= record.classCode %></td>
+          <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
+          <td><%= record.companyName %></td>
+          <td>
+            <input type="checkbox" name="checklistCompleted[<%= record.record_id %>]" <%= record.checklist_completed ? 'checked' : '' %>>
+        </td>
+    </tr>
+<% }) %>
+</table>
+<button type="submit" class="submit-button">Update Checklist</button>
+</form>
+          </div>
+</body>
