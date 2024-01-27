@@ -466,7 +466,7 @@ app.get('/adviser_checklist', (req, res) => {
     const sql = `
     SELECT id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode,
            ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
-           c.companyName, ir.checklist_completed
+           c.companyName, ir.checklist_completed, ir.record_id
     FROM interndetails AS id
     JOIN adviserdetails AS ad ON id.adviser_id = ad.adviser_id
     JOIN company AS c ON id.company_id = c.company_id
@@ -491,19 +491,23 @@ app.get('/adviser_checklist', (req, res) => {
   }
 });
 
-app.post('/update_checklist', (req, res) => {
-  // Extract the checkbox values from req.body
-  const checklistUpdates = req.body.checklistCompleted;
+app.post('/adviser_checklist', (req, res) => {
+  if (req.session.userType !== 'Adviser' || !req.session.userId) {
+      return res.redirect('/login');
+  }
 
-  // Start a transaction
+  const checklistCompletedArray = req.body.checklistCompleted || [];
+  const recordIdsArray = req.body.record_id_name || [];
+
   db.beginTransaction(err => {
       if (err) {
           console.error('Error starting transaction:', err);
-          return res.status(500).send('Could not start database transaction');
+          req.session.message = 'Could not start database transaction';
+          return res.redirect('/adviser_checklist');
       }
 
-      // Helper function to update a single record
       const updateRecord = (record_id, isChecked, done) => {
+          console.log(`Updating record_id ${record_id} to ${isChecked}`); // Debugging log
           const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
           db.query(sql, [isChecked ? 1 : 0, record_id], (updateErr, result) => {
               if (updateErr) {
@@ -513,36 +517,44 @@ app.post('/update_checklist', (req, res) => {
           });
       };
 
-      // Process all updates
-      const tasks = Object.keys(checklistUpdates).map(record_id => {
+      const tasks = recordIdsArray.map((record_id, index) => {
           return done => {
-              const isChecked = checklistUpdates[record_id] === 'on'; // 'on' if checked, undefined if not
+              const isChecked = checklistCompletedArray[index] === 'on';
               updateRecord(record_id, isChecked, done);
           };
       });
 
-      // Execute all tasks
+      if (tasks.length === 0) {
+          req.session.message = 'No changes detected';
+          return res.redirect('/adviser_checklist');
+      }
+
       async.series(tasks, (err, results) => {
           if (err) {
               console.error('Error updating records:', err);
-              return db.rollback(() => {
-                  res.status(500).send('Failed to update records');
+              db.rollback(() => {
+                  req.session.message = 'Failed to update records';
+                  res.redirect('/adviser_checklist');
+              });
+          } else {
+              db.commit(commitErr => {
+                  if (commitErr) {
+                      console.error('Error committing transaction:', commitErr);
+                      db.rollback(() => {
+                          req.session.message = 'Failed to commit changes';
+                          res.redirect('/adviser_checklist');
+                      });
+                  } else {
+                      req.session.message = 'Checklist successfully updated';
+                      res.redirect('/adviser_checklist');
+                  }
               });
           }
-
-          // Commit the transaction
-          db.commit(commitErr => {
-              if (commitErr) {
-                  console.error('Error committing transaction:', commitErr);
-                  return db.rollback(() => {
-                      res.status(500).send('Failed to commit changes');
-                  });
-              }
-              res.redirect('/adviser_checklist'); // Redirect back to the checklist page
-          });
       });
   });
 });
+
+
 
 
 app.listen(port, () => {

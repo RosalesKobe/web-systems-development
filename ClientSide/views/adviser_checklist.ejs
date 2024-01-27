@@ -72,10 +72,15 @@
               </li>
               <button id="logoutButton" class="logout-button">Logout</button>
         </div>
+        <script>document.getElementById('logoutButton').addEventListener('click', function() {
+            // Redirect to the login page
+            window.location.href = '/';
+          });
+          </script>
     </div>
     <div class="container">
             <h2>Intern Checklist</h2>
-            <form method="POST" action="/update_checklist">
+            <form method="POST" action="/adviser_checklist">
                 <table class="work-track">
     <thead>
       <tr>
@@ -95,6 +100,7 @@
           <td><%= record.companyName %></td>
           <td>
             <input type="checkbox" name="checklistCompleted[<%= record.record_id %>]" <%= record.checklist_completed ? 'checked' : '' %>>
+            <input type="hidden" name="record_id_name[<%= record.record_id %>]" value="<%= record.record_id %>">
         </td>
     </tr>
 <% }) %>
