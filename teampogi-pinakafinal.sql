@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 31, 2024 at 02:42 PM
--- Server version: 8.0.31
--- PHP Version: 8.0.26
+-- Generation Time: Jan 31, 2024 at 05:24 PM
+-- Server version: 8.2.0
+-- PHP Version: 8.2.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `interndetails` (
   KEY `adviser_id` (`adviser_id`),
   KEY `supervisor_id` (`supervisor_id`),
   KEY `company_id` (`company_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `interndetails`
@@ -176,20 +176,24 @@ CREATE TABLE IF NOT EXISTS `internshiprecords` (
   `end_date` date NOT NULL,
   `record_status` enum('In Progress','Completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `checklist_completed` tinyint(1) NOT NULL DEFAULT '0',
+  `supervisor_id` int DEFAULT NULL,
   PRIMARY KEY (`record_id`),
   KEY `intern_id` (`intern_id`),
   KEY `adviser_id` (`adviser_id`),
   KEY `program_id` (`program_id`),
-  KEY `administrator_id` (`administrator_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `administrator_id` (`administrator_id`),
+  KEY `fk_supervisor` (`supervisor_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `internshiprecords`
 --
 
-INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `program_id`, `administrator_id`, `hours_completed`, `hours_remaining`, `start_date`, `end_date`, `record_status`, `checklist_completed`) VALUES
-(23, 4, 1, 1, 1, 2, 98, '2024-01-01', '2024-02-01', 'In Progress', 1),
-(26, 8, 1, 1, 1, 24, 76, '2024-01-01', '2024-01-31', 'In Progress', 0);
+INSERT INTO `internshiprecords` (`record_id`, `intern_id`, `adviser_id`, `program_id`, `administrator_id`, `hours_completed`, `hours_remaining`, `start_date`, `end_date`, `record_status`, `checklist_completed`, `supervisor_id`) VALUES
+(23, 4, 1, 1, 1, 15, 85, '2024-01-01', '2024-02-01', 'In Progress', 1, 1),
+(26, 8, 1, 1, 1, 24, 76, '2024-01-01', '2024-01-31', 'In Progress', 1, 1),
+(34, 5, 1, 1, 1, 14, 86, '2024-01-31', '2024-02-10', 'In Progress', 1, 1),
+(35, 6, 1, 1, 1, 3, 97, '2024-01-31', '2024-02-10', 'In Progress', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -213,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `ojtprograms` (
 --
 
 INSERT INTO `ojtprograms` (`program_id`, `administrator_id`, `program_name`, `start_datee`, `end_date`) VALUES
-(1, 1, 'Team Building', '2024-01-16', '2024-01-17');
+(1, 1, 'Computer Science', '2024-01-16', '2024-01-17');
 
 -- --------------------------------------------------------
 
@@ -255,18 +259,21 @@ CREATE TABLE IF NOT EXISTS `timetrack` (
   `hours_submit` decimal(5,2) NOT NULL,
   PRIMARY KEY (`timetrack_id`),
   KEY `record_id` (`record_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `timetrack`
 --
 
 INSERT INTO `timetrack` (`timetrack_id`, `record_id`, `date`, `hours_submit`) VALUES
-(9, 26, '2024-01-21', '8.00'),
-(10, 26, '2024-01-22', '6.00'),
-(11, 26, '2024-01-23', '4.00'),
-(12, 23, '2024-01-25', '2.00'),
-(13, 26, '2024-01-31', '6.00');
+(9, 26, '2024-01-21', 8.00),
+(10, 26, '2024-01-22', 6.00),
+(11, 26, '2024-01-23', 4.00),
+(12, 23, '2024-01-25', 2.00),
+(13, 26, '2024-01-31', 6.00),
+(18, 34, '2024-01-31', 8.00),
+(19, 34, '2024-02-01', 6.00),
+(20, 35, '2024-01-31', 3.00);
 
 -- --------------------------------------------------------
 
@@ -274,16 +281,16 @@ INSERT INTO `timetrack` (`timetrack_id`, `record_id`, `date`, `hours_submit`) VA
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `user_type` enum('Intern','Adviser','Supervisor','Administrator') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS users (
-  user_id int NOT NULL AUTO_INCREMENT,
-  username varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL, -- Adjusted length
-  password varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  user_type enum('Intern','Adviser','Supervisor','Administrator') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (user_id),
-  UNIQUE KEY username (username)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Dumping data for table `users`
 --
@@ -334,6 +341,7 @@ ALTER TABLE `interndetails`
 -- Constraints for table `internshiprecords`
 --
 ALTER TABLE `internshiprecords`
+  ADD CONSTRAINT `fk_supervisor` FOREIGN KEY (`supervisor_id`) REFERENCES `supervisordetails` (`supervisor_id`),
   ADD CONSTRAINT `internshiprecords_ibfk_1` FOREIGN KEY (`administrator_id`) REFERENCES `admindetails` (`administrator_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `internshiprecords_ibfk_2` FOREIGN KEY (`adviser_id`) REFERENCES `adviserdetails` (`adviser_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `internshiprecords_ibfk_3` FOREIGN KEY (`intern_id`) REFERENCES `interndetails` (`intern_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
