@@ -154,6 +154,7 @@ h2 {
               <th>Adviser</th>
               <th>Hours Completed</th>
               <th>Hours Remaining</th>
+              <th>Supervisor</th>
               <th>Start Date</th>
               <th>End Date</th>
               <th>Progress</th>
@@ -164,6 +165,7 @@ h2 {
                 <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
                 <td><%= record.hours_completed %></td>
                 <td><%= record.hours_remaining %></td>
+                <td><%= record.hours_completed >= 14 ? record.supervisorLastName : '' %></td>
                 <td><%= record.start_date.toISOString().split('T')[0] %></td>
                 <td><%= record.end_date.toISOString().split('T')[0] %></td>
                 <td><%= record.record_status %></td>

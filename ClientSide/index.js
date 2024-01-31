@@ -206,11 +206,14 @@ app.get('/intern_worktrack', (req, res) => {
       console.log(`${updateResults.affectedRows} records updated`);
       // Continue with fetching the internship records after the update
       const internshipRecordsSql = `
-        SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName
-        FROM internshiprecords AS ir
-        JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-        WHERE ir.intern_id = ?
-      `;
+      SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
+             sd.lastName AS supervisorLastName
+      FROM internshiprecords AS ir
+      JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
+      JOIN supervisordetails AS sd ON ir.supervisor_id = sd.supervisor_id
+      WHERE ir.intern_id = ?
+  `;
+  
 
       // Query to get the timetrack records
       const timeTrackSql = `

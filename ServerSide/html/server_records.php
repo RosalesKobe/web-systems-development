@@ -66,7 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
   // Get form data
   $internId = $_POST['internId'];
   $adviserId = $_POST['adviserId'];
-  $programId = null;
+  $programId = $_POST['programId'];
+  $supervisorId = $_POST['supervisorId'];
   $administratorId = $_POST['administratorId'];
   $hoursCompleted = $_POST['hoursCompleted'];
   $hoursRemaining = $_POST['hoursRemaining'];
@@ -100,6 +101,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
   $stmt = $db->prepare("INSERT INTO internshiprecords (intern_id, adviser_id, program_id, administrator_id, hours_completed, hours_remaining, start_date, end_date, record_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
   $stmt->bind_param("iiiiiiiss", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus);
   
+  // Prepare the insert query
+$stmt = $db->prepare("INSERT INTO internshiprecords (intern_id, adviser_id, program_id, administrator_id, hours_completed, hours_remaining, start_date, end_date, record_status, supervisor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iiiiiiissi", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus, $supervisorId);
+
  // Execute the query and check for errors
  if ($stmt->execute()) {
   $_SESSION['success_message'] = "New record created successfully";
@@ -276,6 +281,9 @@ if ($result = $db->query($query)) {
 
     <label for="hoursRemaining">Hours Remaining:</label>
     <input type="number" id="hoursRemaining" name="hoursRemaining" value="100" readonly><br>
+
+    <input type="hidden" id="programId" name="programId" value="1">
+    <input type="hidden" id="supervisorId" name="supervisorId" value="1">
 
     <label for="startDate">Start Date:</label>
     <input type="date" id="startDate" name="startDate" required><br>
