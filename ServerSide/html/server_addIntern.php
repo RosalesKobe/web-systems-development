@@ -191,7 +191,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $lastName = $db->real_escape_string($_POST['last_name']);
   $email = $db->real_escape_string($_POST['email']);
   $classCode = $db->real_escape_string($_POST['classCode']);
-  // $requirements = $db->real_escape_string($_POST['requirements']);
 
   // Check if the username or email already exists
 // Check if the username already exists in the 'users' table

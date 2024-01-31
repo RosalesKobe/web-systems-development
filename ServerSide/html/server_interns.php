@@ -29,18 +29,21 @@ $sort = isset($_GET['sort']) ? $_GET['sort'] : 'InternFirstName';
 $order = isset($_GET['order']) && $_GET['order'] == 'desc' ? 'DESC' : 'ASC';
 
 // Define $query at the top level of the script
-$query = "SELECT 
-        i.firstName AS InternFirstName,
-        i.lastName AS InternLastName, 
-        i.email, 
-        i.classCode, 
-        i.requirements,
-        a.firstName AS AdviserFirstName,
-        a.lastName AS AdviserLastName
-    FROM 
-        interndetails i
-    JOIN 
-        adviserdetails a ON i.adviser_id = a.adviser_id";
+$query = "SELECT
+  i.firstName AS InternFirstName,
+  i.lastName AS InternLastName,
+  i.email,
+  i.classCode,
+  a.firstName AS AdviserFirstName,
+  a.lastName AS AdviserLastName,
+  CASE
+    WHEN ir.checklist_completed = 0 THEN 'Not yet Submitted'
+    WHEN ir.checklist_completed = 1 THEN 'Submitted'
+    ELSE 'Unknown Status'
+  END AS RequirementsStatus
+FROM interndetails i
+JOIN adviserdetails a ON i.adviser_id = a.adviser_id
+JOIN internshiprecords ir ON i.intern_id = ir.intern_id";
 
 // Append the WHERE clause if a filter is set
 if (!empty($filterName)) {
@@ -159,9 +162,9 @@ $classCodeSortUrl = sort_link('classCode', $sort, $order);
 <th class="sortable" onmouseover="hovered('lastName')" onclick="sortColumn('lastName')">Last Name</th>
 <th class="sortable" onmouseover="hovered('email')" onclick="sortColumn('email')">Email</th>
 <th class="sortable" onmouseover="hovered('classCode')" onclick="sortColumn('classCode')">Class Code</th>
-        <th>Requirements</th>
         <th>Adviser First Name</th>
         <th>Adviser Last Name</th>
+        <th>Requirements Status</th>
       </tr>
       <?php foreach ($internsData as $intern): ?>
         <tr>
@@ -169,9 +172,9 @@ $classCodeSortUrl = sort_link('classCode', $sort, $order);
           <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
           <td><?php echo htmlspecialchars($intern['email']); ?></td>
           <td><?php echo htmlspecialchars($intern['classCode']); ?></td>
-          <td><?php echo htmlspecialchars($intern['requirements']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
           <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
+          <td><?php echo htmlspecialchars($intern['RequirementsStatus']); ?></td>
         </tr>
       <?php endforeach; ?>
       <?php if (empty($internsData)): ?>

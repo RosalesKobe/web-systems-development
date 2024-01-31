@@ -106,13 +106,23 @@ app.post('/login', (req, res) => {
 // Profile route for intern
 app.get('/intern_profile', (req, res) => {
   if (req.session.userType === 'Intern' && req.session.userId) {
-    const internDetailsSql = 'SELECT * FROM interndetails WHERE user_id = ?';
+    const internDetailsSql = `
+      SELECT interndetails.*, 
+        CASE 
+          WHEN internshiprecords.checklist_completed = 0 THEN 'Not yet Submitted' 
+          WHEN internshiprecords.checklist_completed = 1 THEN 'Submitted' 
+          ELSE 'Unknown' 
+        END AS RequirementsStatus
+      FROM interndetails
+      LEFT JOIN internshiprecords ON interndetails.intern_id = internshiprecords.intern_id
+      WHERE interndetails.user_id = ?
+    `;
     db.query(internDetailsSql, [req.session.userId], (err, internResults) => {
       if (err) {
         console.error('MySQL error:', err);
         return res.status(500).send('Internal Server Error');
       } else if (internResults.length > 0) {
-        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 2';
+        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 1';
         db.query(programDetailsSql, (programErr, programResults) => {
           if (programErr) {
             console.error('MySQL error:', programErr);
@@ -147,7 +157,8 @@ app.get('/intern_profile', (req, res) => {
                       interndetails: internResults[0],
                       programNames: programResults,
                       feedback: feedbackResults,
-                      timeEntries: timeTrackResults // Add this line for time track data
+                      timeEntries: timeTrackResults,
+                      requirementsStatus: internResults[0] ? internResults[0].RequirementsStatus : 'Unknown'
                     });
                   }
                 });
@@ -547,6 +558,98 @@ app.post('/adviser_checklist', (req, res) => {
                   } else {
                       req.session.message = 'Checklist successfully updated';
                       res.redirect('/adviser_checklist');
+                  }
+              });
+          }
+      });
+  });
+});
+
+app.get('/supervisor_checklist', (req, res) => {
+  if (req.session.userType === 'Supervisor' && req.session.userId) {
+    const sql = `
+    SELECT id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode,
+           ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
+           c.companyName, ir.checklist_completed, ir.record_id
+    FROM interndetails AS id
+    JOIN adviserdetails AS ad ON id.adviser_id = ad.adviser_id
+    JOIN company AS c ON id.company_id = c.company_id
+    JOIN internshiprecords AS ir ON id.intern_id = ir.intern_id
+    `;
+
+    db.query(sql, [req.session.userId], (err, results) => {
+      if (err) {
+        console.error('MySQL error:', err);
+        res.status(500).send('Internal Server Error');
+      } else {
+        // Render the 'adviser_checklist.ejs' template with the data
+        res.render('supervisor_checklist', {
+          records: results, // Pass the fetched data to the template
+        });
+      }
+    });
+  } else {
+    // If no username in session or user is not an adviser, redirect to login page
+    res.redirect('/login');
+  }
+});
+
+app.post('/supervisor_checklist', (req, res) => {
+  if (req.session.userType !== 'Supervisor' || !req.session.userId) {
+      return res.redirect('/login');
+  }
+
+  const checklistCompletedArray = req.body.checklistCompleted || [];
+  const recordIdsArray = req.body.record_id_name || [];
+
+  db.beginTransaction(err => {
+      if (err) {
+          console.error('Error starting transaction:', err);
+          req.session.message = 'Could not start database transaction';
+          return res.redirect('/supervisor_checklist');
+      }
+
+      const updateRecord = (record_id, isChecked, done) => {
+          console.log(`Updating record_id ${record_id} to ${isChecked}`); // Debugging log
+          const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
+          db.query(sql, [isChecked ? 1 : 0, record_id], (updateErr, result) => {
+              if (updateErr) {
+                  return done(updateErr);
+              }
+              done(null, result);
+          });
+      };
+
+      const tasks = recordIdsArray.map((record_id, index) => {
+          return done => {
+              const isChecked = checklistCompletedArray[index] === 'on';
+              updateRecord(record_id, isChecked, done);
+          };
+      });
+
+      if (tasks.length === 0) {
+          req.session.message = 'No changes detected';
+          return res.redirect('/supervisor_checklist');
+      }
+
+      async.series(tasks, (err, results) => {
+          if (err) {
+              console.error('Error updating records:', err);
+              db.rollback(() => {
+                  req.session.message = 'Failed to update records';
+                  res.redirect('/supervisor_checklist');
+              });
+          } else {
+              db.commit(commitErr => {
+                  if (commitErr) {
+                      console.error('Error committing transaction:', commitErr);
+                      db.rollback(() => {
+                          req.session.message = 'Failed to commit changes';
+                          res.redirect('/supervisor_checklist');
+                      });
+                  } else {
+                      req.session.message = 'Checklist successfully updated';
+                      res.redirect('/supervisor_checklist');
                   }
               });
           }
