@@ -118,7 +118,6 @@ $stmt->close();
           <th>Last Name</th>
           <th>Email</th>
           <th>Address</th>
-          <th>Other Admin Details</th>
           <th>Company Name</th>
         </tr>
         <?php foreach ($adminData as $admin): ?>
@@ -127,7 +126,6 @@ $stmt->close();
             <td><?php echo htmlspecialchars($admin['lastName']); ?></td>
             <td><?php echo htmlspecialchars($admin['email']); ?></td>
             <td><?php echo htmlspecialchars($admin['address']); ?></td>
-            <td><?php echo htmlspecialchars($admin['other_administrator_details']); ?></td>
             <td><?php echo htmlspecialchars($admin['companyName']); ?></td>
             
           </tr>
