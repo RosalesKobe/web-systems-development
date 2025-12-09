@@ -98,10 +98,14 @@
           <td><%= record.classCode %></td>
           <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
           <td><%= record.companyName %></td>
-          <td>
-            <input type="checkbox" name="checklistCompleted[<%= record.record_id %>]" <%= record.checklist_completed ? 'checked' : '' %>>
-            <input type="hidden" name="record_id_name[<%= record.record_id %>]" value="<%= record.record_id %>">
-        </td>
+<td>
+  <input type="hidden" name="record_id_name[]" value="<%= record.record_id %>">
+  <input
+    type="checkbox"
+    name="checklistCompleted[]"
+    value="<%= record.record_id %>"
+    <%= record.checklist_completed ? 'checked' : '' %> >
+</td>
     </tr>
 <% }) %>
 </table>

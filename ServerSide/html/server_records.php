@@ -1,10 +1,9 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php"); // Adjust the path as needed
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("../php/db.php");
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-  header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
+  header("Location: server_index.php");
   exit;
 }
 
@@ -66,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
   // Get form data
   $internId = $_POST['internId'];
   $adviserId = $_POST['adviserId'];
-  $programId = $_POST['programId'];
+  $programId = empty($_POST['programId']) ? null : $_POST['programId'];
   $supervisorId = $_POST['supervisorId'];
   $administratorId = $_POST['administratorId'];
   $hoursCompleted = $_POST['hoursCompleted'];
@@ -89,21 +88,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
   }
   $stmt->close();
 
+
       // Automatically set status to 'Completed' if hours remaining is 0 or negative
-  if ($hoursRemaining <= 0) {
+// Check if start_date is before end_date
+if (strtotime($startDate) >= strtotime($endDate)) {
+    $_SESSION['error_message'] = "The start date must be before the end date.";
+    header("Location: server_records.php");
+    exit;
+}
+
+// Validate hours remaining
+if ($hoursRemaining < 0) {
+    $_SESSION['error_message'] = "Hours remaining cannot be negative.";
+    header("Location: server_records.php");
+    exit;
+}
+
+// Only after passing the check
+if ($hoursRemaining == 0) {
     $recordStatus = "Completed";
-  }
-      // Check if start_date is before end_date
-    if (strtotime($startDate) >= strtotime($endDate)) {
-      $_SESSION['error_message'] = "The start date must be before the end date.";
-  } else {
-  // Prepare the insert query
-  $stmt = $db->prepare("INSERT INTO internshiprecords (intern_id, adviser_id, program_id, administrator_id, hours_completed, hours_remaining, start_date, end_date, record_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("iiiiiiiss", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus);
-  
-  // Prepare the insert query
+}
+// Only insert after validations pass
 $stmt = $db->prepare("INSERT INTO internshiprecords (intern_id, adviser_id, program_id, administrator_id, hours_completed, hours_remaining, start_date, end_date, record_status, supervisor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("iiiiiiissi", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus, $supervisorId);
+$stmt->bind_param("iiiiissssi", $internId, $adviserId, $programId, $administratorId, $hoursCompleted, $hoursRemaining, $startDate, $endDate, $recordStatus, $supervisorId);
 
  // Execute the query and check for errors
  if ($stmt->execute()) {
@@ -117,7 +124,10 @@ $stmt->close();
 header("Location: server_records.php");
 exit;
 }
-}
+
+
+
+
 
 // Fetch Intern IDs
 $internIds = [];
@@ -128,23 +138,12 @@ if ($result = $db->query($query)) {
     }
 }
 
-
-
 // Fetch Adviser IDs
 $adviserIds = [];
 $query = "SELECT adviser_id, firstName, lastName FROM adviserdetails";
 if ($result = $db->query($query)) {
     while ($row = $result->fetch_assoc()) {
         $adviserIds[$row['adviser_id']] = $row['firstName'] . ' ' . $row['lastName'];
-    }
-}
-
-// Fetch Program IDs
-$programIds = [];
-$query = "SELECT program_id, program_name FROM ojtprograms";
-if ($result = $db->query($query)) {
-    while ($row = $result->fetch_assoc()) {
-        $programIds[$row['program_id']] = $row['program_name'];
     }
 }
 
@@ -159,15 +158,57 @@ if ($result = $db->query($query)) {
 
 ?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
   <title>ADMIN - RECORDS PAGE</title>
-  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_records.css">
+  <link rel="stylesheet" href="../css/style_server_records.css">
+  <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+.alert {
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.alert.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+</style>
 </head>
 <body>
+  
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 <div class="task-manager">
   <div class="left-bar">
@@ -254,6 +295,7 @@ if ($result = $db->query($query)) {
   <div class="modal-content">
     <span class="close">&times;</span>
     <form action="server_records.php" method="post">
+      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
     <h2>Add Internship Record</h2>
     <label for="internId">Intern Name:</label>
 <select id="internId" name="internId" required>
@@ -280,9 +322,19 @@ if ($result = $db->query($query)) {
 <input type="number" id="hoursCompleted" name="hoursCompleted" value="0" readonly><br>
 
     <label for="hoursRemaining">Hours Remaining:</label>
-    <input type="number" id="hoursRemaining" name="hoursRemaining" value="100" readonly><br>
+    <input type="number" id="hoursRemaining" name="hoursRemaining" value="100" readonly min="0"> 
+    <!-- change value of "100" to required ojt hours -->
 
-    <input type="hidden" id="programId" name="programId" value="1">
+    <label for="programId">Program:</label>
+<select id="programId" name="programId" required>
+  <?php if (!empty($programIds)): ?>
+    <?php foreach ($programIds as $id => $program): ?>
+      <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($program); ?></option>
+    <?php endforeach; ?>
+  <?php else: ?>
+      <option disabled selected>No programs available</option>
+  <?php endif; ?>
+</select><br>
     <input type="hidden" id="supervisorId" name="supervisorId" value="1">
 
     <label for="startDate">Start Date:</label>
@@ -294,7 +346,6 @@ if ($result = $db->query($query)) {
     <label for="recordStatus">Record Status:</label>
     <select id="recordStatus" name="recordStatus">
         <option value="In Progress">In Progress</option>
-        <option value="Completed">Completed</option>
     </select><br>
 
     <input type="submit" name="submit" value="Add Record">
@@ -331,9 +382,12 @@ window.onclick = function(event) {
 }
   </script>
 
-  <?php if (isset($_SESSION['error_message'])): ?>
-  <script>alert('<?php echo $_SESSION['error_message']; ?>');</script>
-  <?php unset($_SESSION['error_message']); ?>
+<?php if (isset($_SESSION['success_message'])): ?>
+  <div class="alert success"><?php echo $_SESSION['success_message']; unset($_SESSION['success_message']); ?></div>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error_message'])): ?>
+  <div class="alert error"><?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?></div>
 <?php endif; ?>
 </body>
 </html>

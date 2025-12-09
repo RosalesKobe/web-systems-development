@@ -1,669 +1,489 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const ejs = require('ejs');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
-const saltRounds = 10; // or another number you choose
-const app = express();
-const port = 3333;
-const bodyParser = require('body-parser');
 const async = require('async');
 
-// Database connection setup
+const app = express();
+const port = 3333;
+
+// DB
 const db = mysql.createConnection({
- // host: '192.168.0.207',
- host: 'localhost',
+  host: 'localhost',
   user: 'root',
   password: '',
-  database: 'teampogi',
+  database: 'ojt-websys',
+});
+db.connect(err => {
+  if (err) console.error('Error connecting to MySQL:', err);
+  else console.log('Connected to the database');
 });
 
-// Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-  } else {
-    console.log('Connected to the database');
-  }
-});
+// App middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(express.urlencoded({ extended: true }));
-
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
-
-// Serve static files
-app.use(express.static('public'));
-
-// Parse JSON bodies
 app.use(express.json());
-
-// Session middleware setup
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
 app.use(session({
-  secret: 'secret', // Secret key "slu"
+  secret: 'secret',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if you're using HTTPS
+  cookie: { secure: false }
 }));
 
-// Route to render the index page
+// Utils
+
+// Format a JS Date as YYYY-MM-DD using local calendar (no timezone shift)
+function ymdLocal(d) {
+  const dt = (d instanceof Date) ? d : new Date(d);
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, '0');
+  const day = String(dt.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+// Convert incoming form date (yyyy-mm-dd or dd/mm/yyyy) to YYYY-MM-DD string
+function sqlDateFromInput(value) {
+  if (!value) return null;
+  if (value.includes('-')) {               // yyyy-mm-dd
+    const [y, m, d] = value.split('-');
+    return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+  }
+  if (value.includes('/')) {               // dd/mm/yyyy
+    const [d, m, y] = value.split('/');
+    return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+  }
+  return null;
+}
+
+
+// Routes
 app.get('/', (req, res) => {
-  res.render('index', { title: 'Client Login Page' }); // Pass any necessary data to your EJS template
+  res.render('index', { title: 'Client Login Page' });
 });
 
-// Login route
-// Login route
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/'));
+});
+
+// LOGIN
 app.post('/login', (req, res) => {
   const { username, password, userType } = req.body;
-
   const query = 'SELECT * FROM users WHERE username = ? AND user_type = ?';
-
   db.query(query, [username, userType], (err, results) => {
     if (err) {
       console.error('MySQL error:', err);
       return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-
-    if (results.length > 0) {
-      const user = results[0];
-
-      // Verify the hashed password using bcrypt
-      bcrypt.compare(password, user.password.replace(/^\$2y\$/, '$2b$'), (bcryptErr, passwordMatch) => {
-        if (bcryptErr) {
-          console.error('bcrypt error:', bcryptErr);
-          return res.status(500).json({ success: false, message: 'Internal Server Error' });
-        }
-
-        if (passwordMatch) {
-          req.session.username = username; // Save username in session
-          req.session.userType = userType; // Save userType in session
-          req.session.userId = user.user_id; // Save the user's ID in the session
-          console.log('Login success');
-          // Redirect to different pages based on the user type
-          let redirectUrl = '/intern_profile'; // Default redirect for 'Intern'
-          if (userType === 'Adviser') {
-            redirectUrl = '/adviser_profile'; // Redirect for 'Adviser'
-          } 
-          else if (userType === 'Supervisor') {
-            redirectUrl = '/supervisor_profile'; // Redirect for 'Supervisor'
-          }
-          // Add more 'else if' conditions if there are more user types
-
-          return res.json({ success: true, redirectUrl: redirectUrl });
-        } else {
-          console.log('Incorrect Credentials');
-          return res.json({ success: false, message: 'Invalid credentials' });
-        }
-      });
-    } else {
+    if (!results.length) {
       console.log('User not found or incorrect user type');
       return res.json({ success: false, message: 'Invalid user' });
     }
+    const user = results[0];
+    bcrypt.compare(password, user.password.replace(/^\$2y\$/, '$2b$'), (bcryptErr, match) => {
+      if (bcryptErr) {
+        console.error('bcrypt error:', bcryptErr);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+      }
+      if (!match) return res.json({ success: false, message: 'Invalid credentials' });
+
+      req.session.username = username;
+      req.session.userType = userType;
+      req.session.userId = user.user_id;
+
+      let redirectUrl = '/intern_profile';
+      if (userType === 'Adviser') redirectUrl = '/adviser_profile';
+      else if (userType === 'Supervisor') redirectUrl = '/supervisor_profile';
+
+      return res.json({ success: true, redirectUrl });
+    });
   });
 });
 
-
-// Profile route for intern
+// INTERN PROFILE
 app.get('/intern_profile', (req, res) => {
-  if (req.session.userType === 'Intern' && req.session.userId) {
-    const internDetailsSql = `
-      SELECT interndetails.*, 
-        CASE 
-          WHEN internshiprecords.checklist_completed = 0 THEN 'Not yet Submitted' 
-          WHEN internshiprecords.checklist_completed = 1 THEN 'Submitted' 
-          ELSE 'Unknown' 
-        END AS RequirementsStatus
-      FROM interndetails
-      LEFT JOIN internshiprecords ON interndetails.intern_id = internshiprecords.intern_id
-      WHERE interndetails.user_id = ?
-    `;
-    db.query(internDetailsSql, [req.session.userId], (err, internResults) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        return res.status(500).send('Internal Server Error');
-      } else if (internResults.length > 0) {
-        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 1';
-        db.query(programDetailsSql, (programErr, programResults) => {
-          if (programErr) {
-            console.error('MySQL error:', programErr);
-            return res.status(500).send('Internal Server Error');
-          } else {
-            const feedbackSql = `
-              SELECT feedback.feedback_text FROM feedback
-              JOIN internshiprecords ON feedback.record_id = internshiprecords.record_id
-              WHERE internshiprecords.intern_id = ?
-            `;
-            db.query(feedbackSql, [internResults[0].intern_id], (feedbackErr, feedbackResults) => {
-              if (feedbackErr) {
-                console.error('MySQL error:', feedbackErr);
-                return res.status(500).send('Internal Server Error');
-              } else {
-                // Add new query for time track here
-                const timeTrackSql = `
-                  SELECT date, hours_submit FROM timetrack
-                  WHERE record_id IN (
-                    SELECT record_id FROM internshiprecords WHERE intern_id = ?
-                  )
-                  ORDER BY date ASC
-                `;
-                db.query(timeTrackSql, [internResults[0].intern_id], (timeTrackErr, timeTrackResults) => {
-                  if (timeTrackErr) {
-                    console.error('MySQL error:', timeTrackErr);
-                    return res.status(500).send('Internal Server Error');
-                  } else {
-                    // Now pass all the data to the EJS template
-                    res.render('intern_profile', {
-                      username: req.session.username,
-                      interndetails: internResults[0],
-                      programNames: programResults,
-                      feedback: feedbackResults,
-                      timeEntries: timeTrackResults,
-                      requirementsStatus: internResults[0] ? internResults[0].RequirementsStatus : 'Unknown'
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      } else {
-        console.log('No intern details found for the user.');
-        res.render('intern_profile', {
-          username: req.session.username,
-          interndetails: {},
-          programNames: [],
-          feedback: [],
-          timeEntries: [] // Handle the case where time track data is not found
-        });
-      }
-    });
-  } else {
-    console.log('User is not logged in or not an intern.');
-    res.redirect('/login');
-  }
-});
+  if (req.session.userType !== 'Intern' || !req.session.userId) return res.redirect('/');
 
-
-
-// Work Track route for intern
-app.get('/intern_worktrack', (req, res) => {
-  if (req.session.userType === 'Intern' && req.session.userId) {
-    // First, update any records that should be marked as completed
-    const updateStatusSql = `
-      UPDATE internshiprecords
-      SET record_status = 'Completed'
-      WHERE intern_id = (
-        SELECT intern_id FROM interndetails WHERE user_id = ?
-      ) AND (hours_remaining <= 0 AND record_status <> 'Completed')
-    `;
-
-    // Execute the update query
-    db.query(updateStatusSql, [req.session.userId], (updateErr, updateResults) => {
-      if (updateErr) {
-        console.error('MySQL error during status update:', updateErr);
-        return res.status(500).send('Internal Server Error');
-      }
-      console.log(`${updateResults.affectedRows} records updated`);
-      // Continue with fetching the internship records after the update
-      const internshipRecordsSql = `
-      SELECT ir.*, ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
-             sd.lastName AS supervisorLastName
-      FROM internshiprecords AS ir
-      JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-      JOIN supervisordetails AS sd ON ir.supervisor_id = sd.supervisor_id
-      WHERE ir.intern_id = ?
+  const internDetailsSql = `
+    SELECT interndetails.*,
+           CASE WHEN COALESCE(ir.checklist_completed,0)=0 THEN 'Not yet Submitted'
+                WHEN ir.checklist_completed=1 THEN 'Submitted' ELSE 'Unknown' END AS RequirementsStatus
+    FROM interndetails
+    LEFT JOIN internshiprecords ir ON interndetails.intern_id = ir.intern_id
+    WHERE interndetails.user_id = ?
   `;
-  
+  db.query(internDetailsSql, [req.session.userId], (err, internRows) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    if (!internRows.length) {
+      return res.render('intern_profile', {
+        username: req.session.username, interndetails: {},
+        programNames: [], feedback: [], timeEntries: [], requirementsStatus: 'Unknown'
+      });
+    }
+    const intern = internRows[0];
 
-      // Query to get the timetrack records
-      const timeTrackSql = `
-        SELECT * FROM timetrack WHERE record_id IN (
-          SELECT record_id FROM internshiprecords WHERE intern_id = (
-            SELECT intern_id FROM interndetails WHERE user_id = ?
-          )
-        )
+    const programDetailsSql = 'SELECT program_name FROM ojtprograms';
+    db.query(programDetailsSql, (programErr, programResults) => {
+      if (programErr) { console.error(programErr); return res.status(500).send('Internal Server Error'); }
+
+      const feedbackSql = `
+        SELECT f.feedback_text
+        FROM feedback f
+        JOIN internshiprecords ir ON f.record_id = ir.record_id
+        WHERE ir.intern_id = ?
       `;
+      db.query(feedbackSql, [intern.intern_id], (fbErr, fbRows) => {
+        if (fbErr) { console.error(fbErr); return res.status(500).send('Internal Server Error'); }
 
-      // Execute the first query to get the internship records
-      db.query(internshipRecordsSql, [req.session.userId], (internshipErr, internshipResults) => {
-        if (internshipErr) {
-          console.error('MySQL error:', internshipErr);
-          return res.status(500).send('Internal Server Error');
-        }
+        const timeTrackSql = `
+          SELECT date, hours_submit FROM timetrack
+          WHERE record_id IN (SELECT record_id FROM internshiprecords WHERE intern_id = ?)
+          ORDER BY date ASC
+        `;
+        db.query(timeTrackSql, [intern.intern_id], (ttErr, ttRows) => {
+          if (ttErr) { console.error(ttErr); return res.status(500).send('Internal Server Error'); }
 
-        // Execute the second query to get the timetrack records
-        db.query(timeTrackSql, [req.session.userId], (timetrackErr, timetrackResults) => {
-          if (timetrackErr) {
-            console.error('MySQL error:', timetrackErr);
-            return res.status(500).send('Internal Server Error');
-          }
-
-          // Render the 'intern_worktrack.ejs' template with both sets of data
-          res.render('intern_worktrack', {
+          res.render('intern_profile', {
             username: req.session.username,
-            records: internshipResults,
-            timeEntries: timetrackResults, // Pass the timetrack data to the template
+            interndetails: intern,
+            programNames: programResults,
+            feedback: fbRows,
+            timeEntries: ttRows,
+            requirementsStatus: intern.RequirementsStatus
           });
         });
       });
     });
-  } else {
-    // If no username in session or user is not an intern, redirect to login page
-    res.redirect('/');
-  }
+  });
 });
 
+// INTERN WORKTRACK (GET)
+app.get('/intern_worktrack', (req, res) => {
+  if (req.session.userType !== 'Intern' || !req.session.userId) return res.redirect('/');
 
-//Route for adding data to the timetrack table
-app.post('/submit_time_entry', (req, res) => {
-  const { date, hoursSubmit } = req.body; // Assuming 'hoursSubmit' is the name attribute in your form
-  const internUserId = req.session.userId; // Get the intern's user ID from session
+  const internshipRecordsSql = `
+    SELECT ir.record_id, ir.checklist_completed, ir.hours_completed, ir.hours_remaining,
+           ir.start_date, ir.end_date,
+           CASE WHEN ir.hours_remaining <= 0 THEN 'Completed' ELSE 'In Progress' END AS record_status,
+           ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
+           sd.firstName AS supervisorFirstName, sd.lastName  AS supervisorLastName
+    FROM internshiprecords ir
+    JOIN adviserdetails   ad ON ir.adviser_id    = ad.adviser_id
+    JOIN supervisordetails sd ON ir.supervisor_id = sd.supervisor_id
+    WHERE ir.intern_id = (SELECT intern_id FROM interndetails WHERE user_id = ?)
+  `;
 
-  // Begin transaction to ensure data consistency
-  db.beginTransaction((transactionErr) => {
-    if (transactionErr) {
-      console.error('Error starting transaction:', transactionErr);
-      return res.status(500).send('Error processing your request');
-    }
-  
-    // First, find the record_id for the logged-in intern
-    const recordQuery = `
-        SELECT record_id, hours_remaining FROM internshiprecords
-        WHERE intern_id = (
-            SELECT intern_id FROM interndetails WHERE user_id = ?
-        );
-    `;
+  const timeTrackSql = `
+    SELECT record_id, DATE_FORMAT(date,'%Y-%m-%d') AS date_str, hours_submit
+    FROM timetrack
+    WHERE record_id IN (
+      SELECT record_id FROM internshiprecords
+      WHERE intern_id = (SELECT intern_id FROM interndetails WHERE user_id = ?)
+    )
+    ORDER BY date ASC
+  `;
 
-    db.query(recordQuery, [internUserId], (err, recordResults) => {
-      if (err) {
-        console.error('Error querying record_id:', err);
-        db.rollback(() => {
-          res.status(500).send('Error finding your record');
-        });
-        return;
-      }
+  db.query(internshipRecordsSql, [req.session.userId], (err, records) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
 
-      if (recordResults.length > 0) {
-        const record = recordResults[0];
-        const record_id = record.record_id;
-        const newHoursRemaining = record.hours_remaining - parseFloat(hoursSubmit);
+    // derive per-record min/max for the date picker
+    const today = new Date();
+    const enriched = records.map(r => {
+      const start = new Date(r.start_date);
+      const end   = r.end_date ? new Date(r.end_date) : today;
+      const max   = new Date(Math.min(today, end));
+      return Object.assign({}, r, {
+        dateMin: ymdLocal(start),
+        dateMax: ymdLocal(max),
+        start_date_str: ymdLocal(start),
+        end_date_str: ymdLocal(end)
+      });
+    });
+    
+    db.query(timeTrackSql, [req.session.userId], (ttErr, timeEntries) => {
+      if (ttErr) { console.error(ttErr); return res.status(500).send('Internal Server Error'); }
 
-        // Query to insert data into the timetrack table
-        const insertQuery = `
-            INSERT INTO timetrack (record_id, date, hours_submit)
-            VALUES (?, ?, ?);
-        `;
+      // one-time flash
+      const flash = req.session.message || null;
+      delete req.session.message;           // ensure it won't persist
+      // optional: prevent caching of this page
+      res.set('Cache-Control', 'no-store');
 
-        // Execute the insert query with hoursSubmit
-        db.query(insertQuery, [record_id, date, hoursSubmit], (insertErr, insertResults) => {
-          if (insertErr) {
-            console.error('Error inserting into timetrack:', insertErr);
-            db.rollback(() => {
-              res.status(500).send('Error submitting time entry');
-            });
-            return;
-          }
-          
-          // Update the hours in the internshiprecords table
-          const updateInternshipRecordQuery = `
-            UPDATE internshiprecords
-            SET hours_completed = hours_completed + ?, hours_remaining = ?
-            WHERE record_id = ?;
-          `;
-
-          // Execute the update query with hoursSubmit converted to a decimal
-          db.query(updateInternshipRecordQuery, [parseFloat(hoursSubmit), newHoursRemaining, record_id], (updateErr, updateResults) => {
-            if (updateErr) {
-              console.error('Error updating internship record:', updateErr);
-              db.rollback(() => {
-                res.status(500).send('Error updating internship hours');
-              });
-              return;
-            }
-
-            // If everything went well, commit the transaction
-            db.commit((commitErr) => {
-              if (commitErr) {
-                console.error('Error committing transaction:', commitErr);
-                db.rollback(() => {
-                  res.status(500).send('Error finalizing your request');
-                });
-                return;
-              }
-              res.redirect('/intern_worktrack'); // Redirect back to the work track page
-            });
-          });
-        });
-      } else {
-        db.rollback(() => {
-          res.status(400).send('No internship record found for you');
-        });
-      }
+      res.render('intern_worktrack', {
+        username: req.session.username,
+        records: enriched,
+        timeEntries,
+        message: flash
+      });
     });
   });
 });
 
+// INTERN WORKTRACK (POST time entry)
+app.post('/submit_time_entry', (req, res) => {
+  if (req.session.userType !== 'Intern' || !req.session.userId) return res.redirect('/');
 
-// Profile route for adviser
+  const DAILY_HOURS_CAP = 8; // change policy here if needed
+
+  const { date, hoursSubmit, record_id } = req.body;
+  const submitted = parseFloat(hoursSubmit);
+
+  // parse date helper (supports yyyy-mm-dd and dd/mm/yyyy)
+  function parseYMD(value) {
+    if (!value) return null;
+    if (value.includes('-')) { const [y,m,d] = value.split('-').map(Number); return new Date(y,m-1,d); }
+    if (value.includes('/')) { const [d,m,y] = value.split('/').map(Number); return new Date(y,m-1,d); }
+    return null;
+  }
+
+  if (!record_id || !date || !Number.isFinite(submitted) || submitted <= 0) {
+    req.session.message = { type: 'error', text: 'Invalid date or hours.' };
+    return res.redirect('/intern_worktrack');
+  }
+
+    const inputSqlDate = sqlDateFromInput(date);
+    if (!inputSqlDate) {
+      req.session.message = { type: 'error', text: 'Invalid date.' };
+      return res.redirect('/intern_worktrack');
+    }
+
+  db.beginTransaction(txErr => {
+    if (txErr) { console.error(txErr); req.session.message = { type:'error', text:'Could not start transaction.' }; return res.redirect('/intern_worktrack'); }
+
+    const q1 = `
+      SELECT record_id, intern_id, start_date, end_date,
+             hours_completed, hours_remaining, record_status
+      FROM internshiprecords
+      WHERE record_id = ? AND intern_id = (SELECT intern_id FROM interndetails WHERE user_id = ?)
+      FOR UPDATE
+    `;
+    db.query(q1, [record_id, req.session.userId], (e1, rows) => {
+      if (e1) { console.error(e1); return db.rollback(() => { req.session.message = { type:'error', text:'Error finding record.' }; res.redirect('/intern_worktrack'); }); }
+      if (!rows.length) return db.rollback(() => { req.session.message = { type:'error', text:'Record not found.' }; res.redirect('/intern_worktrack'); });
+
+      const rec = rows[0];
+    if (Number(rec.hours_remaining) <= 0) {
+      return db.rollback(() => {
+        req.session.message = { type:'error', text:'Internship already completed.' };
+        res.redirect('/intern_worktrack');
+      });
+    }
+
+      // Compare by YYYY-MM-DD strings to avoid timezone issues
+      const startStr = ymdLocal(new Date(rec.start_date));
+      const todayStr = ymdLocal(new Date());
+      const endStr   = rec.end_date ? ymdLocal(new Date(rec.end_date)) : null;
+
+      if (inputSqlDate < startStr || inputSqlDate > todayStr || (endStr && inputSqlDate > endStr)) {
+        return db.rollback(() => { req.session.message = { type:'error', text:'Date out of range.' }; res.redirect('/intern_worktrack'); });
+      }
+
+      const allowed = Math.min(DAILY_HOURS_CAP, Number(rec.hours_remaining));
+      const toApply = Math.min(submitted, allowed);
+
+      if (toApply <= 0) {
+        return db.rollback(() => { req.session.message = { type:'error', text:'No hours available to log.' }; res.redirect('/intern_worktrack'); });
+      }
+
+      const insert = `INSERT INTO timetrack (record_id, date, hours_submit) VALUES (?, ?, ?)`;
+      db.query(insert, [rec.record_id, inputSqlDate, toApply], (e2) => {
+        if (e2) { console.error(e2); return db.rollback(() => { req.session.message = { type:'error', text:'Error submitting time entry.' }; res.redirect('/intern_worktrack'); }); }
+
+        const upd = `
+          UPDATE internshiprecords
+          SET hours_completed = hours_completed + ?,
+              hours_remaining = GREATEST(hours_remaining - ?, 0),
+              record_status   = CASE WHEN (hours_remaining - ?) <= 0 THEN 'Completed' ELSE 'In Progress' END
+          WHERE record_id = ?
+        `;
+        db.query(upd, [toApply, toApply, toApply, rec.record_id], (e3) => {
+          if (e3) { console.error(e3); return db.rollback(() => { req.session.message = { type:'error', text:'Error updating internship hours.' }; res.redirect('/intern_worktrack'); }); }
+
+          db.commit(e4 => {
+            if (e4) { console.error(e4); return db.rollback(() => { req.session.message = { type:'error', text:'Error finalizing request.' }; res.redirect('/intern_worktrack'); }); }
+            req.session.message = { type:'success', text:'Time entry submitted.' };
+            res.redirect('/intern_worktrack');
+          });
+        });
+      });
+    });
+  });
+});
+
+/* ----------------------- ADVISER ----------------------- */
+
+// Adviser profile
 app.get('/adviser_profile', (req, res) => {
-  if (req.session.userType === 'Adviser' && req.session.userId) {
-    const adviserDetailsSql = 'SELECT * FROM adviserdetails WHERE user_id = ?';
-    db.query(adviserDetailsSql, [req.session.userId], (err, adviserResults) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        return res.status(500).send('Internal Server Error');
-      } else if (adviserResults.length > 0) {
-        const programDetailsSql = 'SELECT program_name FROM ojtprograms WHERE administrator_id = 2';
-        db.query(programDetailsSql, (programErr, programResults) => {
-          if (programErr) {
-            console.error('MySQL error:', programErr);
-            return res.status(500).send('Internal Server Error');
-          } else {
-            // Pass adviser details, program names, and feedback to the EJS template
-            res.render('adviser_profile', {
-              username: req.session.username,
-              adviserdetails: adviserResults[0],
-              programNames: programResults,
-            });
-          }
-        });
-      } else {
-        console.log('No adviser details found for the user.');
-        res.render('adviser_profile', {
-          username: req.session.username,
-          adviserdetails: {},
-          programNames: [],
-        });
-      }
+  if (req.session.userType !== 'Adviser' || !req.session.userId) return res.redirect('/');
+
+  const adviserDetailsSql = 'SELECT * FROM adviserdetails WHERE user_id = ?';
+  db.query(adviserDetailsSql, [req.session.userId], (err, rows) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    if (!rows.length) {
+      return res.render('adviser_profile', { username: req.session.username, adviserdetails:{}, programNames:[] });
+    }
+    const programDetailsSql = 'SELECT program_name FROM ojtprograms';
+    db.query(programDetailsSql, (perr, prows) => {
+      if (perr) { console.error(perr); return res.status(500).send('Internal Server Error'); }
+      res.render('adviser_profile', { username: req.session.username, adviserdetails: rows[0], programNames: prows });
     });
-  } else {
-    console.log('User is not logged in or not an adviser.');
-    res.redirect('/login');
-  }
+  });
 });
 
-
-// Work Track route for adviser
+// Adviser worktrack
 app.get('/adviser_worktrack', (req, res) => {
-  if (req.session.userType === 'Adviser' && req.session.userId) {
-    // Fetch internship records for all students associated with the logged-in adviser from the database
-    const sql = `
-    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status,
+  if (req.session.userType !== 'Adviser' || !req.session.userId) return res.redirect('/');
+
+  const sql = `
+    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date,
+           CASE WHEN ir.hours_remaining <= 0 THEN 'Completed' ELSE 'In Progress' END AS record_status,
            id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode AS internCC
-    FROM internshiprecords AS ir
-    JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-    JOIN interndetails AS id ON ir.intern_id = id.intern_id
-    WHERE ad.adviser_id = 1
-    `;
-
-    db.query(sql, [req.session.userId], (err, results) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        // Render the 'adviser_worktrack.ejs' template with the data
-        res.render('adviser_worktrack', {
-          username: req.session.username,
-          records: results, // Pass the fetched data to the template
-        });
-      }
-    });
-  } else {
-    // If no username in session or user is not an adviser, redirect to login page
-    res.redirect('/');
-  }
+    FROM internshiprecords ir
+    JOIN adviserdetails ad ON ir.adviser_id = ad.adviser_id
+    JOIN interndetails id  ON ir.intern_id  = id.intern_id
+    WHERE ad.user_id = ?
+  `;
+  db.query(sql, [req.session.userId], (err, results) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    res.render('adviser_worktrack', { username: req.session.username, records: results });
+  });
 });
 
-// Profile route for supervisor
-app.get('/supervisor_profile', (req, res) => {
-  if (req.session.userType === 'Supervisor' && req.session.userId) {
-    const supervisorDetailsSql = 'SELECT * FROM supervisordetails WHERE user_id = ?';
-    db.query(supervisorDetailsSql, [req.session.userId], (err, supervisorResults) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        return res.status(500).send('Internal Server Error');
-      } else if (supervisorResults.length > 0) {
-            // Pass adviser details, program names, and feedback to the EJS template
-            res.render('supervisor_profile', {
-              username: req.session.username,
-              supervisordetails: supervisorResults[0],
-            });
-
-      } else {
-        console.log('No supervisor details found for the user.');
-        res.render('supervisor_profile', {
-          username: req.session.username,
-          supervisordetails: {},
-        });
-      }
-    });
-  } else {
-    console.log('User is not logged in or not an supervisor.');
-    res.redirect('/login');
-  }
-});
-
-
-// Work Track route for supervisor
-app.get('/supervisor_worktrack', (req, res) => {
-  if (req.session.userType === 'Supervisor' && req.session.userId) {
-    // Fetch internship records for all students associated with the logged-in adviser from the database
-    const sql = `
-    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date, ir.record_status,
-           id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode AS internCC
-    FROM internshiprecords AS ir
-    JOIN adviserdetails AS ad ON ir.adviser_id = ad.adviser_id
-    JOIN interndetails AS id ON ir.intern_id = id.intern_id
-    WHERE ad.adviser_id = 1
-    `;
-
-    db.query(sql, [req.session.userId], (err, results) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        // Render the 'adviser_worktrack.ejs' template with the data
-        res.render('supervisor_worktrack', {
-          username: req.session.username,
-          records: results, // Pass the fetched data to the template
-        });
-      }
-    });
-  } else {
-    // If no username in session or user is not an adviser, redirect to login page
-    res.redirect('/');
-  }
-});
-
+// Adviser checklist (GET)
 app.get('/adviser_checklist', (req, res) => {
-  if (req.session.userType === 'Adviser' && req.session.userId) {
-    const sql = `
+  if (req.session.userType !== 'Adviser' || !req.session.userId) return res.redirect('/login');
+
+  const sql = `
     SELECT id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode,
            ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
            c.companyName, ir.checklist_completed, ir.record_id
-    FROM interndetails AS id
-    JOIN adviserdetails AS ad ON id.adviser_id = ad.adviser_id
-    JOIN company AS c ON id.company_id = c.company_id
-    JOIN internshiprecords AS ir ON id.intern_id = ir.intern_id
-    WHERE ad.adviser_id = 1
-    `;
-
-    db.query(sql, [req.session.userId], (err, results) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        // Render the 'adviser_checklist.ejs' template with the data
-        res.render('adviser_checklist', {
-          records: results, // Pass the fetched data to the template
-        });
-      }
-    });
-  } else {
-    // If no username in session or user is not an adviser, redirect to login page
-    res.redirect('/login');
-  }
+    FROM interndetails id
+    JOIN adviserdetails ad ON id.adviser_id = ad.adviser_id
+    JOIN company c         ON id.company_id  = c.company_id
+    JOIN internshiprecords ir ON id.intern_id = ir.intern_id
+    WHERE ad.user_id = ?
+  `;
+  db.query(sql, [req.session.userId], (err, results) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    res.render('adviser_checklist', { records: results });
+  });
 });
 
+// Adviser checklist (POST)
 app.post('/adviser_checklist', (req, res) => {
-  if (req.session.userType !== 'Adviser' || !req.session.userId) {
-      return res.redirect('/login');
-  }
+  if (req.session.userType !== 'Adviser' || !req.session.userId) return res.redirect('/login');
 
-  const checklistCompletedArray = req.body.checklistCompleted || [];
-  const recordIdsArray = req.body.record_id_name || [];
+  const rawAllIds = req.body.record_id_name || [];
+  const rawChecked = req.body.checklistCompleted || [];
+  const allIds = Array.isArray(rawAllIds) ? rawAllIds.map(Number) : [Number(rawAllIds)];
+  const checkedIds = new Set((Array.isArray(rawChecked) ? rawChecked : [rawChecked]).map(Number));
 
   db.beginTransaction(err => {
-      if (err) {
-          console.error('Error starting transaction:', err);
-          req.session.message = 'Could not start database transaction';
-          return res.redirect('/adviser_checklist');
-      }
+    if (err) { console.error(err); req.session.message = 'Could not start database transaction'; return res.redirect('/adviser_checklist'); }
 
-      const updateRecord = (record_id, isChecked, done) => {
-          console.log(`Updating record_id ${record_id} to ${isChecked}`); // Debugging log
-          const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
-          db.query(sql, [isChecked ? 1 : 0, record_id], (updateErr, result) => {
-              if (updateErr) {
-                  return done(updateErr);
-              }
-              done(null, result);
-          });
-      };
+    const updateRecord = (record_id, isChecked, done) => {
+      const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
+      db.query(sql, [isChecked ? 1 : 0, record_id], done);
+    };
 
-      const tasks = recordIdsArray.map((record_id, index) => {
-          return done => {
-              const isChecked = checklistCompletedArray[index] === 'on';
-              updateRecord(record_id, isChecked, done);
-          };
+    const tasks = allIds.map(record_id => done => updateRecord(record_id, checkedIds.has(Number(record_id)), done));
+    if (!tasks.length) { req.session.message = 'No changes detected'; return res.redirect('/adviser_checklist'); }
+
+    async.series(tasks, (e) => {
+      if (e) { console.error(e); return db.rollback(() => { req.session.message = 'Failed to update records'; res.redirect('/adviser_checklist'); }); }
+      db.commit(cerr => {
+        if (cerr) { console.error(cerr); return db.rollback(() => { req.session.message = 'Failed to commit changes'; res.redirect('/adviser_checklist'); }); }
+        req.session.message = 'Checklist successfully updated';
+        res.redirect('/adviser_checklist');
       });
+    });
+  });
+});
 
-      if (tasks.length === 0) {
-          req.session.message = 'No changes detected';
-          return res.redirect('/adviser_checklist');
-      }
+/* --------------------- SUPERVISOR --------------------- */
 
-      async.series(tasks, (err, results) => {
-          if (err) {
-              console.error('Error updating records:', err);
-              db.rollback(() => {
-                  req.session.message = 'Failed to update records';
-                  res.redirect('/adviser_checklist');
-              });
-          } else {
-              db.commit(commitErr => {
-                  if (commitErr) {
-                      console.error('Error committing transaction:', commitErr);
-                      db.rollback(() => {
-                          req.session.message = 'Failed to commit changes';
-                          res.redirect('/adviser_checklist');
-                      });
-                  } else {
-                      req.session.message = 'Checklist successfully updated';
-                      res.redirect('/adviser_checklist');
-                  }
-              });
-          }
-      });
+app.get('/supervisor_profile', (req, res) => {
+  if (req.session.userType !== 'Supervisor' || !req.session.userId) return res.redirect('/login');
+
+  const supervisorDetailsSql = 'SELECT * FROM supervisordetails WHERE user_id = ?';
+  db.query(supervisorDetailsSql, [req.session.userId], (err, rows) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    const programDetailsSql = 'SELECT program_name FROM ojtprograms';
+    db.query(programDetailsSql, (perr, prows) => {
+      if (perr) { console.error(perr); return res.status(500).send('Internal Server Error'); }
+      res.render('supervisor_profile', { username: req.session.username, supervisordetails: rows[0] || {}, programNames: prows });
+    });
+  });
+});
+
+app.get('/supervisor_worktrack', (req, res) => {
+  if (req.session.userType !== 'Supervisor' || !req.session.userId) return res.redirect('/');
+
+  const sql = `
+    SELECT ir.hours_completed, ir.hours_remaining, ir.start_date, ir.end_date,
+           CASE WHEN ir.hours_remaining <= 0 THEN 'Completed' ELSE 'In Progress' END AS record_status,
+           id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode AS internCC
+    FROM internshiprecords ir
+    JOIN supervisordetails sd ON ir.supervisor_id = sd.supervisor_id
+    JOIN interndetails id     ON ir.intern_id     = id.intern_id
+    WHERE sd.user_id = ?
+  `;
+  db.query(sql, [req.session.userId], (err, results) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    res.render('supervisor_worktrack', { username: req.session.username, records: results });
   });
 });
 
 app.get('/supervisor_checklist', (req, res) => {
-  if (req.session.userType === 'Supervisor' && req.session.userId) {
-    const sql = `
+  if (req.session.userType !== 'Supervisor' || !req.session.userId) return res.redirect('/login');
+
+  const sql = `
     SELECT id.firstName AS internFirstName, id.lastName AS internLastName, id.classCode,
            ad.firstName AS adviserFirstName, ad.lastName AS adviserLastName,
            c.companyName, ir.checklist_completed, ir.record_id
-    FROM interndetails AS id
-    JOIN adviserdetails AS ad ON id.adviser_id = ad.adviser_id
-    JOIN company AS c ON id.company_id = c.company_id
-    JOIN internshiprecords AS ir ON id.intern_id = ir.intern_id
-    `;
-
-    db.query(sql, [req.session.userId], (err, results) => {
-      if (err) {
-        console.error('MySQL error:', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        // Render the 'adviser_checklist.ejs' template with the data
-        res.render('supervisor_checklist', {
-          records: results, // Pass the fetched data to the template
-        });
-      }
-    });
-  } else {
-    // If no username in session or user is not an adviser, redirect to login page
-    res.redirect('/login');
-  }
-});
-
-app.post('/supervisor_checklist', (req, res) => {
-  if (req.session.userType !== 'Supervisor' || !req.session.userId) {
-      return res.redirect('/login');
-  }
-
-  const checklistCompletedArray = req.body.checklistCompleted || [];
-  const recordIdsArray = req.body.record_id_name || [];
-
-  db.beginTransaction(err => {
-      if (err) {
-          console.error('Error starting transaction:', err);
-          req.session.message = 'Could not start database transaction';
-          return res.redirect('/supervisor_checklist');
-      }
-
-      const updateRecord = (record_id, isChecked, done) => {
-          console.log(`Updating record_id ${record_id} to ${isChecked}`); // Debugging log
-          const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
-          db.query(sql, [isChecked ? 1 : 0, record_id], (updateErr, result) => {
-              if (updateErr) {
-                  return done(updateErr);
-              }
-              done(null, result);
-          });
-      };
-
-      const tasks = recordIdsArray.map((record_id, index) => {
-          return done => {
-              const isChecked = checklistCompletedArray[index] === 'on';
-              updateRecord(record_id, isChecked, done);
-          };
-      });
-
-      if (tasks.length === 0) {
-          req.session.message = 'No changes detected';
-          return res.redirect('/supervisor_checklist');
-      }
-
-      async.series(tasks, (err, results) => {
-          if (err) {
-              console.error('Error updating records:', err);
-              db.rollback(() => {
-                  req.session.message = 'Failed to update records';
-                  res.redirect('/supervisor_checklist');
-              });
-          } else {
-              db.commit(commitErr => {
-                  if (commitErr) {
-                      console.error('Error committing transaction:', commitErr);
-                      db.rollback(() => {
-                          req.session.message = 'Failed to commit changes';
-                          res.redirect('/supervisor_checklist');
-                      });
-                  } else {
-                      req.session.message = 'Checklist successfully updated';
-                      res.redirect('/supervisor_checklist');
-                  }
-              });
-          }
-      });
+    FROM interndetails id
+    JOIN adviserdetails ad    ON id.adviser_id    = ad.adviser_id
+    JOIN supervisordetails sd ON id.supervisor_id = sd.supervisor_id
+    JOIN company c            ON id.company_id    = c.company_id
+    JOIN internshiprecords ir ON id.intern_id     = ir.intern_id
+    WHERE sd.user_id = ?
+  `;
+  db.query(sql, [req.session.userId], (err, results) => {
+    if (err) { console.error(err); return res.status(500).send('Internal Server Error'); }
+    res.render('supervisor_checklist', { records: results });
   });
 });
 
+app.post('/supervisor_checklist', (req, res) => {
+  if (req.session.userType !== 'Supervisor' || !req.session.userId) return res.redirect('/login');
 
+  const rawAllIds = req.body.record_id_name || [];
+  const rawChecked = req.body.checklistCompleted || [];
+  const allIds = Array.isArray(rawAllIds) ? rawAllIds.map(Number) : [Number(rawAllIds)];
+  const checkedIds = new Set((Array.isArray(rawChecked) ? rawChecked : [rawChecked]).map(Number));
 
+  db.beginTransaction(err => {
+    if (err) { console.error(err); req.session.message = 'Could not start database transaction'; return res.redirect('/supervisor_checklist'); }
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    const updateRecord = (record_id, isChecked, done) => {
+      const sql = `UPDATE internshiprecords SET checklist_completed = ? WHERE record_id = ?`;
+      db.query(sql, [isChecked ? 1 : 0, record_id], done);
+    };
+
+    const tasks = allIds.map(record_id => done => updateRecord(record_id, checkedIds.has(Number(record_id)), done));
+    if (!tasks.length) { req.session.message = 'No changes detected'; return res.redirect('/supervisor_checklist'); }
+
+    async.series(tasks, (e) => {
+      if (e) { console.error(e); return db.rollback(() => { req.session.message = 'Failed to update records'; res.redirect('/supervisor_checklist'); }); }
+      db.commit(cerr => {
+        if (cerr) { console.error(cerr); return db.rollback(() => { req.session.message = 'Failed to commit changes'; res.redirect('/supervisor_checklist'); }); }
+        req.session.message = 'Checklist successfully updated';
+        res.redirect('/supervisor_checklist');
+      });
+    });
+  });
 });
 
+// START
+app.listen(port, () => console.log(`Server is running on port ${port}`));

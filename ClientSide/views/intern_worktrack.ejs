@@ -1,220 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>OJT Student - Work Track</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/style_client.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>OJT Student - Work Track</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/style_client.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body, html { height:100%; margin:0; font-family: Arial, sans-serif; }
+    .container { width:80%; margin:auto; padding:20px; }
+    .header { display:flex; justify-content:flex-end; margin-bottom:20px; }
+    .time-block label { font-size:1.2em; }
+    .time-entry input { padding:10px; margin:5px; border:1px solid #ccc; border-radius:5px; }
+    .work-track, .work-history table { width:100%; border-collapse:collapse; margin-top:20px; }
+    .work-track th, .work-history th { background:#4CAF50; color:#fff; padding:10px; border:1px solid #ddd; }
+    .work-track td, .work-history td { padding:10px; border:1px solid #ddd; text-align:center; }
+    h2 { color:#333; }
+    .left-manager { width:200px; float:left; background:#333; height:100vh; color:#fff; }
+    .left-manager .client-task { list-style:none; padding:0; }
+    .left-manager .client-task .work { padding:10px; border-bottom:1px solid #444; }
+    .left-manager .client-task .work a { color:#fff; text-decoration:none; display:block; }
+    .container { margin-left:220px; }
+    .clearfix::after { content:""; display:table; clear:both; }
+    .logout-button { background:#e0f7fa; padding:10px; border-radius:5px; text-decoration:none; color:#00695c; display:inline-block; cursor:pointer; transition:background-color .3s; }
+    .logout-button:hover { background:#b2ebf2; }
+  </style>
 </head>
-
-<style>
-    body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
-}
-
-.header {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-.time-block label {
-    font-size: 1.2em;
-}
-
-.time-entry input {
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.work-track, .work-history table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.work-track th, .work-history th {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-
-.work-track td, .work-history td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-h2 {
-    color: #333;
-}
-
-
-/* You may need to add more CSS for full resemblance, this is just a basic layout */
-.left-manager {
-    width: 200px; /* Set a fixed width for the sidebar */
-    float: left; /* Float it to the left */
-    background-color: #333; /* Just for visual separation, match to your design */
-    height: 100vh; /* Full height */
-    color: white; /* Assuming a dark theme for the sidebar */
-}
-
-.left-manager .client-task {
-    list-style-type: none; /* Remove list bullets */
-    padding: 0; /* Remove default padding */
-}
-
-.left-manager .client-task .work {
-    padding: 10px; /* Add some padding for each item */
-    border-bottom: 1px solid #444; /* Add a separator between items */
-}
-
-.left-manager .client-task .work a {
-    color: white; /* Color of the links */
-    text-decoration: none; /* No underline */
-    display: block; /* Make the link fill the entire list item for easier clicking */
-}
-
-.container {
-    margin-left: 220px; /* Add margin to the left that is slightly more than the width of the sidebar */
-}
-
-/* After the floating elements, clear the floats to maintain layout structure */
-.clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-.logout-button {
-  background-color: #e0f7fa;
-  padding: 10px;
-  border-radius: 5px;
-  text-decoration: none;
-  color: #00695c;
-  display: inline-block;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.logout-button:hover {
-  background-color: #b2ebf2;
-}
-
-</style>
 <body>
-    <div class="left-manager">
-        <div class="client-task">
-            <li class="work">
-                <a href="/intern_profile">Profile</a>
-            </li>
-            <li class="work">
-                <a href="/intern_worktrack">Work Track</a>
-            </li>
-            <li class="work">
-                <button id="logoutButton" class="logout-button">Logout</button>
-              </li>
-        </div>
+  <div class="left-manager">
+    <div class="client-task">
+      <li class="work"><a href="/intern_profile">Profile</a></li>
+      <li class="work"><a href="/intern_worktrack">Work Track</a></li>
+      <li class="work"><a id="logoutButton" class="logout-button" href="/logout">Logout</a></li>
     </div>
-    <div class="container">
-        <div class="header">
-            <div class="time-block">
-                <div id="current-time"></div>
-            </div>
-        </div>
-        <% records.forEach(function(record) { %>
-            <% if (record.record_status !== 'Completed') { %>
-              <form action="/submit_time_entry" method="post">
-                <div class="time-entry">
-                  <label for="date">Date:</label>
-                  <input type="date" id="date" name="date" placeholder="Date Today" required>
-                  <label for="hours-submitted">Hours Submitted:</label>
-                  <!-- Ensure the 'name' attribute matches the server-side code -->
-                  <input type="number" id="hours-submitted" name="hoursSubmit" placeholder="Total Hours today" step="0.01" required>
-                  <button type="submit">Submit Time Entry</button>
-                </div>
-              </form>
-        <% } else { %>
-            <p>Your internship has been completed. No further time entry is required.</p>
-          <% } %>
-        <% }) %>
-        <table class="work-track">
-          <thead>
-            <tr>
-              <th>Adviser</th>
-              <th>Hours Completed</th>
-              <th>Hours Remaining</th>
-              <th>Supervisor</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Progress</th>
-            </tr>
-          </thead>
-            <% records.forEach(function(record) { %>
-              <tr>
-                <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
-                <td><%= record.hours_completed %></td>
-                <td><%= record.hours_remaining %></td>
-                <td><%= record.hours_completed >= 14 ? record.supervisorLastName : '' %></td>
-                <td><%= record.start_date.toISOString().split('T')[0] %></td>
-                <td><%= record.end_date.toISOString().split('T')[0] %></td>
-                <td><%= record.record_status %></td>
-              </tr>
-            <% }) %>
-          </table>
-          <div class="work-history">
-            <h2>Work Track History</h2>
-            <table>
-              <tr>
-                <th>Date</th>
-                <th>Hours Rendered</th>
-              </tr>
-              <% timeEntries.forEach(function(entry) { 
-                // Create a new date object and add one day
-                let date = new Date(entry.date);
-                date.setDate(date.getDate() + 1); 
-              %>
-                <tr>
-                  <!-- Output the adjusted date -->
-                  <td><%= date.toISOString().split('T')[0] %></td>
-                  <td><%= entry.hours_submit %></td>
-                </tr>
-              <% }) %>
-            </table>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div class="time-block">
+        <div id="current-time"></div>
+      </div>
+    </div>
+
+    <% records.forEach(function(record) { %>
+      <% if (record.record_status !== 'Completed') { %>
+        <form action="/submit_time_entry" method="post">
+          <input type="hidden" name="record_id" value="<%= record.record_id %>">
+          <div class="time-entry">
+            <label for="date-<%= record.record_id %>">Date:</label>
+            <input type="date"
+                   id="date-<%= record.record_id %>"
+                   name="date"
+                   required
+                   min="<%= record.dateMin %>"
+                   max="<%= record.dateMax %>">
+
+            <label for="hours-<%= record.record_id %>">Hours Submitted:</label>
+            <input type="number"
+                   id="hours-<%= record.record_id %>"
+                   name="hoursSubmit"
+                   step="0.25"
+                   min="0.25"
+                   max="<%= Math.min(8, Number(record.hours_remaining)) %>"
+                   required>
+
+            <button type="submit">Submit Time Entry</button>
           </div>
+        </form>
+      <% } else { %>
+        <p>Your internship has been completed. No further time entry is required.</p>
+      <% } %>
+    <% }) %>
+
+    <table class="work-track">
+      <thead>
+        <tr>
+          <th>Adviser</th>
+          <th>Hours Completed</th>
+          <th>Hours Remaining</th>
+          <th>Supervisor</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% records.forEach(function(record) { %>
+          <tr>
+            <td><%= record.adviserFirstName %> <%= record.adviserLastName %></td>
+            <td><%= Number(record.hours_completed).toFixed(0) %></td>
+            <td><%= Number(record.hours_remaining).toFixed(0) %></td>
+            <td><%= record.supervisorFirstName %> <%= record.supervisorLastName %></td>
+            <td><%= record.start_date_str %></td>
+            <td><%= record.end_date_str %></td>
+            <td><%= record.record_status %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="work-history">
+      <h2>Work Track History</h2>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Hours Rendered</th></tr>
+        </thead>
+        <tbody>
+          <% timeEntries.forEach(function(entry) { %>
+            <tr>
+              <td><%= entry.date_str %></td>
+              <td><%= entry.hours_submit %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
     </div>
-</div>
-<script>
+  </div>
+
+  <script>
     function updateCurrentTime() {
-        const currentTimeDisplay = document.getElementById('current-time');
-        const now = new Date();
-        const currentTime = now.getHours().toString().padStart(2, '0') + ':' + 
-                            now.getMinutes().toString().padStart(2, '0') + ':' + 
-                            now.getSeconds().toString().padStart(2, '0');
-        currentTimeDisplay.textContent = currentTime;
+      const el = document.getElementById('current-time');
+      const now = new Date();
+      el.textContent = String(now.getHours()).padStart(2,'0') + ':' +
+                       String(now.getMinutes()).padStart(2,'0') + ':' +
+                       String(now.getSeconds()).padStart(2,'0');
     }
+    updateCurrentTime(); setInterval(updateCurrentTime, 1000);
+  </script>
 
-    // Call updateCurrentTime immediately to set the initial time
-    updateCurrentTime();
-
-    // Update the time every second
-    setInterval(updateCurrentTime, 1000);
-
-    
-  document.getElementById('logoutButton').addEventListener('click', function() {
-    // Redirect to the login page
-    window.location.href = '/';
-  });
+<% if (message) { %>
+<script>
+  (function(){
+    var msg = <%- JSON.stringify(message.text || message) %>;
+    // show after first paint; won’t re-fire on bfcache restore
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ alert(msg); });
+    });
+  })();
 </script>
+<% } %>
 </body>
 </html>

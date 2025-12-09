@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost"; // Server name, usually localhost (127.0.0.1)
+$servername = "localhost"; // Server name,
 $username = "root"; // Your database username
 $password = ""; // Your database password
-$dbname = "teampogi"; // Your database name
+$dbname = "ojt-websys"; // Your database name
 
 // Create connection
 $db = new mysqli($servername, $username, $password, $dbname);

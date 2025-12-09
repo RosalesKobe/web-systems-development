@@ -1,18 +1,25 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
+require("../php/db.php");
 
+// Redirect if not logged in
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: web-systems-development/ServerSide/html/server_index.php");
+    header("Location: server_index.php");
     exit;
 }
 
+// Generate CSRF token
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Fetch admin's name
 $userID = $_SESSION['user_id'];
 $firstName = '';
 $lastName = '';
 
-$detailsTable = 'admindetails';
-$stmt = $db->prepare("SELECT firstName, lastName FROM $detailsTable WHERE user_id = ?");
+
+$stmt = $db->prepare("SELECT firstName, lastName FROM admindetails WHERE user_id = ?");
 $stmt->bind_param("i", $userID);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -24,78 +31,68 @@ if ($result->num_rows > 0) {
 }
 $stmt->close();
 
-$filterName = isset($_GET['filterName']) ? $_GET['filterName'] : '';
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'InternFirstName';
-$order = isset($_GET['order']) && $_GET['order'] == 'desc' ? 'DESC' : 'ASC';
+// Filtering and sorting
+$filterName = $_GET['filterName'] ?? '';
+$sort = $_GET['sort'] ?? 'InternFirstName';
+$order = ($_GET['order'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
+
+// Whitelist for sorting columns
+$allowedSorts = ['InternFirstName', 'InternLastName', 'email', 'classCode'];
+if (!in_array($sort, $allowedSorts)) {
+    $sort = 'InternFirstName';
+}
+
 
 // Define $query at the top level of the script
 $query = "SELECT
-  i.firstName AS InternFirstName,
-  i.lastName AS InternLastName,
-  i.email,
-  i.classCode,
-  a.firstName AS AdviserFirstName,
-  a.lastName AS AdviserLastName,
-  CASE
-    WHEN ir.checklist_completed = 0 THEN 'Not yet Submitted'
-    WHEN ir.checklist_completed = 1 THEN 'Submitted'
-    ELSE 'Unknown Status'
-  END AS RequirementsStatus
+    i.firstName AS InternFirstName,
+    i.lastName AS InternLastName,
+    i.email,
+    i.classCode,
+    a.firstName AS AdviserFirstName,
+    a.lastName AS AdviserLastName,
+    CASE
+        WHEN ir.checklist_completed = 0 THEN 'Not yet Submitted'
+        WHEN ir.checklist_completed = 1 THEN 'Submitted'
+        ELSE 'Unknown Status'
+    END AS RequirementsStatus
 FROM interndetails i
 JOIN adviserdetails a ON i.adviser_id = a.adviser_id
 JOIN internshiprecords ir ON i.intern_id = ir.intern_id";
 
-// Append the WHERE clause if a filter is set
+// Filter condition
 if (!empty($filterName)) {
     $query .= " WHERE i.firstName LIKE CONCAT('%', ?, '%') OR i.lastName LIKE CONCAT('%', ?, '%')";
 }
 
-// Append the ORDER BY clause
-$query .= " ORDER BY " . $sort . " " . $order;
-
-// Prepare the statement
+$query .= " ORDER BY $sort $order";
 $stmt = $db->prepare($query);
-if (!$stmt) {
-    // Handle error here
-    die('Prepare failed: ' . $db->error);
-}
 
-// Bind parameters if needed
 if (!empty($filterName)) {
     $stmt->bind_param("ss", $filterName, $filterName);
 }
 
-// Execute the statement
-if (!$stmt->execute()) {
-    // Handle error here
-    die('Execute failed: ' . $stmt->error);
-}
-
-// Fetch the results
+$stmt->execute();
 $result = $stmt->get_result();
+
 $internsData = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $internsData[] = $row;
-    }
-} else {
-    $internsData = [];
+while ($row = $result->fetch_assoc()) {
+    $internsData[] = $row;
 }
 
-// Close the statement
 $stmt->close();
 
-// Define the sort_order and sort_link functions
+// Sorting helper functions
 function sort_order($current_order) {
     return $current_order == 'ASC' ? 'desc' : 'asc';
 }
 
 function sort_link($column, $current_sort, $current_order) {
-  $order = $column == $current_sort ? sort_order($current_order) : 'asc';
-  return "server_interns.php?sort=" . $column . "&order=" . $order;
+    $order = $column == $current_sort ? sort_order($current_order) : 'asc';
+    return "server_interns.php?sort=$column&order=$order";
 }
 
-// Use PHP to generate the URLs ahead of time
+// Precomputed URLs
 $firstNameSortUrl = sort_link('InternFirstName', $sort, $order);
 $lastNameSortUrl = sort_link('InternLastName', $sort, $order);
 $emailSortUrl = sort_link('email', $sort, $order);
@@ -103,125 +100,79 @@ $classCodeSortUrl = sort_link('classCode', $sort, $order);
 ?>
 
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ADMIN - INTERNS PAGE</title>
-  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_interns.css">
-
+    <meta charset="UTF-8">
+    <title>ADMIN - INTERNS PAGE</title>
+    <link rel="stylesheet" href="../css/style_server_interns.css">
+    <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 <div class="task-manager">
-  <div class="left-bar">
-    <div class="upper-part">
-
+    <div class="left-bar">
+        <div class="upper-part"></div>
+        <div class="left-content">
+            <ul class="action-list">
+                <li class="item"><a href="server_home.php">Home</a></li>
+                <li class="item active"><a href="server_interns.php">Interns</a></li>
+                <li class="item"><a href="server_advisers.php">Advisers</a></li>
+                <li class="item"><a href="server_admins.php">Administrators</a></li>
+                <li class="item"><a href="server_programs.php">Programs</a></li>
+                <li class="item"><a href="server_records.php">Records</a></li>
+                <li class="item"><a href="server_feedbacks.php">Feedback</a></li>
+                <li class="item"><a href="server_addIntern.php">Add Intern</a></li>
+                <a href="server_logout.php" class="logout-button">Logout</a>  
+            </ul>
+        </div>
     </div>
-    <div class="left-content">
-      <ul class="action-list">
-        <li class="item">
-          <a href="server_home.php">Home</a>
-        </li>
-        <li class="item active">
-          <a href="server_interns.php">Interns</a>
-        </li>
-        <li class="item">
-          <a href="server_advisers.php">Advisers</a>
-        </li>
-        <li class="item">
-          <a href="server_admins.php">Administrators</a>
-        </li>
-        <li class="item">
-          <a href="server_programs.php">Programs</a>          
-        </li>
-        <li class="item">
-          <a href="server_records.php">Records</a>    
-        </li>
 
-        <li class="item">
-          <a href="server_feedbacks.php">Feedback</a>
-        </li>
-        <li class="item">
-          <a href="server_addIntern.php">Add Intern</a>
-        </li>
-        <a href="server_logout.php" class="logout-button">Logout</a>  
-      </ul>
+    <div class="page-content">
+    <div class="image-container">
+        <img src="../img/Saint_Louis_University_PH_Logo.svg.png" alt="SLU Logo">
     </div>
-  </div>
-  <div class="page-content">
+
     <div class="header">Welcome <?php echo htmlspecialchars($firstName); ?> <?php echo htmlspecialchars($lastName); ?>!</div>
-    <form action="server_interns.php" method="get">
-      <label for="filterName">Filter by Name:</label>
-      <input type="text" id="filterName" name="filterName" value="<?php echo isset($_GET['filterName']) ? htmlspecialchars($_GET['filterName']) : ''; ?>">
-      <input type="submit" value="Filter">
-    </form>
 
+        <form action="server_interns.php" method="get">
+            <label for="filterName">Filter by Name:</label>
+            <input type="text" id="filterName" name="filterName" value="<?php echo htmlspecialchars($filterName); ?>">
+            <input type="submit" value="Filter">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+        </form>
+
+
+<div class="table-container">
     <table>
-      <tr>
-      <th class="sortable" onmouseover="hovered('firstName')" onclick="sortColumn('firstName')">First Name</th>
-<th class="sortable" onmouseover="hovered('lastName')" onclick="sortColumn('lastName')">Last Name</th>
-<th class="sortable" onmouseover="hovered('email')" onclick="sortColumn('email')">Email</th>
-<th class="sortable" onmouseover="hovered('classCode')" onclick="sortColumn('classCode')">Class Code</th>
-        <th>Adviser First Name</th>
-        <th>Adviser Last Name</th>
-        <th>Requirements Status</th>
-      </tr>
-      <?php foreach ($internsData as $intern): ?>
         <tr>
-          <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['email']); ?></td>
-          <td><?php echo htmlspecialchars($intern['classCode']); ?></td>
-          <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
-          <td><?php echo htmlspecialchars($intern['RequirementsStatus']); ?></td>
+            <th class="sortable"><a href="<?php echo $firstNameSortUrl; ?>">First Name</a></th>
+            <th class="sortable"><a href="<?php echo $lastNameSortUrl; ?>">Last Name</a></th>
+            <th class="sortable"><a href="<?php echo $emailSortUrl; ?>">Email</a></th>
+            <th class="sortable"><a href="<?php echo $classCodeSortUrl; ?>">Class Code</a></th>
+            <th>Adviser First Name</th>
+            <th>Adviser Last Name</th>
+            <th>Requirements Status</th>
         </tr>
-      <?php endforeach; ?>
-      <?php if (empty($internsData)): ?>
-        <tr>
-          <td colspan="8">No interns found.</td>
-        </tr>
-      <?php endif; ?>
+        <?php if (empty($internsData)): ?>
+            <tr><td colspan="7">No interns found.</td></tr>
+        <?php else: ?>
+            <?php foreach ($internsData as $intern): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($intern['InternFirstName']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['InternLastName']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['email']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['classCode']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['AdviserFirstName']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['AdviserLastName']); ?></td>
+                    <td><?php echo htmlspecialchars($intern['RequirementsStatus']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </table>
-  </div>
 </div>
-<script>
-var hoverFlags = { firstName: false, lastName: false, email: false, classCode: false };
 
-function hovered(column) {
-  // Set the hover flag for the column to true
-  hoverFlags[column] = true;
-}
-
-function sortColumn(column) {
-  // Check if the column was hovered over before sorting
-  if (hoverFlags[column]) {
-    var sortURL = '';
-    switch(column) {
-      case 'firstName':
-        sortURL = '<?php echo sort_link('InternFirstName', $sort, $order); ?>';
-        break;
-      case 'lastName':
-        sortURL = '<?php echo sort_link('InternLastName', $sort, $order); ?>';
-        break;
-      case 'email':
-        sortURL = '<?php echo sort_link('email', $sort, $order); ?>';
-        break;
-      case 'classCode':
-        sortURL = '<?php echo sort_link('classCode', $sort, $order); ?>';
-        break;
-    }
-    window.location.href = sortURL;
-  }
-}
-
-// Optional: Reset the hover flag when the mouse leaves the column header
-function resetHover(column) {
-  hoverFlags[column] = false;
-}
-</script>
+    </div>
+</div>
 </body>
-
 </html>
 
 

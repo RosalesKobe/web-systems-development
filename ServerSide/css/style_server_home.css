@@ -89,6 +89,7 @@ body {
   margin-bottom: 20px; /* Spacing after header */
 }
 
+/* Image container remains top right */
 .image-container {
   position: absolute;
   top: 8px;
@@ -97,19 +98,25 @@ body {
 }
 
 .image-container img {
-  width: 130px; /* Adjust image size */
-  height: auto; /* Maintain aspect ratio */
-  border: none; /* If there was a border making the circle, set it to none */
-  display: block; /* Ensure it doesn't have any line around it */
-  margin-bottom: 10px; /* Add some space below the image */
+  width: 130px;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
 }
 
-/* Chart Container */
+/* New: Center the chart properly */
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  width: 100%;
+}
+
 #myChart {
-  max-width: 600px;
-  margin: 20px auto;
+  max-width: 400px; /* changed from 600px */
+  width: 100%;
 }
-
 /* Table Styles */
 table {
   width: 100%;

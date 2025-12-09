@@ -146,6 +146,7 @@ tr:hover {
 /* Form Headings */
 #addForm h2 {
   color: #333;
+  margin-bottom: 20px;
   margin-bottom: 20px; /* Space below the heading */
   text-align: center;
 }
@@ -316,10 +317,30 @@ button[type="button"]:hover {
   }
 }
 
+.table-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  box-sizing: border-box;
+}
 
+.table-container table {
+  width: 100%;
+  max-width: 1400px;
+  background-color: transparent;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
 
+.add-button-container {
+  display: flex;
+  justify-content: flex-start;
 
-
+  margin: 0 auto;
+  padding: 0 40px;
+  margin-top: 40px;
+}
 
 
 

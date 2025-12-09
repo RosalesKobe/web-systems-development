@@ -1,10 +1,13 @@
 <?php
 session_start();
-require("C:/wamp64/www/web-systems-development/ServerSide/php/db.php");
-//require("/Applications/XAMPP/xamppfiles/htdocs/web-systems-development/ServerSide/php/db.php");
+require("../php/db.php");
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-  header("Location: web-systems-development/ServerSide/html/server_index.php"); // redirect to login if not logged in
+  header("Location: server_index.php");
     exit;
 }
 
@@ -132,6 +135,9 @@ function lookupCompanyIdByName($db, $companyName) {
 
 // Check if a POST request with a file upload has been made
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
+  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Invalid CSRF token.");
+}
   $csvFile = $_FILES['csv_file']['tmp_name'];
   if (($handle = fopen($csvFile, 'r')) !== FALSE) {
       fgetcsv($handle); // Skip the header line
@@ -172,10 +178,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['csv_file'])) {
       fclose($handle);
   }
   // Redirect or display a success message
-  echo "Bulk upload successful!";
-  // Redirect to a confirmation page or back to the form
- header('Location: server_addIntern.php');
-  exit;
+$_SESSION['alert'] = ['type' => 'success', 'message' => 'Bulk upload successful.'];
+header("Location: server_addIntern.php");
+exit;
 }
 
 
@@ -210,10 +215,10 @@ $usernameResult = $usernameStmt->get_result();
 $usernameStmt->close();
 
 if ($usernameResult->num_rows > 0) {
-    echo "Error: Username already exists";
-    exit; // Stop the script if username already exists
+    $_SESSION['alert'] = ['type' => 'error', 'message' => 'Username already exists.'];
+    header("Location: server_addIntern.php");
+    exit;
 }
-
 // Check if the email already exists in the 'interndetails' table
 $checkEmailQuery = "SELECT email FROM interndetails WHERE email = ?";
 $emailStmt = $db->prepare($checkEmailQuery);
@@ -231,8 +236,9 @@ $emailResult = $emailStmt->get_result();
 $emailStmt->close();
 
 if ($emailResult->num_rows > 0) {
-    echo "Error: Email already exists";
-    exit; // Stop the script if email already exists
+    $_SESSION['alert'] = ['type' => 'error', 'message' => 'Email already exists.'];
+    header("Location: server_addIntern.php");
+    exit;
 }
  else {
       // Proceed with inserting new user since username and email are unique
@@ -248,11 +254,15 @@ if ($emailResult->num_rows > 0) {
           $stmt = $db->prepare($insertInternDetailsQuery);
           $stmt->bind_param("iiiissss", $lastUserId, $adviserId, $supervisorId, $companyId, $firstName, $lastName, $email, $classCode);        
           
-          if ($stmt->execute()) {
-              echo "New intern added successfully";
-          } else {
-              echo "Error: " . $stmt->error;
-          }
+        if ($stmt->execute()) {
+            $_SESSION['alert'] = ['type' => 'success', 'message' => 'New intern added successfully.'];
+            header("Location: server_addIntern.php");
+            exit;
+        } else {
+            $_SESSION['alert'] = ['type' => 'error', 'message' => 'Error: ' . $stmt->error];
+            header("Location: server_addIntern.php");
+            exit;
+        }
           $stmt->close();
       } else {
           echo "Error: " . $stmt->error;
@@ -270,7 +280,7 @@ if ($emailResult->num_rows > 0) {
 <head>
   <meta charset="UTF-8">
   <title>ADMIN - ADD INTERN PAGE</title>
-  <link rel="stylesheet" href="/web-systems-development/ServerSide/css/style_server_addIntern.css">
+  <link rel="stylesheet" href="../css/style_server_addIntern.css">
   <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -311,7 +321,15 @@ if ($emailResult->num_rows > 0) {
   </div>
   <div class="page-content">
     <div class="header">Add Intern</div>
+    <?php if (isset($_SESSION['alert'])): ?>
+  <div class="alert <?= $_SESSION['alert']['type'] ?>">
+    <?= htmlspecialchars($_SESSION['alert']['message']) ?>
+  </div>
+  <?php unset($_SESSION['alert']); ?>
+<?php endif; ?>
     <form id="add-user-form" method="POST" action="/web-systems-development/ServerSide/html/server_addIntern.php">
+  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
       <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
@@ -356,7 +374,7 @@ if ($emailResult->num_rows > 0) {
       </div>
       <div class="form-group">
         <label for="class-code">Class Code</label>
-        <input type="text" id="classCode" name="classCode">
+        <input type="text" id="classCode" name="classCode" required>
       </div>
       <div class="form-group">
         <input type="submit" class="btn" value="Add User">

@@ -194,7 +194,20 @@
 
           </form>
         </div>
-      
+              <div class="announcement">
+          <h2>Announcements:</h2>
+          <div class="announcement-content">
+            <% if (programNames && programNames.length > 0) { %> <%
+            programNames.forEach(function(program) { %>
+            <div class="program">
+              <h3><%= program.program_name %></h3>
+              <!-- Displaying more information about each program -->
+            </div>
+            <% }); %> <% } else { %>
+            <p>No program announcements available.</p>
+            <% } %>
+          </div>
+      </div>
     </div>
   </body>
 </html>
